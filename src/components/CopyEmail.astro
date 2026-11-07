@@ -8,20 +8,30 @@ interface Props {
   variant?: 'link' | 'block';
 }
 const { variant = 'link' } = Astro.props;
+
+// Адрес не кладём в HTML целиком, чтобы его не собирали спам-боты:
+// части хранятся задом наперёд и склеиваются скриптом в браузере.
+const [user, domain] = site.email.split('@');
+const rev = (s: string) => s.split('').reverse().join('');
 ---
 
-<button type="button" class:list={['copy-email', variant]} data-email={site.email}>
-  <span class="value">{site.email}</span>
+<button type="button" class:list={['copy-email', variant]} data-u={rev(user)} data-d={rev(domain)}>
+  <span class="value">{user} [at] {domain}</span>
   <span class="toast" aria-live="polite">{t('copy.done')}</span>
 </button>
 
 <script>
+  const rev = (s: string) => s.split('').reverse().join('');
+  const emailOf = (btn: HTMLElement) => `${rev(btn.dataset.u ?? '')}@${rev(btn.dataset.d ?? '')}`;
+
   function init() {
     document.querySelectorAll<HTMLButtonElement>('.copy-email').forEach((btn) => {
       if (btn.dataset.ready) return;
       btn.dataset.ready = '1';
+      const value = btn.querySelector('.value');
+      if (value) value.textContent = emailOf(btn);
       btn.addEventListener('click', async () => {
-        const email = btn.dataset.email ?? '';
+        const email = emailOf(btn);
         try {
           await navigator.clipboard.writeText(email);
           btn.classList.add('copied');

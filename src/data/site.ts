@@ -16,7 +16,7 @@ export const site = {
     en: 'Learning experience designer in corporate L&D. I build e-learning that changes how people work — and AI tools that make it faster to create.',
     ru: 'Дизайнер обучения в корпоративном L&D. Создаю курсы, которые меняют то, как люди работают, и ИИ-инструменты, которые ускоряют их разработку.',
   } as L,
-  email: 'hello@example.com', // TODO: рабочая почта
+  email: 'hello@alexander-edelman.com',
   callUrl: 'https://cal.com', // TODO: ссылка на запись на звонок
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/alex-edelman', icon: 'linkedin' },
