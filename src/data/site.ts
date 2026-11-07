@@ -8,8 +8,8 @@ export const site = {
   // false — поисковики (Google, Яндекс) не будут показывать сайт в выдаче.
   // Поменяйте на true, когда будете готовы показывать портфолио.
   indexable: false,
-  name: 'Lexx Edelman',
-  initials: 'LE',
+  name: 'Alexander Edelman',
+  initials: 'AE',
   // Положите своё фото в public/avatar.jpg и впишите '/avatar.jpg'
   avatar: '',
   bio: {
@@ -150,7 +150,7 @@ export const experiments: Experiment[] = [
 
 export const about = {
   photoCaption: { en: 'Photo caption', ru: 'Подпись к фото' } as L,
-  greeting: { en: 'Hi, I’m Lexx.', ru: 'Привет, я Lexx.' } as L,
+  greeting: { en: 'Hi, I’m Alexander.', ru: 'Привет, я Александр.' } as L,
   headline: {
     en: 'A designer who values clarity and real-world use',
     ru: 'Дизайнер, который ценит ясность и реальную пользу',
