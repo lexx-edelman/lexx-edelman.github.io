@@ -1,0 +1,65 @@
+---
+// Страница «не найдено». GitHub Pages сам показывает её для любого несуществующего адреса.
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found" hero={false}>
+  <section class="nf">
+    <p class="code">404</p>
+    <h1>Page not found</h1>
+    <p class="text">This page doesn’t exist or has moved.</p>
+    <p class="text ru" lang="ru">Такой страницы нет или она переехала.</p>
+    <div class="links">
+      <a class="btn" href="/">Go to homepage</a>
+      <a class="btn btn--ghost" href="/ru/" lang="ru">На главную</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding: 48px 0 96px;
+    text-align: center;
+  }
+  .code {
+    font-size: 72px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--text-3);
+  }
+  h1 {
+    margin-top: 16px;
+    font-size: 28px;
+    font-weight: 500;
+  }
+  .text {
+    margin-top: 8px;
+    color: var(--text-2);
+  }
+  .ru {
+    margin-top: 2px;
+    color: var(--text-3);
+  }
+  .links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 20px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .btn--ghost {
+    background: var(--surface);
+    color: var(--text);
+  }
+</style>
