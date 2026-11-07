@@ -1,0 +1,182 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import CopyEmail from '../../../components/CopyEmail.astro';
+import Icon from '../../../components/Icon.astro';
+import { projects, type Project } from '../../../data/site';
+import type { Lang } from '../../../i18n/config';
+import { localePath, localeStaticPaths, tr, useTranslations } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return localeStaticPaths().flatMap(({ params, props }) =>
+    projects.map((project) => ({
+      params: { ...params, slug: project.slug },
+      props: { ...props, project },
+    })),
+  );
+}
+
+const { project, lang } = Astro.props as { project: Project; lang: Lang };
+const t = useTranslations(lang);
+const title = tr(project.title, lang);
+const description = tr(project.description, lang);
+const more = projects.filter((p) => p.slug !== project.slug).slice(0, 2);
+const [a, b, c] = project.tint;
+const facts = [
+  { label: t('case.role'), value: tr(project.role, lang) },
+  { label: t('case.timeline'), value: tr(project.timeline, lang) },
+  { label: t('case.team'), value: tr(project.team, lang) },
+  { label: t('case.platform'), value: tr(project.platform, lang) },
+];
+const [lead, ...rest] = tr(project.body, lang);
+---
+
+<Base title={title} description={description} hero={false}>
+  <article class="case">
+    <header class="case-head reveal">
+      <a href={localePath('/', lang)} class="back"><Icon name="arrow-left" size={16} /> {t('case.back')}</a>
+      <p class="eyebrow">{tr(project.client, lang)} • {project.year}</p>
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+    </header>
+
+    <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${project.slug}`}>
+      {project.cover && <img src={project.cover} alt={title} />}
+    </div>
+
+    <dl class="facts">
+      {
+        facts.map((f) => (
+          <div>
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <section class="body">
+      <p class="eyebrow accent">{t('case.overview')}</p>
+      <h2>{title}</h2>
+      {lead && <p>{lead}</p>}
+      {rest.map((p) => <p>{p}</p>)}
+      <CopyEmail variant="block" />
+    </section>
+  </article>
+
+  <section class="section more">
+    <h2 class="section-title">{t('case.more')}</h2>
+    <div class="more-grid">
+      {more.map((p, i) => <ProjectCard project={p} index={i} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .case {
+    max-width: 800px;
+    margin-inline: auto;
+    padding-bottom: 64px;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+    padding: 6px 12px 6px 10px;
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .back:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  .accent {
+    color: #5b4fe0;
+  }
+  h1 {
+    margin-top: 10px;
+    font-size: 40px;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    margin-top: 14px;
+    color: var(--text-3);
+    max-width: 640px;
+  }
+  .cover {
+    margin-top: 40px;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 0% 0%, var(--a), transparent 60%),
+      radial-gradient(120% 90% at 100% 0%, var(--b), transparent 60%),
+      radial-gradient(140% 100% at 50% 100%, var(--c), transparent 70%),
+      #eef0f6;
+  }
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: 32px 0 0;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  dt {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  dd {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: var(--text-3);
+  }
+  .body {
+    display: grid;
+    gap: 14px;
+    padding-top: 48px;
+  }
+  .body h2 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .body p:not(.eyebrow) {
+    color: var(--text-2);
+  }
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 720px) {
+    h1 {
+      font-size: 30px;
+    }
+    .facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 24px;
+    }
+    .more-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>

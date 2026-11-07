@@ -1,0 +1,93 @@
+---
+import { site } from '../data/site';
+import { getLang, useTranslations } from '../i18n/utils';
+
+const t = useTranslations(getLang(Astro.url));
+
+interface Props {
+  variant?: 'link' | 'block';
+}
+const { variant = 'link' } = Astro.props;
+---
+
+<button type="button" class:list={['copy-email', variant]} data-email={site.email}>
+  <span class="value">{site.email}</span>
+  <span class="toast" aria-live="polite">{t('copy.done')}</span>
+</button>
+
+<script>
+  function init() {
+    document.querySelectorAll<HTMLButtonElement>('.copy-email').forEach((btn) => {
+      if (btn.dataset.ready) return;
+      btn.dataset.ready = '1';
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email ?? '';
+        try {
+          await navigator.clipboard.writeText(email);
+          btn.classList.add('copied');
+          setTimeout(() => btn.classList.remove('copied'), 1600);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+  }
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .copy-email {
+    position: relative;
+    text-align: left;
+  }
+  .link {
+    font-size: 14px;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+  .link:hover {
+    color: var(--text);
+  }
+  .block {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+  }
+  .block:hover {
+    background: var(--surface-hover);
+  }
+  .toast {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    translate: -50% 4px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, translate 0.2s var(--ease);
+  }
+  .link .toast {
+    left: 0;
+    translate: 0 4px;
+  }
+  .copied .toast {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  .link.copied .toast {
+    translate: 0 0;
+  }
+</style>

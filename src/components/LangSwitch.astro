@@ -1,0 +1,78 @@
+---
+// Переключатель языка: ведёт на эту же страницу на другом языке
+import { languages, langs } from '../i18n/config';
+import { getLang, localePath, stripLang, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+const path = stripLang(Astro.url.pathname);
+---
+
+<nav class="lang" aria-label={t('lang.label')} transition:name="lang" transition:animate="none">
+  {
+    langs.map((l) => (
+      <a
+        href={localePath(path, l)}
+        hreflang={languages[l].htmlLang}
+        lang={languages[l].htmlLang}
+        title={languages[l].name}
+        class:list={['opt', { active: l === lang }]}
+        aria-current={l === lang ? 'true' : undefined}
+        data-lang={l}
+      >
+        {l === lang && <span class="pill" transition:name="lang-pill" />}
+        <span class="label">{languages[l].label}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<script>
+  // Запоминаем выбор, чтобы в будущем можно было на него опираться
+  function init() {
+    document.querySelectorAll<HTMLAnchorElement>('.lang .opt').forEach((a) => {
+      a.addEventListener('click', () => {
+        try {
+          localStorage.setItem('lang', a.dataset.lang ?? '');
+        } catch {}
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  .lang {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 14px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .opt {
+    position: relative;
+    padding: 5px 9px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 18px;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+  .opt:hover,
+  .opt.active {
+    color: var(--text);
+  }
+  .pill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--bg);
+    box-shadow: 0 1px 2px rgba(4, 17, 31, 0.06);
+  }
+  .label {
+    position: relative;
+  }
+</style>

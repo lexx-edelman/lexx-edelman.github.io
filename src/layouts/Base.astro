@@ -1,0 +1,207 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import { site, projects } from '../data/site';
+import Avatar from '../components/Avatar.astro';
+import TabNav from '../components/TabNav.astro';
+import Footer from '../components/Footer.astro';
+import Button from '../components/Button.astro';
+import LangSwitch from '../components/LangSwitch.astro';
+import { languages, langs } from '../i18n/config';
+import { getLang, localePath, stripLang, tr, useTranslations } from '../i18n/utils';
+
+interface Props {
+  title?: string;
+  description?: string;
+  hero?: boolean;
+}
+
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+const bio = tr(site.bio, lang);
+const { title, description = bio, hero = true } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t('meta.portfolio')}`;
+const latest = projects[0];
+const home = localePath('/', lang);
+
+// Ссылки на версии страницы на других языках (для поисковиков)
+const basePath = stripLang(Astro.url.pathname);
+const origin = Astro.site ?? Astro.url;
+const alternates = langs.map((l) => ({
+  hreflang: languages[l].htmlLang,
+  href: new URL(localePath(basePath, l), origin).href,
+}));
+---
+
+<!doctype html>
+<html lang={languages[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={languages[lang].ogLocale} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
+    <meta name="theme-color" content="#fafafa" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="glow" aria-hidden="true" transition:persist></div>
+
+    <header class="top container">
+      {
+        hero ? (
+          <div class="hero" transition:name="hero" transition:animate="none">
+            <a href={home} class="hero-avatar" aria-label={t('nav.home')}>
+              <Avatar />
+            </a>
+            <h1 class="hero-name">{site.name}</h1>
+            <p class="hero-bio">{bio}</p>
+            <div class="hero-actions">
+              <Button href={localePath(`/projects/${latest.slug}/`, lang)} icon="star">
+                {t('hero.latest')}
+              </Button>
+              <Button href={site.callUrl} variant="ghost" icon="phone" external>
+                {t('hero.contact')}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <a href={home} class="hero-avatar" aria-label={t('nav.home')}>
+            <Avatar />
+          </a>
+        )
+      }
+      <div class="nav-slot">
+        <TabNav />
+      </div>
+      <div class="lang-slot">
+        <LangSwitch />
+      </div>
+    </header>
+
+    <main class="container page" transition:animate="fade">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Цветное свечение сверху справа, как в Tabfolio */
+  .glow {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 560px;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .glow::before,
+  .glow::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+  }
+  .glow::before {
+    width: 760px;
+    height: 420px;
+    top: -220px;
+    left: 42%;
+    background: radial-gradient(closest-side, rgba(214, 170, 255, 0.75), rgba(232, 196, 255, 0));
+  }
+  .glow::after {
+    width: 900px;
+    height: 460px;
+    top: -120px;
+    right: -260px;
+    background: radial-gradient(closest-side, rgba(176, 214, 255, 0.85), rgba(200, 228, 255, 0));
+  }
+
+  .top {
+    position: relative;
+    padding-top: 40px;
+  }
+
+  .nav-slot {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    translate: -50% 0;
+    z-index: 5;
+  }
+
+  .lang-slot {
+    position: absolute;
+    top: 44px;
+    right: var(--gutter);
+    z-index: 5;
+  }
+
+  .hero-avatar {
+    display: inline-block;
+    border-radius: 18px;
+  }
+
+  .hero-name {
+    margin-top: 20px;
+    font-size: 40px;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-bio {
+    margin-top: 12px;
+    max-width: 550px;
+    color: var(--text-3);
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .page {
+    padding-top: 56px;
+    padding-bottom: 32px;
+  }
+
+  @media (max-width: 860px) {
+    .top {
+      padding-top: 16px;
+    }
+    .nav-slot {
+      position: static;
+      translate: none;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+      order: -1;
+    }
+    .top {
+      display: flex;
+      flex-direction: column;
+    }
+    .lang-slot {
+      /* на мобильном — справа от аватара, под табами */
+      top: 101px;
+    }
+    .hero-name {
+      font-size: 32px;
+    }
+    .page {
+      padding-top: 40px;
+    }
+  }
+</style>

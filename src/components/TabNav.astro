@@ -1,0 +1,72 @@
+---
+import { nav } from '../data/site';
+import { getLang, localePath, stripLang, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+const path = stripLang(Astro.url.pathname).replace(/\/?$/, '/');
+const isActive = (href: string) => {
+  if (href === '/') return path === '/' || path.startsWith('/projects/');
+  return path.startsWith(href);
+};
+---
+
+<nav class="tabs" aria-label={t('nav.label')} transition:name="tabs" transition:animate="none">
+  {
+    nav.map((item) => {
+      const active = isActive(item.href);
+      return (
+        <a href={localePath(item.href, lang)} class:list={['tab', { active }]} aria-current={active ? 'page' : undefined}>
+          {active && <span class="pill" transition:name="tab-pill" />}
+          <span class="label">{t(item.key)}</span>
+        </a>
+      );
+    })
+  }
+</nav>
+
+<style>
+  .tabs {
+    display: inline-flex;
+    padding: 4px;
+    gap: 2px;
+    border-radius: 20px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .tab {
+    position: relative;
+    padding: 8px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    color: var(--text-2);
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+  .tab:hover {
+    color: var(--text);
+  }
+  .tab.active {
+    color: var(--text);
+  }
+  .pill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--bg);
+    box-shadow: 0 1px 2px rgba(4, 17, 31, 0.06);
+  }
+  .label {
+    position: relative;
+  }
+
+  @media (max-width: 420px) {
+    .tab {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+  }
+</style>

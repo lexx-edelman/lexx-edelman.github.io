@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+import { resume } from '../../data/site';
+import type { Lang } from '../../i18n/config';
+import { localeStaticPaths, tr, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = localeStaticPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const [toolsA, toolsB] = t('resume.tools');
+---
+
+<Base title={t('resume.title')}>
+  <section class="jobs">
+    {
+      resume.experience.map((job, i) => (
+        <article class="job reveal" style={`--i:${i}`}>
+          <span class="logo" aria-hidden="true">{job.company.charAt(0)}</span>
+          <div>
+            <h3>
+              {tr(job.role, lang)} <span class="at">@</span> {job.company}
+            </h3>
+            <p class="job-meta">
+              {tr(job.period, lang)} <span>·</span> {tr(job.location, lang)}
+            </p>
+            <p class="job-text">{tr(job.text, lang)}</p>
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">{toolsA} <span>{toolsB}</span></h2>
+    <div class="tools">
+      {
+        resume.tools.map((tool, i) => (
+          <div class="tool">
+            <span class="tool-icon" style={`--h:${(i * 53 + 210) % 360}`}>{tool.name.charAt(0)}</span>
+            <div>
+              <p class="tool-name">{tool.name}</p>
+              <p class="tool-use">{tr(tool.use, lang)}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">{t('resume.skills')}</h2>
+    <div class="chips">{resume.skills.map((s) => <span class="chip">{tr(s, lang)}</span>)}</div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">{t('resume.awards')}</h2>
+    <ul class="list">
+      {resume.awards.map((a) => <li><p class="item-title">{tr(a.title, lang)}</p><p class="item-meta">{tr(a.meta, lang)}</p></li>)}
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">{t('resume.education')}</h2>
+    <ul class="list">
+      {resume.education.map((e) => <li><p class="item-title">{tr(e.title, lang)}</p><p class="item-meta">{tr(e.meta, lang)}</p></li>)}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .jobs {
+    padding-bottom: 48px;
+  }
+  .job {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 16px;
+    padding: 24px 0;
+  }
+  .job + .job {
+    border-top: 1px solid var(--line);
+  }
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .at {
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .job-meta {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .job-meta span {
+    margin-inline: 4px;
+  }
+  .job-text {
+    margin-top: 12px;
+    max-width: 860px;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .section:first-of-type {
+    border-top: 1px solid var(--line);
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+  .tool-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, hsl(var(--h) 80% 62%), hsl(calc(var(--h) + 30) 80% 50%));
+    color: white;
+    font-weight: 700;
+  }
+  .tool-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .tool-use {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .list li {
+    padding: 14px 0;
+  }
+  .list li + li {
+    border-top: 1px solid var(--line);
+  }
+  .item-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .item-meta {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  @media (max-width: 860px) {
+    .tools {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 480px) {
+    .tools {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

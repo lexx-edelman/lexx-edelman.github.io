@@ -1,0 +1,35 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  size?: number;
+}
+const { size = 60 } = Astro.props;
+---
+
+<span class="avatar" style={`--size:${size}px`}>
+  {site.avatar ? <img src={site.avatar} alt={site.name} width={size} height={size} /> : <span>{site.initials}</span>}
+</span>
+
+<style>
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: var(--size);
+    height: var(--size);
+    flex: none;
+    border-radius: calc(var(--size) * 0.28);
+    overflow: hidden;
+    background: linear-gradient(135deg, #dfe4ff, #f6dcef);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(4, 17, 31, 0.06);
+    color: #3b4a7a;
+    font-weight: 700;
+    font-size: calc(var(--size) * 0.32);
+    letter-spacing: 0.02em;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

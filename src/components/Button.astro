@@ -1,0 +1,189 @@
+---
+// Кнопка с hover-анимацией как в Tabfolio:
+//  icon="star"  — тёмная кнопка, справа влетает вращающаяся звёздочка
+//  icon="phone" — светлая кнопка, справа «выпрыгивает» тёмный кружок с телефоном
+interface Props {
+  href: string;
+  variant?: 'dark' | 'ghost';
+  icon?: 'star' | 'phone';
+  size?: 'md' | 'sm';
+  external?: boolean;
+}
+
+const { href, variant = 'dark', icon, size = 'md', external = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['fx-btn', `fx-btn--${variant}`, `fx-btn--${size}`, icon && `has-${icon}`]}
+  {...external ? { target: '_blank', rel: 'noopener' } : {}}
+>
+  <span class="fx-label"><slot /></span>
+  {
+    icon === 'star' && (
+      <span class="fx-icon fx-star" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5Z" />
+        </svg>
+      </span>
+    )
+  }
+  {
+    icon === 'phone' && (
+      <span class="fx-icon fx-bubble" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+        </svg>
+      </span>
+    )
+  }
+</a>
+
+<style>
+  .fx-btn {
+    --h: 44px;
+    --px: 16px;
+    --icon: 18px;
+    --gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    height: var(--h);
+    padding-inline: var(--px);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      padding 0.6s var(--spring),
+      background-color 0.25s,
+      transform 0.2s var(--ease);
+  }
+  .fx-btn--sm {
+    --h: 36px;
+    --px: 12px;
+    --icon: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+  }
+  .fx-btn:active {
+    transform: scale(0.97);
+  }
+
+  .fx-btn--dark {
+    background: var(--text);
+    color: var(--bg);
+  }
+  .fx-btn--ghost {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  /* Слот под иконку: ширина 0, при наведении раскрывается с пружиной */
+  .fx-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 0;
+    height: var(--icon);
+    margin-left: 0;
+    transition:
+      width 0.6s var(--spring),
+      margin-left 0.6s var(--spring);
+  }
+  .fx-icon svg {
+    flex: none;
+    width: var(--icon);
+    height: var(--icon);
+  }
+
+  /* Звёздочка */
+  .fx-star svg {
+    fill: currentColor;
+    opacity: 0;
+    transform: rotate(-200deg) scale(0.2);
+    transition:
+      transform 0.75s var(--spring-bouncy),
+      opacity 0.2s;
+  }
+
+  /* Кружок с телефоном */
+  .has-phone {
+    --bubble: 26px;
+  }
+  .fx-btn--sm.has-phone {
+    --bubble: 22px;
+  }
+  .fx-bubble {
+    --icon: var(--bubble);
+    height: var(--icon);
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--bg);
+    opacity: 0;
+    transform: scale(0.4, 0.3);
+    transform-origin: 0% 50%;
+    transition:
+      width 0.6s var(--spring),
+      margin-left 0.6s var(--spring),
+      opacity 0.15s,
+      transform 0.6s var(--spring-bouncy);
+  }
+  .fx-bubble svg {
+    width: 52%;
+    height: 52%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: scale(1.4);
+    transition:
+      opacity 0.3s 0.08s,
+      transform 0.5s 0.05s var(--spring);
+  }
+
+  @media (hover: hover) {
+    .fx-btn--dark:hover {
+      background: rgba(4, 17, 31, 0.87);
+    }
+    .fx-btn--ghost:hover {
+      background: var(--surface-hover);
+    }
+
+    .fx-btn:hover .fx-icon {
+      width: var(--icon);
+      margin-left: var(--gap);
+    }
+    .fx-btn.has-phone:hover {
+      padding-right: calc((var(--h) - var(--bubble)) / 2);
+    }
+
+    .fx-btn:hover .fx-star svg {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .fx-btn:hover .fx-bubble {
+      opacity: 1;
+      transform: none;
+    }
+    .fx-btn:hover .fx-bubble svg {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Клавиатурный фокус показывает ту же анимацию */
+  .fx-btn:focus-visible .fx-icon {
+    width: var(--icon);
+    margin-left: var(--gap);
+  }
+  .fx-btn:focus-visible .fx-star svg,
+  .fx-btn:focus-visible .fx-bubble,
+  .fx-btn:focus-visible .fx-bubble svg {
+    opacity: 1;
+    transform: none;
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+import { site, nav } from '../data/site';
+import Avatar from './Avatar.astro';
+import Icon from './Icon.astro';
+import CopyEmail from './CopyEmail.astro';
+import { getLang, localePath, tr, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+
+const year = new Date().getFullYear();
+---
+
+<footer class="container footer">
+  <div class="cols">
+    <div class="about">
+      <a href={localePath('/', lang)} class="brand">
+        <Avatar size={32} />
+        <span>{site.name}</span>
+      </a>
+      <p class="bio">{tr(site.bio, lang)}</p>
+      <p class="copy">© {year} {site.name}</p>
+    </div>
+
+    <div class="col">
+      <p class="col-title">{t('footer.links')}</p>
+      <ul>
+        {nav.map((item) => <li><a href={localePath(item.href, lang)}>{t(item.key)}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="col">
+      <p class="col-title">{t('footer.contact')}</p>
+      <ul>
+        <li><CopyEmail /></li>
+        <li><a href={site.callUrl} target="_blank" rel="noopener">{t('footer.call')}</a></li>
+      </ul>
+      <div class="socials">
+        {
+          site.socials.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+              <Icon name={s.icon as 'linkedin'} size={20} />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-bottom: 72px;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 272px 264px;
+    gap: 24px;
+    padding-top: 64px;
+    border-top: 1px solid var(--line);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .bio {
+    margin-top: 16px;
+    max-width: 420px;
+    color: var(--text-3);
+    font-size: 16px;
+  }
+  .copy {
+    margin-top: 8px;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .col-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  li a {
+    font-size: 14px;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+  li a:hover {
+    color: var(--text);
+  }
+  .socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    color: var(--text-2);
+  }
+  .socials a:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 860px) {
+    .cols {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 40px;
+      padding-top: 48px;
+    }
+    .about {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
