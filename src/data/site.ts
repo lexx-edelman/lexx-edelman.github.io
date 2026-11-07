@@ -5,6 +5,9 @@ import type { Localized } from '../i18n/config';
 type L = Localized;
 
 export const site = {
+  // false — поисковики (Google, Яндекс) не будут показывать сайт в выдаче.
+  // Поменяйте на true, когда будете готовы показывать портфолио.
+  indexable: false,
   name: 'Lexx Edelman',
   initials: 'LE',
   // Положите своё фото в public/avatar.jpg и впишите '/avatar.jpg'
