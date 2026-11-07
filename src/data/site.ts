@@ -11,7 +11,7 @@ export const site = {
   name: 'Alexander Edelman',
   initials: 'AE',
   // Положите своё фото в public/avatar.jpg и впишите '/avatar.jpg'
-  avatar: '',
+  avatar: '/avatar.jpg',
   bio: {
     en: 'Product & web designer focused on clear interfaces, solid systems and meaningful details.',
     ru: 'Продуктовый и веб-дизайнер. Делаю понятные интерфейсы, аккуратные системы и внимание к деталям.',
