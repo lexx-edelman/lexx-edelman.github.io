@@ -434,13 +434,8 @@ export const resume = {
   education: [
     {
       logo: '/logos/mgimo.png',
-      title: { en: 'LLM, Private International & Civil Law', ru: 'Магистр права, международное частное и гражданское право' },
-      meta: { en: 'MGIMO University · 2018 · with honours', ru: 'МГИМО · 2018 · с отличием' },
-    },
-    {
-      logo: '/logos/mgimo.png',
-      title: { en: 'Bachelor of Laws, International Law', ru: 'Бакалавр права, международное право' },
-      meta: { en: 'MGIMO University · 2016', ru: 'МГИМО · 2016' },
+      title: { en: 'LLB + LLM (with honours), International & Civil Law', ru: 'Бакалавр и магистр права (с отличием), международное и гражданское право' },
+      meta: { en: 'MGIMO University · 2016, 2018', ru: 'МГИМО · 2016, 2018' },
     },
     {
       logo: '/logos/netology.png',
