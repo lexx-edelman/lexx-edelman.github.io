@@ -32,6 +32,10 @@ export const ui = {
     'approach.ai': ['AI in learning', 'how I use it'],
 
     'resume.title': 'Resume',
+    'resume.download': 'Download full CV',
+    'resume.pdf': 'PDF',
+    'resume.experience': 'Experience',
+    'resume.languages': 'Languages',
     'resume.tools': ['Tools', 'powering my work'],
     'resume.skills': 'Skills',
     'resume.awards': 'Awards',
@@ -74,6 +78,10 @@ export const ui = {
     'approach.ai': ['ИИ в обучении', 'как я его применяю'],
 
     'resume.title': 'Резюме',
+    'resume.download': 'Скачать полное резюме',
+    'resume.pdf': 'PDF, англ.',
+    'resume.experience': 'Опыт',
+    'resume.languages': 'Языки',
     'resume.tools': ['Инструменты', 'в работе'],
     'resume.skills': 'Навыки',
     'resume.awards': 'Награды',

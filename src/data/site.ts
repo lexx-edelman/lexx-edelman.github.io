@@ -19,8 +19,8 @@ export const site = {
   email: 'hello@example.com', // TODO: рабочая почта
   callUrl: 'https://cal.com', // TODO: ссылка на запись на звонок
   socials: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: 'linkedin' }, // TODO
-    { label: 'Telegram', href: 'https://t.me/', icon: 'telegram' }, // TODO
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/alex-edelman', icon: 'linkedin' },
+    { label: 'Telegram', href: 'https://t.me/lexx_edelman', icon: 'telegram' },
   ],
 };
 
@@ -304,54 +304,148 @@ export const about = {
   ],
 };
 
+// Резюме: самое главное из PDF. Полная версия — public/cv/Alexander_Edelman_CV.pdf
+export interface Job {
+  company: string;
+  logo: string; // картинка из public/logos/
+  role: L;
+  period: L;
+  location: L;
+  bullets: Localized<string[]>;
+}
+
 export const resume = {
+  cvUrl: '/cv/Alexander_Edelman_CV.pdf',
+  title: { en: 'Learning Technology & L&D Lead', ru: 'Лид по L&D и технологиям обучения' } as L,
+  summary: {
+    en: 'L&D professional with nearly 8 years across a course-development vendor, Yandex Practicum and corporate L&D at Sber. I handle training requests end to end — from what the business actually needs to a published course — and over the past year I’ve built AI pipelines that took over most of the production we used to buy from vendors.',
+    ru: 'Почти 8 лет в L&D: студия разработки курсов, Яндекс Практикум и корпоративное обучение Сбера. Веду запросы на обучение от начала до конца — от того, что на самом деле нужно бизнесу, до опубликованного курса. За последний год построил ИИ-конвейеры, которые взяли на себя бо́льшую часть разработки, раньше заказанной у подрядчиков.',
+  } as L,
+  facts: [
+    { en: '~8 years in L&D', ru: '~8 лет в L&D' },
+    { en: 'Moscow · open to relocation', ru: 'Москва · готов к переезду' },
+    { en: 'English C2', ru: 'Английский C2' },
+  ] as L[],
   experience: [
     {
-      role: { en: 'Learning Solutions Development Manager', ru: 'Менеджер по разработке обучающих решений' },
-      company: 'Sber',
-      period: { en: '20XX — now', ru: '20XX — сейчас' }, // TODO
-      location: { en: 'Russia', ru: 'Россия' }, // TODO
-      text: {
-        en: 'Lead the development of asynchronous corporate e-learning — from needs analysis with stakeholders to build, testing and launch in the LMS. Bring AI into course production: AI practice trainers, knowledge assistants, authoring automation.',
-        ru: 'Руковожу разработкой асинхронных корпоративных курсов — от анализа потребности с заказчиками до сборки, тестирования и запуска в LMS. Внедряю ИИ в разработку: ИИ-тренажёры, ассистенты по базе знаний, автоматизация сборки.',
+      company: 'Sber (SberUniversity)',
+      logo: '/logos/sber.png',
+      role: {
+        en: 'Learning Solutions Development Manager, Head of Direction',
+        ru: 'Менеджер по разработке обучающих решений, руководитель направления',
+      },
+      period: { en: 'Apr 2025 — now', ru: 'Апр 2025 — сейчас' },
+      location: { en: 'Moscow', ru: 'Москва' },
+      bullets: {
+        en: [
+          'Own corporate e-learning end to end: business request, learning concept, vendors, LMS launch, QA and post-launch updates.',
+          'Built AI workflows for course copy, layout and illustrations, bringing outsourced production in-house.',
+          'Delivered an AI-generated xAPI package that passed LMS testing and launched an AI conversational trainer in a company-wide course.',
+          'Presented a learning personalization approach to senior leadership and got approval to test it.',
+        ],
+        ru: [
+          'Веду корпоративные курсы целиком: запрос бизнеса, концепция обучения, подрядчики, запуск в LMS, тестирование и доработки после запуска.',
+          'Построил ИИ-процессы для текстов, вёрстки и иллюстраций курсов — перенёс внутрь то, что раньше отдавали подрядчикам.',
+          'Сделал сгенерированный ИИ xAPI-пакет, прошедший тестирование в LMS, и запустил ИИ-тренажёр диалогов в общекорпоративном курсе.',
+          'Представил подход к персонализации обучения топ-менеджменту и получил одобрение на пилот.',
+        ],
       },
     },
     {
-      role: { en: 'TODO: previous role', ru: 'TODO: предыдущая должность' },
-      company: 'Company',
-      period: { en: '20XX — 20XX', ru: '20XX — 20XX' },
-      location: { en: 'TODO', ru: 'TODO' },
-      text: {
-        en: 'TODO: key tasks and results.',
-        ru: 'TODO: ключевые задачи и результаты.',
+      company: 'Yandex Practicum',
+      logo: '/logos/yandex-practicum.png',
+      role: { en: 'Instructional Designer', ru: 'Методист' },
+      period: { en: 'Sep 2021 — Mar 2025', ru: 'Сен 2021 — Мар 2025' },
+      location: { en: 'Moscow', ru: 'Москва' },
+      bullets: {
+        en: [
+          'Designed and launched online programs for marketers, managers and designers, including online Master’s programs with leading Russian universities.',
+          'Revised content based on completion and NPS data.',
+          'Coordinated in-house and external experts through the full production cycle.',
+        ],
+        ru: [
+          'Проектировал и запускал онлайн-программы для маркетологов, менеджеров и дизайнеров, включая онлайн-магистратуры с ведущими вузами.',
+          'Дорабатывал контент по данным о доходимости и NPS.',
+          'Координировал внутренних и внешних экспертов на всём цикле производства.',
+        ],
       },
     },
-  ] as { role: L; company: string; period: L; location: L; text: L }[],
-  tools: [
-    { name: 'LMS', use: { en: 'Course publishing, analytics', ru: 'Публикация курсов, аналитика' } },
-    { name: 'SCORM / xAPI', use: { en: 'E-learning standards', ru: 'Стандарты e-learning' } },
-    { name: 'Claude', use: { en: 'Content, AI trainers', ru: 'Контент, ИИ-тренажёры' } },
-    { name: 'Cursor', use: { en: 'Tools and automation', ru: 'Инструменты и автоматизация' } },
-    { name: 'Obsidian', use: { en: 'Knowledge base', ru: 'База знаний' } },
-    { name: 'Notion', use: { en: 'Projects, documentation', ru: 'Проекты, документация' } },
-  ] as { name: string; use: L }[],
+    {
+      company: 'CRMM',
+      logo: '/logos/crmm.svg',
+      role: { en: 'Lead Instructional Designer', ru: 'Ведущий методист' },
+      period: { en: 'Dec 2018 — Sep 2021', ru: 'Дек 2018 — Сен 2021' },
+      location: { en: 'Moscow', ru: 'Москва' },
+      bullets: {
+        en: [
+          'Developed practice-focused asynchronous courses for large corporate clients, including Sber and oil & gas companies.',
+          'Built a knowledge base of course templates and checklists used to onboard new instructional designers.',
+          'Started as a project manager: ran e-learning projects from client specs to final QA and introduced weekly cross-team status meetings that reduced delays.',
+        ],
+        ru: [
+          'Разрабатывал практико-ориентированные асинхронные курсы для крупных корпоративных клиентов, включая Сбер и нефтегазовые компании.',
+          'Собрал базу знаний с шаблонами курсов и чек-листами, по которой адаптировались новые методисты.',
+          'Начинал менеджером проектов: вёл e-learning-проекты от ТЗ клиента до финальной проверки и ввёл еженедельные статусы между командами, что сократило задержки.',
+        ],
+      },
+    },
+    {
+      company: 'Tutoring app startup',
+      logo: '/logos/startup.svg',
+      role: { en: 'Founder', ru: 'Основатель' },
+      period: { en: 'During university', ru: 'Во время учёбы' },
+      location: { en: 'MGIMO business incubator', ru: 'Бизнес-инкубатор МГИМО' },
+      bullets: {
+        en: ['Took an app for private tutors — essentially a mini-LMS — from prototype to MVP with a designer and a developer.'],
+        ru: ['Довёл приложение для частных репетиторов — по сути мини-LMS — от прототипа до MVP вместе с дизайнером и разработчиком.'],
+      },
+    },
+  ] as Job[],
   skills: [
-    { en: 'Instructional design (ADDIE)', ru: 'Педагогический дизайн (ADDIE)' },
-    { en: 'Training needs analysis', ru: 'Анализ потребности в обучении' },
-    { en: 'Learning objectives (Bloom)', ru: 'Цели обучения (Блум)' },
-    { en: 'Evaluation (Kirkpatrick)', ru: 'Оценка (Киркпатрик)' },
-    { en: 'E-learning production', ru: 'Разработка электронных курсов' },
-    { en: 'SCORM / LMS', ru: 'SCORM / LMS' },
-    { en: 'LLM & RAG in learning', ru: 'LLM и RAG в обучении' },
-    { en: 'Stakeholder management', ru: 'Работа с заказчиками' },
-    { en: 'Project management', ru: 'Управление проектами' },
+    { en: 'Needs analysis', ru: 'Анализ потребностей' },
+    { en: 'Instructional design', ru: 'Педагогический дизайн' },
+    { en: 'Assessment design', ru: 'Проектирование оценки' },
+    { en: 'AI content pipelines', ru: 'ИИ-конвейеры контента' },
+    { en: 'RAG', ru: 'RAG' },
+    { en: 'SCORM & xAPI packaging and testing', ru: 'Сборка и тестирование SCORM и xAPI' },
+    { en: 'LMS content operations', ru: 'Работа с контентом в LMS' },
+    { en: 'Learning analytics', ru: 'Аналитика обучения' },
+    { en: 'Vendor & stakeholder management', ru: 'Работа с подрядчиками и заказчиками' },
+    { en: 'Procurement', ru: 'Закупки' },
+    { en: 'Rapid prototyping with AI coding tools', ru: 'Быстрые прототипы с ИИ-инструментами' },
   ] as L[],
+  tools: [
+    { name: 'Articulate Rise', use: { en: 'E-learning authoring', ru: 'Сборка курсов' } },
+    { name: 'CourseEditor', use: { en: 'E-learning authoring', ru: 'Сборка курсов' } },
+    { name: 'Figma', use: { en: 'Layouts and visuals', ru: 'Макеты и визуал' } },
+    { name: 'Tilda', use: { en: 'Landing pages', ru: 'Лендинги' } },
+    { name: 'Notion', use: { en: 'Docs and projects', ru: 'Документы и проекты' } },
+    { name: 'Claude Code', use: { en: 'AI pipelines', ru: 'ИИ-конвейеры' } },
+    { name: 'Cursor', use: { en: 'Prototyping with AI', ru: 'Прототипы с ИИ' } },
+  ] as { name: string; use: L }[],
+  languages: [
+    { name: { en: 'Russian', ru: 'Русский' }, level: { en: 'Native', ru: 'Родной' } },
+    { name: { en: 'English', ru: 'Английский' }, level: { en: 'C2', ru: 'C2' } },
+    { name: { en: 'German', ru: 'Немецкий' }, level: { en: 'B2', ru: 'B2' } },
+    { name: { en: 'French', ru: 'Французский' }, level: { en: 'A1', ru: 'A1' } },
+  ] as { name: L; level: L }[],
   // Пустой список — раздел «Награды» не показывается
   awards: [] as { title: L; meta: L }[],
   education: [
     {
-      title: { en: 'TODO: degree', ru: 'TODO: образование' },
-      meta: { en: '20XX — 20XX · University', ru: '20XX — 20XX · Университет' },
+      logo: '/logos/mgimo.png',
+      title: { en: 'LLM, Private International & Civil Law', ru: 'Магистр права, международное частное и гражданское право' },
+      meta: { en: 'MGIMO University · 2018 · with honours', ru: 'МГИМО · 2018 · с отличием' },
     },
-  ] as { title: L; meta: L }[],
+    {
+      logo: '/logos/mgimo.png',
+      title: { en: 'Bachelor of Laws, International Law', ru: 'Бакалавр права, международное право' },
+      meta: { en: 'MGIMO University · 2016', ru: 'МГИМО · 2016' },
+    },
+    {
+      logo: '/logos/netology.png',
+      title: { en: 'Product development: analytics, production, promotion', ru: 'Разработка продукта: аналитика, производство, продвижение' },
+      meta: { en: 'Netology · 2017 · course', ru: 'Нетология · 2017 · курс' },
+    },
+  ] as { logo: string; title: L; meta: L }[],
 };
