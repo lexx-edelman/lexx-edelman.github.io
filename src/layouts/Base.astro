@@ -19,8 +19,9 @@ interface Props {
 const lang = getLang(Astro.url);
 const t = useTranslations(lang);
 const bio = tr(site.bio, lang);
+const name = tr(site.name, lang);
 const { title, description = bio, hero = true } = Astro.props;
-const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${t('meta.portfolio')}`;
+const pageTitle = title ? `${title} — ${name}` : `${name} — ${t('meta.portfolio')}`;
 const latest = projects[0];
 const home = localePath('/', lang);
 
@@ -61,7 +62,7 @@ const alternates = langs.map((l) => ({
             <a href={home} class="hero-avatar" aria-label={t('nav.home')}>
               <Avatar />
             </a>
-            <h1 class="hero-name">{site.name}</h1>
+            <h1 class="hero-name">{name}</h1>
             <p class="hero-bio">{bio}</p>
             <div class="hero-actions">
               <Button href={localePath(`/projects/${latest.slug}/`, lang)} icon="star">

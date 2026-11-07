@@ -16,10 +16,10 @@ const year = new Date().getFullYear();
     <div class="about">
       <a href={localePath('/', lang)} class="brand">
         <Avatar size={32} />
-        <span>{site.name}</span>
+        <span>{tr(site.name, lang)}</span>
       </a>
       <p class="bio">{tr(site.bio, lang)}</p>
-      <p class="copy">© {year} {site.name}</p>
+      <p class="copy">© {year} {tr(site.name, lang)}</p>
     </div>
 
     <div class="col">

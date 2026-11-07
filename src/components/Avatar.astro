@@ -1,14 +1,16 @@
 ---
 import { site } from '../data/site';
+import { getLang, tr } from '../i18n/utils';
 
 interface Props {
   size?: number;
 }
 const { size = 60 } = Astro.props;
+const name = tr(site.name, getLang(Astro.url));
 ---
 
 <span class="avatar" style={`--size:${size}px`}>
-  {site.avatar ? <img src={site.avatar} alt={site.name} width={size} height={size} /> : <span>{site.initials}</span>}
+  {site.avatar ? <img src={site.avatar} alt={name} width={size} height={size} /> : <span>{site.initials}</span>}
 </span>
 
 <style>

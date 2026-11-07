@@ -9,7 +9,7 @@ export const site = {
   // false — поисковики (Google, Яндекс) не будут показывать сайт в выдаче.
   // Поменяйте на true, когда будете готовы показывать портфолио.
   indexable: false,
-  name: 'Alexander Edelman',
+  name: { en: 'Alexander Edelman', ru: 'Александр Эдельман' } as L,
   initials: 'AE',
   avatar: '/avatar.jpg',
   bio: {
