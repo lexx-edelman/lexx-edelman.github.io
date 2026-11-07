@@ -1,5 +1,6 @@
 // Весь контент сайта живёт здесь. Каждый текст — пара { en, ru }:
 // en — основная версия сайта, ru — русская (/ru/...).
+// Места, которые нужно уточнить, помечены комментарием «TODO».
 import type { Localized } from '../i18n/config';
 
 type L = Localized;
@@ -10,25 +11,23 @@ export const site = {
   indexable: false,
   name: 'Alexander Edelman',
   initials: 'AE',
-  // Положите своё фото в public/avatar.jpg и впишите '/avatar.jpg'
   avatar: '/avatar.jpg',
   bio: {
-    en: 'Product & web designer focused on clear interfaces, solid systems and meaningful details.',
-    ru: 'Продуктовый и веб-дизайнер. Делаю понятные интерфейсы, аккуратные системы и внимание к деталям.',
+    en: 'Learning experience designer in corporate L&D. I build e-learning that changes how people work — and AI tools that make it faster to create.',
+    ru: 'Дизайнер обучения в корпоративном L&D. Создаю курсы, которые меняют то, как люди работают, и ИИ-инструменты, которые ускоряют их разработку.',
   } as L,
-  email: 'hello@example.com',
-  callUrl: 'https://cal.com',
+  email: 'hello@example.com', // TODO: рабочая почта
+  callUrl: 'https://cal.com', // TODO: ссылка на запись на звонок
   socials: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: 'linkedin' },
-    { label: 'Instagram', href: 'https://www.instagram.com/', icon: 'instagram' },
-    { label: 'Telegram', href: 'https://t.me/', icon: 'telegram' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: 'linkedin' }, // TODO
+    { label: 'Telegram', href: 'https://t.me/', icon: 'telegram' }, // TODO
   ],
 };
 
 // Пункты меню: адреса без языкового префикса, подписи — в src/i18n/ui.ts
 export const nav = [
   { key: 'nav.projects', href: '/' },
-  { key: 'nav.experiments', href: '/experiments/' },
+  { key: 'nav.approach', href: '/approach/' },
   { key: 'nav.about', href: '/about/' },
   { key: 'nav.resume', href: '/resume/' },
 ] as const;
@@ -42,7 +41,7 @@ export interface Project {
   client: L;
   year: number;
   description: L;
-  cover?: string; // путь к картинке в public/, например '/projects/aviera.jpg'
+  cover?: string; // путь к картинке в public/, например '/projects/factoring.jpg'
   tint: Tint;
   role: L;
   timeline: L;
@@ -51,240 +50,308 @@ export interface Project {
   body: Localized<string[]>; // абзацы текста кейса
 }
 
-const ndaBody: Localized<string[]> = {
-  en: [
-    'This is where the story of the project goes: context, the problem, your process and decisions. Add images, quotes and results in numbers.',
-    'Want to know more about this project and my role? Drop me a line.',
-  ],
-  ru: [
-    'Здесь будет рассказ о проекте: контекст, проблема, ваш процесс и решения. Можно добавить изображения, цитаты и результаты в цифрах.',
-    'Если хотите узнать больше о проекте и моей роли — напишите мне.',
-  ],
+// Общий абзац для курсов под NDA
+const ndaNote: L = {
+  en: 'The course materials are internal and can’t be shared publicly. I’m happy to walk you through the process, decisions and results on a call.',
+  ru: 'Материалы курса внутренние, поэтому их нельзя показать публично. Могу рассказать о процессе, решениях и результатах на созвоне.',
 };
+
+const role: L = { en: 'Learning solutions manager', ru: 'Менеджер по разработке обучающих решений' };
 
 export const projects: Project[] = [
   {
-    slug: 'finance-dashboard',
-    title: { en: 'Making financial data easier to understand', ru: 'Делаем финансовые данные понятнее' },
-    client: { en: 'Project 1', ru: 'Проект 1' },
+    slug: 'compliance-misselling',
+    title: {
+      en: 'A role-based compliance course on unfair market practices',
+      ru: 'Комплаенс-курс о недобросовестных практиках с выбором роли',
+    },
+    client: { en: 'Sber · Compliance', ru: 'Сбер · Комплаенс' },
     year: 2026,
     description: {
-      en: 'A short summary: who the product is for, what got in users’ way, and what changed after the redesign.',
-      ru: 'Короткое описание задачи: для кого продукт, что мешало пользователям и что изменилось после редизайна.',
+      en: 'Turning dense regulation into a course employees can actually apply: learners pick their role and follow their own branch of scenarios.',
+      ru: 'Как превратить сложное регулирование в курс, который сотрудники применяют на практике: каждый выбирает свою роль и проходит свою ветку сценариев.',
     },
     tint: ['#c9d8ff', '#f4d7f0', '#ffd9c7'],
-    role: { en: 'Product Designer', ru: 'Продуктовый дизайнер' },
-    timeline: { en: '3 months', ru: '3 месяца' },
-    team: { en: 'Me and 4 developers', ru: 'Я и 4 разработчика' },
-    platform: { en: 'Web', ru: 'Веб' },
-    body: ndaBody,
+    role,
+    timeline: { en: '2026', ru: '2026' }, // TODO: сроки
+    team: { en: 'Me, compliance experts, developers', ru: 'Я, эксперты комплаенса, разработчики' }, // TODO
+    platform: { en: 'Web course in the corporate LMS', ru: 'Веб-курс в корпоративной LMS' },
+    body: {
+      en: [
+        'The course explains unfair practices in the financial market to employees in different roles. Instead of one long read, learners choose their role and go through the scenarios that matter for their work.',
+        'Key terms open in pop-ups so the main text stays readable for non-specialists. Progress counts only when learners complete the interactions, not when they scroll to the end.',
+        ndaNote.en,
+      ],
+      ru: [
+        'Курс объясняет недобросовестные практики на финансовом рынке сотрудникам в разных ролях. Вместо одного длинного текста сотрудник выбирает свою роль и проходит сценарии, которые важны именно для его работы.',
+        'Ключевые термины открываются во всплывающих окнах, поэтому основной текст понятен неспециалисту. Прогресс засчитывается за выполненные задания, а не за прокрутку до конца.',
+        ndaNote.ru,
+      ],
+    },
   },
   {
-    slug: 'music-app',
-    title: { en: 'Creating a music discovery app', ru: 'Приложение для поиска музыки' },
-    client: { en: 'Project 2', ru: 'Проект 2' },
-    year: 2025,
+    slug: 'learning-to-learn',
+    title: { en: 'Learning to learn: a course with an AI practice trainer', ru: '«Учись учиться»: курс с ИИ-тренажёром' },
+    client: { en: 'Sber · Corporate learning', ru: 'Сбер · Корпоративное обучение' },
+    year: 2026,
     description: {
-      en: 'A mobile app that helps people discover new artists and build playlists without extra complexity.',
-      ru: 'Мобильное приложение, которое помогает находить новых артистов и собирать плейлисты без лишней сложности.',
+      en: 'A course on learning skills where theory is followed by practice with an AI trainer that responds to each learner.',
+      ru: 'Курс о навыках обучения, где за теорией следует практика с ИИ-тренажёром, который отвечает каждому ученику.',
     },
     tint: ['#ffd6c2', '#f7c6e0', '#d4dcff'],
-    role: { en: 'Product Designer', ru: 'Продуктовый дизайнер' },
-    timeline: { en: 'May 2025', ru: 'Май 2025' },
-    team: { en: 'Me and 2 developers', ru: 'Я и 2 разработчика' },
-    platform: { en: 'Mobile app', ru: 'Мобильное приложение' },
-    body: ndaBody,
+    role,
+    timeline: { en: '2026', ru: '2026' }, // TODO
+    team: { en: 'Me, subject-matter experts', ru: 'Я и эксперты' }, // TODO
+    platform: { en: 'E-learning + AI trainer', ru: 'Электронный курс + ИИ-тренажёр' },
+    body: {
+      en: [
+        'TODO: the problem — why employees needed this course and what got in their way.',
+        'TODO: the solution — course structure and how the AI trainer gives practice and feedback.',
+        ndaNote.en,
+      ],
+      ru: [
+        'TODO: проблема — зачем сотрудникам этот курс и что им мешало.',
+        'TODO: решение — структура курса и как ИИ-тренажёр даёт практику и обратную связь.',
+        ndaNote.ru,
+      ],
+    },
   },
   {
-    slug: 'portfolio-system',
-    title: { en: 'Designing a portfolio', ru: 'Дизайн портфолио' },
-    client: { en: 'Personal project', ru: 'Личный проект' },
-    year: 2025,
+    slug: 'factoring',
+    title: { en: 'Making factoring clear for bank employees', ru: 'Курс «Факторинг»: сложный продукт простыми словами' },
+    client: { en: 'Sber · Corporate learning', ru: 'Сбер · Корпоративное обучение' },
+    year: 2026,
     description: {
-      en: 'How I built the system behind my portfolio: grid, typography, components.',
-      ru: 'Как я собирал систему для своего портфолио: сетка, типографика, компоненты.',
+      en: 'A product course that explains a complex financing instrument through cases and practice.',
+      ru: 'Продуктовый курс, который объясняет сложный финансовый инструмент через кейсы и практику.',
     },
     tint: ['#d7e3ff', '#e9d9ff', '#ffd6e6'],
-    role: { en: 'Designer', ru: 'Дизайнер' },
-    timeline: { en: '2 weeks', ru: '2 недели' },
-    team: { en: 'Solo', ru: 'Соло' },
-    platform: { en: 'Web', ru: 'Веб' },
-    body: ndaBody,
+    role,
+    timeline: { en: '2026', ru: '2026' }, // TODO
+    team: { en: 'Me, product experts', ru: 'Я и эксперты продукта' }, // TODO
+    platform: { en: 'SCORM course in the LMS', ru: 'SCORM-курс в LMS' }, // TODO
+    body: {
+      en: ['TODO: the problem, the solution and the result.', ndaNote.en],
+      ru: ['TODO: проблема, решение и результат.', ndaNote.ru],
+    },
   },
   {
-    slug: 'finance-teams',
-    title: { en: 'Expanding the product for finance teams', ru: 'Расширение продукта для финансовых команд' },
-    client: { en: 'Project 1', ru: 'Проект 1' },
-    year: 2024,
+    slug: 'personal-effectiveness',
+    title: {
+      en: 'Redesigning a personal effectiveness course',
+      ru: 'Редизайн курса по личной эффективности',
+    },
+    client: { en: 'Sber · Soft skills', ru: 'Сбер · Гибкие навыки' },
+    year: 2026,
     description: {
-      en: 'New expense approval flows for teams and managers.',
-      ru: 'Новые сценарии согласования расходов для команд и руководителей.',
+      en: 'Rebuilding an old course around real workdays: managing a constant flow of tasks, with a checklist and a live training to back it up.',
+      ru: 'Как пересобрать старый курс вокруг реального рабочего дня: работа в потоке задач, чек-лист и очный тренинг в поддержку.',
     },
     tint: ['#ffcfb8', '#f3d4ff', '#cfe2ff'],
-    role: { en: 'Lead Designer', ru: 'Ведущий дизайнер' },
-    timeline: { en: '6 months', ru: '6 месяцев' },
-    team: { en: 'Me, a PM and 6 developers', ru: 'Я, PM и 6 разработчиков' },
-    platform: { en: 'Web', ru: 'Веб' },
-    body: ndaBody,
+    role,
+    timeline: { en: '2026', ru: '2026' }, // TODO
+    team: { en: 'Me, trainers', ru: 'Я и тренеры' }, // TODO
+    platform: { en: 'E-learning + checklist + training', ru: 'Курс + чек-лист + тренинг' },
+    body: {
+      en: ['TODO: what was wrong with the old course and what changed.', ndaNote.en],
+      ru: ['TODO: что было не так со старым курсом и что изменилось.', ndaNote.ru],
+    },
   },
 ];
 
-export interface Experiment {
-  title: L;
-  image?: string;
-  ratio: string; // соотношение сторон плитки, например '4/5'
-  tint: [string, string];
-}
-
-export const experiments: Experiment[] = [
-  { title: { en: 'Movement through type', ru: 'Движение через типографику' }, ratio: '3/4', tint: ['#f1f1f4', '#e3e4ea'] },
-  { title: { en: 'Exploring Procreate', ru: 'Эксперименты в Procreate' }, ratio: '4/3', tint: ['#cfe3d0', '#9fc4a6'] },
-  { title: { en: 'Color and digital brushwork', ru: 'Цвет и цифровая кисть' }, ratio: '4/3', tint: ['#b9d0ff', '#f6c9a8'] },
-  { title: { en: 'Flower illustration series', ru: 'Серия иллюстраций с цветами' }, ratio: '4/3', tint: ['#ffe2d6', '#ffd0e0'] },
-  { title: { en: 'Mood and texture', ru: 'Настроение и фактура' }, ratio: '3/4', tint: ['#3d4b5c', '#9fb1c4'] },
-  { title: { en: 'Shapes and color systems', ru: 'Формы и цветовые системы' }, ratio: '1/1', tint: ['#ffd9e1', '#ffeef2'] },
-  { title: { en: 'Abstract forms', ru: 'Абстрактные формы' }, ratio: '1/1', tint: ['#e8e1ff', '#c9d6ff'] },
-  { title: { en: 'Social campaign concepts', ru: 'Концепты социальной кампании' }, ratio: '4/3', tint: ['#ffe7b8', '#ffc9a6'] },
-  { title: { en: 'Digital painting', ru: 'Цифровая живопись' }, ratio: '3/4', tint: ['#d2ecf5', '#a8cfe0'] },
-];
-
-export const about = {
-  photoCaption: { en: 'Photo caption', ru: 'Подпись к фото' } as L,
-  greeting: { en: 'Hi, I’m Alexander.', ru: 'Привет, я Александр.' } as L,
-  headline: {
-    en: 'A designer who values clarity and real-world use',
-    ru: 'Дизайнер, который ценит ясность и реальную пользу',
+// Страница «Подход»
+export const approach = {
+  intro: {
+    en: 'How I take a learning project from a request to results that show up in the work.',
+    ru: 'Как я веду проект обучения: от запроса до результата, который виден в работе.',
   } as L,
-  paragraphs: {
-    en: [
-      'A couple of sentences about where you’re based and what products you work on. Briefly explain what you’re best at.',
-      'How you got into design and what shaped your approach: structure first, visuals second.',
-      'What matters to you in your work: removing noise, reducing friction, helping people move forward.',
-      'What you do outside of work — photography, side projects, travel.',
-    ],
-    ru: [
-      'Пара предложений о том, где вы живёте и над какими продуктами работаете. Здесь важно коротко объяснить, в чём ваша сила.',
-      'Как вы пришли в профессию и что повлияло на ваш подход: сначала структура, потом визуал.',
-      'Что для вас важно в работе: убирать лишнее, снижать трение, помогать людям двигаться вперёд.',
-      'Чем занимаетесь вне работы — фотография, сайд-проекты, путешествия.',
-    ],
-  } as Localized<string[]>,
-  interests: [
-    { en: 'AI tools', ru: 'AI-инструменты' },
-    { en: 'Minimal interfaces', ru: 'Минимализм' },
-    { en: 'Street photography', ru: 'Уличная фотография' },
-    { en: 'Design systems', ru: 'Дизайн-системы' },
-    { en: 'Coffee', ru: 'Кофе' },
-    { en: 'Long walks', ru: 'Долгие прогулки' },
-    { en: 'Sketching', ru: 'Скетчи' },
-    { en: 'Ambient music', ru: 'Эмбиент' },
-    { en: 'Interior design', ru: 'Интерьеры' },
-    { en: 'Books', ru: 'Книги' },
-    { en: 'Travel', ru: 'Путешествия' },
-  ] as L[],
-  values: [
+  steps: [
     {
-      title: { en: 'Courage', ru: 'Смелость' },
+      title: { en: 'Analyze', ru: 'Анализ' },
       text: {
-        en: 'I take initiative, explore new ideas and make decisions even when the path isn’t clear.',
-        ru: 'Беру инициативу, пробую новое и принимаю решения, даже когда путь неочевиден.',
+        en: 'I start with the business problem, not the content. I talk to stakeholders and experts, run a training needs analysis and define what people should do differently.',
+        ru: 'Начинаю с бизнес-задачи, а не с контента. Говорю с заказчиками и экспертами, анализирую потребность в обучении и формулирую, что люди должны начать делать иначе.',
+      },
+      tags: ['Training needs analysis', 'Stakeholder interviews'],
+    },
+    {
+      title: { en: 'Design', ru: 'Проектирование' },
+      text: {
+        en: 'I set measurable objectives and pick the right format: a course, practice, a job aid — or no training at all if it won’t solve the problem.',
+        ru: 'Ставлю измеримые цели и выбираю формат: курс, практика, памятка — или вообще не обучение, если оно не решит задачу.',
+      },
+      tags: ['ADDIE', 'Bloom’s taxonomy'],
+    },
+    {
+      title: { en: 'Develop', ru: 'Разработка' },
+      text: {
+        en: 'I build interactive e-learning with scenarios, branching and practice, and use AI to speed up drafting, editing and quality checks.',
+        ru: 'Собираю интерактивные курсы со сценариями, ветвлением и практикой, а ИИ использую, чтобы быстрее писать, редактировать и проверять материалы.',
+      },
+      tags: ['E-learning', 'SCORM / xAPI', 'AI-assisted authoring'],
+    },
+    {
+      title: { en: 'Launch', ru: 'Запуск' },
+      text: {
+        en: 'I test with real learners, remove friction, publish to the LMS and support the rollout together with the business.',
+        ru: 'Тестирую на реальных сотрудниках, убираю трения, публикую в LMS и сопровождаю запуск вместе с бизнесом.',
+      },
+      tags: ['Pilot', 'QA', 'LMS'],
+    },
+    {
+      title: { en: 'Evaluate', ru: 'Оценка' },
+      text: {
+        en: 'I measure more than completion: reaction, learning, behavior and business results. Then I use the data to improve the next version.',
+        ru: 'Измеряю не только прохождение: реакцию, знания, поведение и бизнес-результат. Данные использую, чтобы улучшить следующую версию.',
+      },
+      tags: ['Kirkpatrick model', 'Learning analytics'],
+    },
+  ] as { title: L; text: L; tags: string[] }[],
+  ai: [
+    {
+      title: { en: 'AI practice trainers', ru: 'ИИ-тренажёры' },
+      text: {
+        en: 'Learners practice conversations and decisions with an AI that gives instant, personal feedback.',
+        ru: 'Сотрудники отрабатывают диалоги и решения с ИИ, который сразу даёт персональную обратную связь.',
       },
     },
     {
-      title: { en: 'Honesty', ru: 'Честность' },
+      title: { en: 'Knowledge assistants', ru: 'Ассистенты по базе знаний' },
       text: {
-        en: 'I communicate openly, give feedback and focus on what truly matters for the outcome.',
-        ru: 'Говорю открыто, даю обратную связь и фокусируюсь на том, что важно для результата.',
+        en: 'RAG assistants answer questions from internal documents, so people get help in the flow of work.',
+        ru: 'RAG-ассистенты отвечают на вопросы по внутренним документам, и люди получают помощь прямо в работе.',
       },
     },
     {
-      title: { en: 'Adaptability', ru: 'Гибкость' },
+      title: { en: 'Faster production', ru: 'Быстрая разработка' },
       text: {
-        en: 'I learn quickly and adjust to challenges without losing direction.',
-        ru: 'Быстро учусь и подстраиваюсь под задачи, не теряя направления.',
-      },
-    },
-    {
-      title: { en: 'Teamwork', ru: 'Команда' },
-      text: {
-        en: 'I love collaborating and believe the best results come from teamwork.',
-        ru: 'Люблю работать вместе и верю, что лучшие результаты — командные.',
+        en: 'Custom tools automate routine work: course authoring templates, longread drafts, SCORM package checks.',
+        ru: 'Собственные инструменты убирают рутину: шаблоны сборки курсов, черновики лонгридов, проверка SCORM-пакетов.',
       },
     },
   ] as { title: L; text: L }[],
-  // Названия книг обычно не переводят — оставлены одной строкой
+};
+
+export const about = {
+  photoCaption: { en: 'TODO: photo caption', ru: 'TODO: подпись к фото' } as L,
+  greeting: { en: 'Hi, I’m Alexander.', ru: 'Привет, я Александр.' } as L,
+  headline: {
+    en: 'I design corporate learning and bring AI into how it’s made',
+    ru: 'Проектирую корпоративное обучение и встраиваю ИИ в то, как оно создаётся',
+  } as L,
+  paragraphs: {
+    en: [
+      'I work in corporate learning at Sber, where I lead the development of asynchronous e-learning courses — from compliance and finance to soft skills — and gradually move toward managing learning processes as a whole.',
+      'My work starts with the problem, not the content: what people need to do differently and what gets in their way. The learning path, interactions and assessment are built around that.',
+      'Lately I’ve focused on AI in learning: practice trainers, knowledge assistants and tools that speed up course production and quality checks.',
+      'TODO: a sentence about you outside of work.',
+    ],
+    ru: [
+      'Работаю в корпоративном обучении Сбера: руковожу разработкой асинхронных электронных курсов — от комплаенса и финансов до гибких навыков — и постепенно перехожу к управлению процессами обучения целиком.',
+      'Моя работа начинается с задачи, а не с контента: что люди должны делать иначе и что им мешает. Вокруг этого строятся маршрут обучения, интерактивы и оценка.',
+      'Последнее время занимаюсь ИИ в обучении: тренажёрами для практики, ассистентами по базе знаний и инструментами, которые ускоряют разработку и проверку курсов.',
+      'TODO: пара слов о вас вне работы.',
+    ],
+  } as Localized<string[]>,
+  interests: [
+    { en: 'AI in learning', ru: 'ИИ в обучении' },
+    { en: 'Learning science', ru: 'Наука об обучении' },
+    { en: 'Instructional design', ru: 'Педагогический дизайн' },
+    { en: 'Knowledge management', ru: 'Управление знаниями' },
+    { en: 'Obsidian', ru: 'Obsidian' },
+    { en: 'Automation', ru: 'Автоматизация' },
+    { en: 'Prompt engineering', ru: 'Промпт-инжиниринг' },
+    { en: 'French', ru: 'Французский язык' }, // TODO: проверить
+    { en: 'Tabletop RPGs', ru: 'Настольные ролевые игры' }, // TODO: проверить
+  ] as L[],
+  values: [
+    {
+      title: { en: 'Learner first', ru: 'Сначала ученик' },
+      text: {
+        en: 'I design for the person doing the work, not for the content owner or the checkbox.',
+        ru: 'Проектирую для человека, который будет работать, а не для владельца контента или галочки в отчёте.',
+      },
+    },
+    {
+      title: { en: 'Clarity', ru: 'Ясность' },
+      text: {
+        en: 'Complex topics in plain language, without losing accuracy of terms and rules.',
+        ru: 'Сложные темы простым языком — без потери точности терминов и правил.',
+      },
+    },
+    {
+      title: { en: 'Evidence', ru: 'Доказательность' },
+      text: {
+        en: 'Decisions based on learning science and data, not on habits and trends.',
+        ru: 'Решения на основе науки об обучении и данных, а не привычек и трендов.',
+      },
+    },
+    {
+      title: { en: 'Smart automation', ru: 'Разумная автоматизация' },
+      text: {
+        en: 'AI takes the routine so people can focus on what needs judgment.',
+        ru: 'ИИ забирает рутину, чтобы люди занимались тем, где нужно мышление.',
+      },
+    },
+  ] as { title: L; text: L }[],
+  // TODO: заменить на книги, которые вы правда любите
   books: [
-    { title: 'Grid Systems', author: 'Josef Müller-Brockmann', color: '#e8743b' },
-    { title: 'The Design of Everyday Things', author: 'Don Norman', color: '#2f3b4c' },
-    { title: 'Don’t Make Me Think', author: 'Steve Krug', color: '#f2d64b' },
-    { title: 'Refactoring UI', author: 'Wathan & Schoger', color: '#e9e4dc' },
-    { title: 'Interaction of Color', author: 'Josef Albers', color: '#4a6fd1' },
+    { title: 'Design for How People Learn', author: 'Julie Dirksen', color: '#e8743b' },
+    { title: 'Map It', author: 'Cathy Moore', color: '#2f3b4c' },
+    { title: 'Make It Stick', author: 'Brown, Roediger, McDaniel', color: '#f2d64b' },
+    { title: 'Evidence-Informed Learning Design', author: 'Neelen & Kirschner', color: '#e9e4dc' },
+    { title: 'Kirkpatrick’s Four Levels of Training Evaluation', author: 'J. & W. Kirkpatrick', color: '#4a6fd1' },
   ],
 };
 
 export const resume = {
   experience: [
     {
-      role: { en: 'Product Designer', ru: 'Продуктовый дизайнер' },
-      company: 'Company',
-      period: { en: 'May 2023 — now', ru: 'Май 2023 — сейчас' },
-      location: { en: 'Moscow', ru: 'Москва' },
+      role: { en: 'Learning Solutions Development Manager', ru: 'Менеджер по разработке обучающих решений' },
+      company: 'Sber',
+      period: { en: '20XX — now', ru: '20XX — сейчас' }, // TODO
+      location: { en: 'Russia', ru: 'Россия' }, // TODO
       text: {
-        en: 'What you did and what came of it: numbers, scale, who you worked with.',
-        ru: 'Что вы делали и какой был результат: цифры, масштаб, с кем работали.',
+        en: 'Lead the development of asynchronous corporate e-learning — from needs analysis with stakeholders to build, testing and launch in the LMS. Bring AI into course production: AI practice trainers, knowledge assistants, authoring automation.',
+        ru: 'Руковожу разработкой асинхронных корпоративных курсов — от анализа потребности с заказчиками до сборки, тестирования и запуска в LMS. Внедряю ИИ в разработку: ИИ-тренажёры, ассистенты по базе знаний, автоматизация сборки.',
       },
     },
     {
-      role: { en: 'Product Designer', ru: 'Продуктовый дизайнер' },
+      role: { en: 'TODO: previous role', ru: 'TODO: предыдущая должность' },
       company: 'Company',
-      period: { en: 'May 2022 — Aug 2022', ru: 'Май 2022 — Авг 2022' },
-      location: { en: 'Remote', ru: 'Удалённо' },
+      period: { en: '20XX — 20XX', ru: '20XX — 20XX' },
+      location: { en: 'TODO', ru: 'TODO' },
       text: {
-        en: 'Key tasks and achievements. A couple of sentences is enough.',
-        ru: 'Ключевые задачи и достижения. Пара предложений достаточно.',
-      },
-    },
-    {
-      role: { en: 'Design Intern', ru: 'Стажёр-дизайнер' },
-      company: 'Company',
-      period: { en: 'Jan 2021 — Apr 2022', ru: 'Янв 2021 — Апр 2022' },
-      location: { en: 'Saint Petersburg', ru: 'Санкт-Петербург' },
-      text: {
-        en: 'What you learned and what you shipped.',
-        ru: 'Чему научились и что успели запустить.',
+        en: 'TODO: key tasks and results.',
+        ru: 'TODO: ключевые задачи и результаты.',
       },
     },
   ] as { role: L; company: string; period: L; location: L; text: L }[],
   tools: [
-    { name: 'Figma', use: { en: 'UI design', ru: 'UI-дизайн' } },
-    { name: 'Framer', use: { en: 'Websites, prototypes', ru: 'Сайты, прототипы' } },
-    { name: 'Claude', use: { en: 'Ideation, prototyping', ru: 'Идеи, прототипирование' } },
-    { name: 'Miro', use: { en: 'Workshops', ru: 'Воркшопы' } },
-    { name: 'Notion', use: { en: 'Documentation', ru: 'Документация' } },
-    { name: 'Procreate', use: { en: 'Illustration', ru: 'Иллюстрации' } },
+    { name: 'LMS', use: { en: 'Course publishing, analytics', ru: 'Публикация курсов, аналитика' } },
+    { name: 'SCORM / xAPI', use: { en: 'E-learning standards', ru: 'Стандарты e-learning' } },
+    { name: 'Claude', use: { en: 'Content, AI trainers', ru: 'Контент, ИИ-тренажёры' } },
+    { name: 'Cursor', use: { en: 'Tools and automation', ru: 'Инструменты и автоматизация' } },
+    { name: 'Obsidian', use: { en: 'Knowledge base', ru: 'База знаний' } },
+    { name: 'Notion', use: { en: 'Projects, documentation', ru: 'Проекты, документация' } },
   ] as { name: string; use: L }[],
   skills: [
-    { en: 'Product design', ru: 'Продуктовый дизайн' },
-    { en: 'UX research', ru: 'UX-исследования' },
-    { en: 'Interaction design', ru: 'Интерфейсы' },
-    { en: 'Design systems', ru: 'Дизайн-системы' },
-    { en: 'Prototyping', ru: 'Прототипирование' },
-    { en: 'User flows', ru: 'Пользовательские сценарии' },
-    { en: 'Usability testing', ru: 'Юзабилити-тесты' },
-    { en: 'Visual design', ru: 'Визуальный дизайн' },
-    { en: 'Information architecture', ru: 'Информационная архитектура' },
+    { en: 'Instructional design (ADDIE)', ru: 'Педагогический дизайн (ADDIE)' },
+    { en: 'Training needs analysis', ru: 'Анализ потребности в обучении' },
+    { en: 'Learning objectives (Bloom)', ru: 'Цели обучения (Блум)' },
+    { en: 'Evaluation (Kirkpatrick)', ru: 'Оценка (Киркпатрик)' },
+    { en: 'E-learning production', ru: 'Разработка электронных курсов' },
+    { en: 'SCORM / LMS', ru: 'SCORM / LMS' },
+    { en: 'LLM & RAG in learning', ru: 'LLM и RAG в обучении' },
+    { en: 'Stakeholder management', ru: 'Работа с заказчиками' },
+    { en: 'Project management', ru: 'Управление проектами' },
   ] as L[],
-  awards: [
-    { title: { en: 'Award name', ru: 'Название награды' }, meta: { en: 'Organizer · 2023', ru: 'Организатор · 2023' } },
-    {
-      title: { en: 'Product Hunt — #1 product of the day', ru: 'Product Hunt — #1 продукт дня' },
-      meta: { en: 'Product Hunt · 2021', ru: 'Product Hunt · 2021' },
-    },
-  ] as { title: L; meta: L }[],
+  // Пустой список — раздел «Награды» не показывается
+  awards: [] as { title: L; meta: L }[],
   education: [
     {
-      title: { en: 'Bachelor’s in Interaction Design', ru: 'Бакалавр, дизайн интерфейсов' },
-      meta: { en: '2017 — 2021 · University', ru: '2017 — 2021 · Университет' },
+      title: { en: 'TODO: degree', ru: 'TODO: образование' },
+      meta: { en: '20XX — 20XX · University', ru: '20XX — 20XX · Университет' },
     },
   ] as { title: L; meta: L }[],
 };

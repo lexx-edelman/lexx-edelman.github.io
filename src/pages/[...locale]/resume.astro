@@ -53,12 +53,16 @@ const [toolsA, toolsB] = t('resume.tools');
     <div class="chips">{resume.skills.map((s) => <span class="chip">{tr(s, lang)}</span>)}</div>
   </section>
 
-  <section class="section">
-    <h2 class="section-title">{t('resume.awards')}</h2>
-    <ul class="list">
-      {resume.awards.map((a) => <li><p class="item-title">{tr(a.title, lang)}</p><p class="item-meta">{tr(a.meta, lang)}</p></li>)}
-    </ul>
-  </section>
+  {
+    resume.awards.length > 0 && (
+      <section class="section">
+        <h2 class="section-title">{t('resume.awards')}</h2>
+        <ul class="list">
+          {resume.awards.map((a) => <li><p class="item-title">{tr(a.title, lang)}</p><p class="item-meta">{tr(a.meta, lang)}</p></li>)}
+        </ul>
+      </section>
+    )
+  }
 
   <section class="section">
     <h2 class="section-title">{t('resume.education')}</h2>

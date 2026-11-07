@@ -114,5 +114,18 @@ const title = tr(project.title, lang);
   }
   .sub {
     flex: none;
+    max-width: 50%;
+    text-align: right;
+  }
+  @media (max-width: 520px) {
+    .meta {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sub {
+      max-width: none;
+      text-align: left;
+      font-weight: 500;
+    }
   }
 </style>

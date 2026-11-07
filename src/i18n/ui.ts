@@ -7,7 +7,7 @@ export const ui = {
     'meta.portfolio': 'Portfolio',
     'nav.label': 'Main navigation',
     'nav.projects': 'Projects',
-    'nav.experiments': 'Experiments',
+    'nav.approach': 'Approach',
     'nav.about': 'About',
     'nav.resume': 'Resume',
     'nav.home': 'Home',
@@ -27,7 +27,9 @@ export const ui = {
     'about.books': ['Books', 'I keep coming back to'],
     'about.call': 'Book a call',
 
-    'experiments.title': 'Experiments',
+    'approach.title': 'Approach',
+    'approach.process': ['How I work', 'step by step'],
+    'approach.ai': ['AI in learning', 'how I use it'],
 
     'resume.title': 'Resume',
     'resume.tools': ['Tools', 'powering my work'],
@@ -47,7 +49,7 @@ export const ui = {
     'meta.portfolio': 'Портфолио',
     'nav.label': 'Основная навигация',
     'nav.projects': 'Проекты',
-    'nav.experiments': 'Эксперименты',
+    'nav.approach': 'Подход',
     'nav.about': 'Обо мне',
     'nav.resume': 'Резюме',
     'nav.home': 'На главную',
@@ -67,7 +69,9 @@ export const ui = {
     'about.books': ['Книги', 'к которым я возвращаюсь'],
     'about.call': 'Назначить звонок',
 
-    'experiments.title': 'Эксперименты',
+    'approach.title': 'Подход',
+    'approach.process': ['Как я работаю', 'по шагам'],
+    'approach.ai': ['ИИ в обучении', 'как я его применяю'],
 
     'resume.title': 'Резюме',
     'resume.tools': ['Инструменты', 'в работе'],
