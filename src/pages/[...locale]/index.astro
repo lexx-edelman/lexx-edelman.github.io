@@ -27,7 +27,7 @@ const { featured, archived } = await getCases();
   </div>
 
   <section class="grid" aria-label={t('nav.work')}>
-    {featured.map((item, i) => <ProjectCard item={item} index={i} />)}
+    {featured.map((item, i) => <ProjectCard item={item} index={i} layout="row" />)}
   </section>
 
   {
@@ -94,9 +94,8 @@ const { featured, archived } = await getCases();
   }
   .grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 48px 24px;
-    padding-bottom: 56px;
+    gap: 72px;
+    padding-bottom: 72px;
   }
   .more {
     display: flex;
@@ -122,10 +121,9 @@ const { featured, archived } = await getCases();
     font-size: 14px;
     color: var(--text-3);
   }
-  @media (max-width: 720px) {
+  @media (max-width: 860px) {
     .grid {
-      grid-template-columns: 1fr;
-      gap: 36px;
+      gap: 48px;
     }
   }
 </style>

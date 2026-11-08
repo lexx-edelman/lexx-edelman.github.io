@@ -1,39 +1,65 @@
 ---
-// Карточка кейса на главной, в архиве и в блоке «Другие работы»
+// Карточка кейса. layout="row" — на главной: обложка слева, текст справа
+// (на телефоне — друг под другом). layout="grid" — в архиве и в блоке «Другие работы».
 import CaseCover from './case/CaseCover.astro';
+import Icon from './Icon.astro';
 import { caseTypes, isTodo, type Case } from '../data/cases';
-import { getLang, localePath, tr } from '../i18n/utils';
+import { getLang, localePath, tr, useTranslations } from '../i18n/utils';
 
 interface Props {
   item: Case;
   index?: number;
+  layout?: 'grid' | 'row';
 }
-const { item, index = 0 } = Astro.props;
+const { item, index = 0, layout = 'grid' } = Astro.props;
 const data = item.data;
 const lang = getLang(Astro.url);
 const title = tr(data.title, lang);
 const summary = tr(data.summary, lang);
 const tags = caseTypes.filter((type) => data.types.includes(type.id));
 const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
+const t = useTranslations(lang);
 ---
 
 <a
   href={localePath(`/projects/${item.id}/`, lang)}
-  class="card reveal"
+  class:list={['card', 'reveal', layout]}
   style={`--i:${index}`}
   data-types={data.types.join(' ')}
 >
   <div class="cover" transition:name={`cover-${item.id}`}>
     {data.cover ? <img src={data.cover} alt={title} loading="lazy" /> : <CaseCover item={item} lang={lang} />}
   </div>
-  <div class="meta">
-    <span class="title">{title}</span>
-    <span class="sub">{sub}</span>
-  </div>
-  <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
-  <ul class="tags">
-    {tags.map((type) => <li>{tr(type.short, lang)}</li>)}
-  </ul>
+  {
+    layout === 'row' ? (
+      <div class="info">
+        <span class="eyebrow">{sub}</span>
+        <span class="title">{title}</span>
+        <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
+        <ul class="tags">
+          {tags.map((type) => (
+            <li>{tr(type.short, lang)}</li>
+          ))}
+        </ul>
+        <span class="read">
+          {t('work.read')} <Icon name="arrow-up-right" size={14} />
+        </span>
+      </div>
+    ) : (
+      <>
+        <div class="meta">
+          <span class="title">{title}</span>
+          <span class="sub">{sub}</span>
+        </div>
+        <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
+        <ul class="tags">
+          {tags.map((type) => (
+            <li>{tr(type.short, lang)}</li>
+          ))}
+        </ul>
+      </>
+    )
+  }
 </a>
 
 <style>
@@ -104,6 +130,65 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
     font-weight: 600;
     color: var(--text-2);
   }
+  /* --- Строка на главной: обложка слева, текст справа --- */
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .info {
+    display: grid;
+    justify-items: start;
+    gap: 10px;
+  }
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  .row .title {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .row .summary {
+    margin-top: 2px;
+    font-size: 16px;
+    color: var(--text-2);
+  }
+  .row .tags {
+    margin-top: 4px;
+  }
+  .read {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: color 0.2s, gap 0.2s var(--ease);
+  }
+  .row:hover .read {
+    color: var(--text);
+    gap: 7px;
+  }
+  @media (max-width: 860px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .row .title {
+      font-size: 21px;
+    }
+    .row .summary {
+      font-size: 15px;
+    }
+  }
+
   /* Скрытие карточки фильтром на главной */
   .card[hidden] {
     display: none;
