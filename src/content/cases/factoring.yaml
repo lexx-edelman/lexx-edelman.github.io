@@ -1,0 +1,19 @@
+# Архив. Курс «Факторинг»
+order: 101
+archived: true
+title:
+  en: "Making factoring clear for bank employees"
+  ru: "Курс «Факторинг»: сложный продукт простыми словами"
+summary:
+  en: "A product course that explains a complex financing instrument through cases and practice."
+  ru: "Продуктовый курс, который объясняет сложный финансовый инструмент через кейсы и практику."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026
+types: [experience]
+role: { en: "Learning solutions manager", ru: "Менеджер по разработке обучающих решений" }
+team: { en: "Me and product experts", ru: "Я и эксперты продукта" }
+nda: true
+tint: ["#d7e3ff", "#e9d9ff", "#ffd6e6"]
+overview:
+  en: ["TODO: the problem, the solution and the result."]
+  ru: ["TODO: проблема, решение и результат."]

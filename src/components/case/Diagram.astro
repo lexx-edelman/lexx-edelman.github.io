@@ -1,0 +1,71 @@
+---
+// Обёртка для SVG-схем: рамка, подпись, прокрутка на узких экранах.
+// Имя схемы задаётся в YAML кейса (artifact.diagram).
+import type { Lang } from '../../i18n/config';
+import { isTodo } from '../../data/cases';
+import AiDesignPipeline from '../diagrams/AiDesignPipeline.astro';
+import TrainerFlow from '../diagrams/TrainerFlow.astro';
+import FormatMatrix from '../diagrams/FormatMatrix.astro';
+import PersonalizationCjm from '../diagrams/PersonalizationCjm.astro';
+import ComplianceStructure from '../diagrams/ComplianceStructure.astro';
+
+const diagrams = {
+  'ai-design-pipeline': AiDesignPipeline,
+  'trainer-flow': TrainerFlow,
+  'format-matrix': FormatMatrix,
+  'personalization-cjm': PersonalizationCjm,
+  'compliance-structure': ComplianceStructure,
+} as const;
+
+interface Props {
+  name?: string;
+  caption?: string;
+  lang: Lang;
+}
+const { name, caption, lang } = Astro.props;
+const Svg = name ? diagrams[name as keyof typeof diagrams] : undefined;
+---
+
+{
+  Svg && (
+    <figure class="diagram">
+      <div class="frame">
+        <div class="scroll">
+          <Svg lang={lang} />
+        </div>
+      </div>
+      {caption && <figcaption class:list={{ todo: isTodo(caption) }}>{caption}</figcaption>}
+    </figure>
+  )
+}
+
+<style>
+  .diagram {
+    margin: 0;
+  }
+  .frame {
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+    box-shadow: inset 0 0 0 1px var(--line);
+    overflow: hidden;
+  }
+  .scroll {
+    padding: 28px;
+    overflow-x: auto;
+  }
+  /* На телефоне схема не сжимается до нечитаемого размера, а прокручивается внутри рамки */
+  .scroll :global(.dg) {
+    min-width: 620px;
+  }
+  figcaption {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  @media (max-width: 640px) {
+    .scroll {
+      padding: 20px;
+    }
+  }
+</style>

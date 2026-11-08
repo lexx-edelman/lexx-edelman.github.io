@@ -1,33 +1,131 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { projects } from '../../data/site';
+import Icon from '../../components/Icon.astro';
+import { caseTypes, getCases } from '../../data/cases';
 import type { Lang } from '../../i18n/config';
-import { localeStaticPaths, tr, useTranslations } from '../../i18n/utils';
+import { localePath, localeStaticPaths, tr, useTranslations } from '../../i18n/utils';
 
 export const getStaticPaths = localeStaticPaths;
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
+const { featured, archived } = await getCases();
 ---
 
 <Base>
-  <section class="grid" aria-label={t('nav.projects')}>
-    {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+  <!-- Фильтры появляются, только если работает JavaScript. Без него видны все кейсы. -->
+  <div class="filters" role="group" aria-label={t('work.filter')} hidden>
+    <button type="button" class="filter" data-filter="all" aria-pressed="true">{t('work.all')}</button>
+    {
+      caseTypes.map((type) => (
+        <button type="button" class="filter" data-filter={type.id} aria-pressed="false">
+          {tr(type.label, lang)}
+        </button>
+      ))
+    }
+  </div>
+
+  <section class="grid" aria-label={t('nav.work')}>
+    {featured.map((item, i) => <ProjectCard item={item} index={i} />)}
   </section>
+
+  {
+    archived.length > 0 && (
+      <a href={localePath('/archive/', lang)} class="more">
+        <span>
+          <span class="more-title">{t('work.more')}</span>
+          <span class="more-text">{t('work.moreText')}</span>
+        </span>
+        <Icon name="arrow-up-right" size={18} />
+      </a>
+    )
+  }
 </Base>
 
+<script>
+  function initFilters() {
+    const bar = document.querySelector<HTMLElement>('.filters');
+    if (!bar || bar.dataset.ready) return;
+    bar.dataset.ready = '1';
+    bar.hidden = false;
+    const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter');
+    const cards = document.querySelectorAll<HTMLElement>('.grid .card');
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.filter ?? 'all';
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        cards.forEach((card) => {
+          card.hidden = id !== 'all' && !(card.dataset.types ?? '').split(' ').includes(id);
+        });
+      }),
+    );
+  }
+  initFilters();
+  document.addEventListener('astro:page-load', initFilters);
+</script>
+
 <style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+  .filters[hidden] {
+    display: none;
+  }
+  .filter {
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .filter:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+  .filter[aria-pressed='true'] {
+    background: var(--text);
+    color: var(--bg);
+  }
   .grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px 24px;
-    padding-bottom: 64px;
+    gap: 48px 24px;
+    padding-bottom: 56px;
+  }
+  .more {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 64px;
+    padding: 20px 24px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: background-color 0.2s;
+  }
+  .more:hover {
+    background: var(--surface-hover);
+  }
+  .more-title {
+    display: block;
+    font-weight: 600;
+  }
+  .more-text {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+    color: var(--text-3);
   }
   @media (max-width: 720px) {
     .grid {
       grid-template-columns: 1fr;
-      gap: 32px;
+      gap: 36px;
     }
   }
 </style>

@@ -1,0 +1,39 @@
+---
+// Кейс 5. Обязательный контент в центре, ценность вокруг него
+import type { Lang } from '../../i18n/config';
+
+const { lang } = Astro.props as { lang: Lang };
+const L = (en: string, ru: string) => (lang === 'ru' ? ru : en);
+
+const around = [
+  { x: 0, y: 0, title: L('Role choice', 'Выбор роли'), sub: L('each role gets its own scenarios', 'у каждой роли свои сценарии') },
+  { x: 540, y: 0, title: L('Situational tasks', 'Ситуационные задачи'), sub: L('practice for each role', 'практика для каждой роли') },
+  { x: 0, y: 196, title: L('“How to apply” block', 'Блок «как применить»'), sub: L('from rules to actions', 'от правил к действиям') },
+  { x: 540, y: 196, title: L('Key terms in pop-ups', 'Термины во всплывающих окнах'), sub: L('main text in plain language', 'основной текст простым языком') },
+];
+const center = { x: 250, y: 92, w: 260, h: 76 };
+---
+
+<svg class="dg" viewBox="0 0 760 252" role="img" aria-label={L('Course structure', 'Структура курса')}>
+  {
+    around.map((a) => {
+      const fromX = a.x === 0 ? 220 : 540;
+      const fromY = a.y === 0 ? 56 : 196;
+      const toX = a.x === 0 ? center.x + 30 : center.x + center.w - 30;
+      const toY = a.y === 0 ? center.y : center.y + center.h;
+      return (
+        <g>
+          <line x1={fromX} y1={fromY} x2={toX} y2={toY} class="ln dash" />
+          <rect x={a.x} y={a.y} width="220" height="56" rx="12" class="box" />
+          <text x={a.x + 16} y={a.y + 24} class="t" style="font-size:12px">{a.title}</text>
+          <text x={a.x + 16} y={a.y + 42} class="ts">{a.sub}</text>
+        </g>
+      );
+    })
+  }
+  <rect x={center.x} y={center.y} width={center.w} height={center.h} rx="14" class="accent" />
+  <text x={center.x + center.w / 2} y={center.y + 32} text-anchor="middle" class="t ta">{L('Mandatory content', 'Обязательный контент')}</text>
+  <text x={center.x + center.w / 2} y={center.y + 52} text-anchor="middle" class="ts">
+    {L('kept intact, acknowledgment is provable', 'без изменений, ознакомление доказуемо')}
+  </text>
+</svg>

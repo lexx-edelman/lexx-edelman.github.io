@@ -1,75 +1,222 @@
 ---
+// Шаблон страницы кейса. Разделы идут в фиксированном порядке;
+// раздел, которого нет в YAML-файле кейса, не показывается.
 import Base from '../../../layouts/Base.astro';
 import ProjectCard from '../../../components/ProjectCard.astro';
 import CopyEmail from '../../../components/CopyEmail.astro';
 import Icon from '../../../components/Icon.astro';
-import { projects, type Project } from '../../../data/site';
+import AtAGlance from '../../../components/case/AtAGlance.astro';
+import DecisionCard from '../../../components/case/DecisionCard.astro';
+import BeforeAfter from '../../../components/case/BeforeAfter.astro';
+import Diagram from '../../../components/case/Diagram.astro';
+import Prose from '../../../components/case/Prose.astro';
+import { caseTypes, getCases, statusLabels, type Case } from '../../../data/cases';
 import type { Lang } from '../../../i18n/config';
 import { localePath, localeStaticPaths, tr, useTranslations } from '../../../i18n/utils';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const { all } = await getCases();
   return localeStaticPaths().flatMap(({ params, props }) =>
-    projects.map((project) => ({
-      params: { ...params, slug: project.slug },
-      props: { ...props, project },
+    all.map((item) => ({
+      params: { ...params, slug: item.id },
+      props: { ...props, item },
     })),
   );
 }
 
-const { project, lang } = Astro.props as { project: Project; lang: Lang };
+const { item, lang } = Astro.props as { item: Case; lang: Lang };
+const d = item.data;
 const t = useTranslations(lang);
-const title = tr(project.title, lang);
-const description = tr(project.description, lang);
-const more = projects.filter((p) => p.slug !== project.slug).slice(0, 2);
-const [a, b, c] = project.tint;
-const facts = [
-  { label: t('case.role'), value: tr(project.role, lang) },
-  { label: t('case.timeline'), value: tr(project.timeline, lang) },
-  { label: t('case.team'), value: tr(project.team, lang) },
-  { label: t('case.platform'), value: tr(project.platform, lang) },
+const title = tr(d.title, lang);
+const summary = tr(d.summary, lang);
+const [a, b, c] = d.tint;
+
+const glance = [
+  { label: t('case.role'), value: tr(d.role, lang) },
+  { label: t('case.team'), value: tr(d.team, lang) },
+  ...(d.timeline ? [{ label: t('case.timeline'), value: tr(d.timeline, lang) }] : []),
+  ...(d.archived ? [] : [{ label: t('case.status'), value: d.status ? tr(statusLabels[d.status], lang) : 'TODO' }]),
+  {
+    label: t('case.type'),
+    value: caseTypes
+      .filter((type) => d.types.includes(type.id))
+      .map((type) => tr(type.label, lang))
+      .join(', '),
+  },
 ];
-const [lead, ...rest] = tr(project.body, lang);
+
+// «Другие работы»: следующие два кейса из основной подборки
+const { featured } = await getCases();
+const pos = featured.findIndex((c) => c.id === item.id);
+const more = [1, 2].map((k) => featured[(Math.max(pos, -1) + k + featured.length) % featured.length]).filter((c) => c.id !== item.id);
+
+const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'), why: t('case.why') };
 ---
 
-<Base title={title} description={description} hero={false}>
+<Base title={title} description={summary} hero={false}>
   <article class="case">
     <header class="case-head reveal">
-      <a href={localePath('/', lang)} class="back"><Icon name="arrow-left" size={16} /> {t('case.back')}</a>
-      <p class="eyebrow">{tr(project.client, lang)} • {project.year}</p>
+      <a href={localePath(d.archived ? '/archive/' : '/', lang)} class="back">
+        <Icon name="arrow-left" size={16} />
+        {d.archived ? t('archive.title') : t('case.back')}
+      </a>
+      <p class="eyebrow">{[tr(d.company, lang), d.year].filter(Boolean).join(' • ')}</p>
       <h1>{title}</h1>
-      <p class="lead">{description}</p>
+      <p class:list={['lead', { todo: summary.includes('TODO') }]}>{summary}</p>
     </header>
 
-    <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${project.slug}`}>
-      {project.cover && <img src={project.cover} alt={title} />}
+    <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${item.id}`}>
+      {d.cover && <img src={d.cover} alt={title} />}
     </div>
 
-    <dl class="facts">
-      {
-        facts.map((f) => (
-          <div>
-            <dt>{f.label}</dt>
-            <dd>{f.value}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <div class="glance">
+      <AtAGlance title={t('case.glance')} items={glance} />
+    </div>
 
-    <section class="body">
-      <p class="eyebrow accent">{t('case.overview')}</p>
-      <h2>{title}</h2>
-      {lead && <p>{lead}</p>}
-      {rest.map((p) => <p>{p}</p>)}
+    {
+      d.overview && (
+        <section class="block">
+          <h2>{t('case.overview')}</h2>
+          <Prose items={tr(d.overview, lang)} />
+        </section>
+      )
+    }
+
+    {
+      d.problem && (
+        <section class="block">
+          <h2>{t('case.problem')}</h2>
+          <Prose items={tr(d.problem, lang)} />
+        </section>
+      )
+    }
+
+    {
+      d.constraints && (
+        <section class="block">
+          <h2>{t('case.constraints')}</h2>
+          <Prose items={tr(d.constraints, lang)} list />
+        </section>
+      )
+    }
+
+    {
+      d.myRole && (
+        <section class="block">
+          <h2>{t('case.myRole')}</h2>
+          <div class="role">
+            <div>
+              <h3>{t('case.me')}</h3>
+              <Prose items={tr(d.myRole.me, lang)} />
+            </div>
+            {d.myRole.team && (
+              <div>
+                <h3>{t('case.we')}</h3>
+                <Prose items={tr(d.myRole.team, lang)} />
+              </div>
+            )}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      d.decisions && (
+        <section class="block">
+          <h2>{t('case.decisions')}</h2>
+          <div class="decisions">
+            {d.decisions.map((dec, i) => (
+              <DecisionCard
+                index={i}
+                title={tr(dec.title, lang)}
+                options={dec.options.map((o) => tr(o, lang))}
+                chosen={dec.chosen}
+                why={tr(dec.why, lang)}
+                labels={decisionLabels}
+              />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      d.cut && (
+        <section class="block">
+          <h2>{t('case.cut')}</h2>
+          <Prose items={tr(d.cut, lang)} list />
+        </section>
+      )
+    }
+
+    {
+      d.artifact && (
+        <section class="block">
+          <h2>{t('case.artifact')}</h2>
+          {d.artifact.text && (
+            <div class="artifact-text">
+              <Prose items={tr(d.artifact.text, lang)} />
+            </div>
+          )}
+          <Diagram name={d.artifact.diagram} caption={d.artifact.caption && tr(d.artifact.caption, lang)} lang={lang} />
+        </section>
+      )
+    }
+
+    {
+      d.outcome && (
+        <section class="block">
+          <h2>{d.outcome.kind === 'plan' ? t('case.plan') : t('case.outcome')}</h2>
+          {d.outcome.text && <Prose items={tr(d.outcome.text, lang)} />}
+          {d.outcome.before && d.outcome.after && (
+            <div class="ba">
+              <BeforeAfter
+                before={tr(d.outcome.before, lang)}
+                after={tr(d.outcome.after, lang)}
+                labels={{ before: t('case.before'), after: t('case.after') }}
+              />
+            </div>
+          )}
+        </section>
+      )
+    }
+
+    {
+      d.learned && (
+        <section class="block">
+          <h2>{t('case.learned')}</h2>
+          <Prose items={tr(d.learned, lang)} />
+        </section>
+      )
+    }
+
+    {
+      d.next && (
+        <section class="block">
+          <h2>{t('case.next')}</h2>
+          <Prose items={tr(d.next, lang)} />
+        </section>
+      )
+    }
+
+    <footer class="case-foot">
+      {d.nda && <p class="nda">{t('case.nda')}</p>}
       <CopyEmail variant="block" />
-    </section>
+    </footer>
   </article>
 
-  <section class="section more">
-    <h2 class="section-title">{t('case.more')}</h2>
-    <div class="more-grid">
-      {more.map((p, i) => <ProjectCard project={p} index={i} />)}
-    </div>
-  </section>
+  {
+    more.length > 0 && (
+      <section class="section more">
+        <h2 class="section-title">{t('case.more')}</h2>
+        <div class="more-grid">
+          {more.map((c, i) => (
+            <ProjectCard item={c} index={i} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 </Base>
 
 <style>
@@ -100,9 +247,6 @@ const [lead, ...rest] = tr(project.body, lang);
     font-weight: 600;
     color: var(--text-3);
   }
-  .accent {
-    color: #5b4fe0;
-  }
   h1 {
     margin-top: 10px;
     font-size: 40px;
@@ -117,7 +261,7 @@ const [lead, ...rest] = tr(project.body, lang);
   }
   .cover {
     margin-top: 40px;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     border-radius: var(--radius-lg);
     overflow: hidden;
     background:
@@ -131,35 +275,50 @@ const [lead, ...rest] = tr(project.body, lang);
     height: 100%;
     object-fit: cover;
   }
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    margin: 32px 0 0;
-    padding-bottom: 48px;
-    border-bottom: 1px solid var(--line);
+  .glance {
+    margin-top: 24px;
   }
-  dt {
-    font-size: 14px;
-    font-weight: 600;
-  }
-  dd {
-    margin: 4px 0 0;
-    font-size: 14px;
-    color: var(--text-3);
-  }
-  .body {
-    display: grid;
-    gap: 14px;
+  .block {
     padding-top: 48px;
   }
-  .body h2 {
-    font-size: 28px;
+  .block h2 {
+    font-size: 24px;
     font-weight: 500;
-    margin-bottom: 4px;
+    line-height: 1.25;
+    margin-bottom: 16px;
   }
-  .body p:not(.eyebrow) {
-    color: var(--text-2);
+  .role {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .role h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .decisions {
+    display: grid;
+    gap: 12px;
+  }
+  .artifact-text {
+    margin-bottom: 20px;
+  }
+  .ba {
+    margin-top: 16px;
+  }
+  .case-foot {
+    display: grid;
+    gap: 16px;
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .nda {
+    font-size: 14px;
+    color: var(--text-3);
+    max-width: 640px;
   }
   .more-grid {
     display: grid;
@@ -170,9 +329,12 @@ const [lead, ...rest] = tr(project.body, lang);
     h1 {
       font-size: 30px;
     }
-    .facts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      row-gap: 24px;
+    .block {
+      padding-top: 40px;
+    }
+    .role {
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
     .more-grid {
       grid-template-columns: 1fr;

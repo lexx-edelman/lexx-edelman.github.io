@@ -1,0 +1,57 @@
+---
+// Плашка «At a glance»: роль, команда, сроки, статус, тип работы
+import { isTodo } from '../../data/cases';
+
+interface Props {
+  title: string;
+  items: { label: string; value: string }[];
+}
+const { title, items } = Astro.props;
+---
+
+<aside class="glance" aria-label={title}>
+  <p class="glance-title">{title}</p>
+  <dl>
+    {
+      items.map((item) => (
+        <div>
+          <dt>{item.label}</dt>
+          <dd>
+            <span class:list={{ todo: isTodo(item.value) }}>{item.value}</span>
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</aside>
+
+<style>
+  .glance {
+    padding: 20px 24px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .glance-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px 24px;
+    margin: 0;
+  }
+  dt {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  dd {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+</style>

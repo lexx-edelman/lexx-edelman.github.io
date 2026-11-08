@@ -6,7 +6,7 @@ const lang = getLang(Astro.url);
 const t = useTranslations(lang);
 const path = stripLang(Astro.url.pathname).replace(/\/?$/, '/');
 const isActive = (href: string) => {
-  if (href === '/') return path === '/' || path.startsWith('/projects/');
+  if (href === '/') return path === '/' || path.startsWith('/projects/') || path.startsWith('/archive/');
   return path.startsWith(href);
 };
 ---

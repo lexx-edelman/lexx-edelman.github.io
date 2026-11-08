@@ -1,0 +1,92 @@
+# Кейс 1. AI-этап проектирования в производстве курсов
+order: 1
+title:
+  en: "An AI-assisted design stage for course production"
+  ru: "AI-этап проектирования в производстве курсов"
+summary:
+  en: "A research and design stage that runs before a course gets built. AI helps go from source materials, the brief and stakeholder interviews to a chain that starts with the behavior gap."
+  ru: "Этап исследования и проектирования до сборки курса. AI помогает пройти путь от исходных материалов, ТЗ и интервью с заказчиками до цепочки, которая начинается с разрыва в поведении."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026
+types: [systems, ai]
+role:
+  en: "Proposed and designed the stage. Early user and methodology expert for the assembly tool"
+  ru: "Предложил и спроектировал этап. Ранний пользователь и методологический эксперт инструмента сборки"
+team:
+  en: "TODO: who you worked with, without names"
+  ru: "TODO: с кем работали, без имён"
+timeline: { en: "TODO", ru: "TODO" }
+status: pilot
+nda: true
+tint: ["#cfd9ff", "#e6d6ff", "#d2f0ea"]
+
+problem:
+  en:
+    - "TODO: what the design stage looked like before, and where time or quality got lost."
+  ru:
+    - "TODO: как выглядел этап проектирования раньше и где терялись время или качество."
+
+constraints:
+  en:
+    - "TODO: platform, deadlines, regulation, data."
+  ru:
+    - "TODO: платформа, сроки, регуляторика, данные."
+
+myRole:
+  me:
+    en:
+      - "I proposed a separate research and design stage before assembly and designed how it works, from the inputs to the course outline."
+      - "I was an early user of the assembly tool and acted as its methodology expert."
+    ru:
+      - "Предложил отдельный этап исследования и проектирования перед сборкой и спроектировал, как он работает, от входных материалов до структуры курса."
+      - "Был ранним пользователем инструмента сборки и его методологическим экспертом."
+  team:
+    en:
+      - "The tool that assembles xAPI packages was built by a colleague."
+      - "TODO: who else took part and what they did."
+    ru:
+      - "Инструмент, который собирает xAPI-пакеты, создал мой коллега."
+      - "TODO: кто ещё участвовал и что делал."
+
+decisions:
+  - title: { en: "Where the AI starts", ru: "С чего начинает AI" }
+    options:
+      - { en: "TODO: option A", ru: "TODO: вариант A" }
+      - { en: "TODO: option B", ru: "TODO: вариант B" }
+    why: { en: "TODO: what we chose and why.", ru: "TODO: что выбрали и почему." }
+  - title: { en: "Where a human review is required", ru: "Где обязательна проверка человеком" }
+    options:
+      - { en: "TODO: option A", ru: "TODO: вариант A" }
+      - { en: "TODO: option B", ru: "TODO: вариант B" }
+    why: { en: "TODO: what we chose and why.", ru: "TODO: что выбрали и почему." }
+  - title: { en: "Theory first or practice first", ru: "Сначала теория или сначала практика" }
+    options:
+      - { en: "Theory, then practice", ru: "Теория, потом практика" }
+      - { en: "Practice, then the theory it needs", ru: "Практика, потом теория, которая для неё нужна" }
+    chosen: 1
+    why: { en: "TODO: why practice comes before theory.", ru: "TODO: почему практика идёт раньше теории." }
+
+artifact:
+  diagram: ai-design-pipeline
+  text:
+    en:
+      - "The stage takes everything we know before production starts, including source materials, the brief, surveys and interviews with stakeholders. AI helps turn it into a chain that goes from the behavior gap to learning objectives, then to practice, and only then to theory."
+    ru:
+      - "Этап собирает всё, что известно до начала производства: исходные материалы, ТЗ, опросы и интервью с заказчиками. AI помогает превратить это в цепочку от разрыва в поведении к целям обучения, затем к практике и только потом к теории."
+  caption:
+    en: "The design stage, from inputs to an outline that goes into assembly."
+    ru: "Этап проектирования: от входных материалов до структуры, которая уходит в сборку."
+
+outcome:
+  kind: plan
+  text:
+    en:
+      - "The stage is being piloted on the first course."
+      - "TODO: what we’ll compare (for example, time to launch, number of iterations with the client, share of practice in the course)."
+    ru:
+      - "Этап проходит пилот на первом курсе."
+      - "TODO: что будем сравнивать (например, сроки, число итераций с заказчиком, долю практики в курсе)."
+
+learned:
+  en: ["TODO: 1–3 sentences."]
+  ru: ["TODO: 1–3 предложения."]

@@ -1,22 +1,32 @@
 ---
-import type { Project } from '../data/site';
+// Карточка кейса на главной, в архиве и в блоке «Другие работы»
+import { caseTypes, isTodo, type Case } from '../data/cases';
 import { getLang, localePath, tr } from '../i18n/utils';
 
 interface Props {
-  project: Project;
+  item: Case;
   index?: number;
 }
-const { project, index = 0 } = Astro.props;
-const [a, b, c] = project.tint;
+const { item, index = 0 } = Astro.props;
+const data = item.data;
+const [a, b, c] = data.tint;
 const lang = getLang(Astro.url);
-const title = tr(project.title, lang);
+const title = tr(data.title, lang);
+const summary = tr(data.summary, lang);
+const tags = caseTypes.filter((type) => data.types.includes(type.id));
+const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
 ---
 
-<a href={localePath(`/projects/${project.slug}/`, lang)} class="card reveal" style={`--i:${index}`}>
-  <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${project.slug}`}>
+<a
+  href={localePath(`/projects/${item.id}/`, lang)}
+  class="card reveal"
+  style={`--i:${index}`}
+  data-types={data.types.join(' ')}
+>
+  <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${item.id}`}>
     {
-      project.cover ? (
-        <img src={project.cover} alt={title} loading="lazy" />
+      data.cover ? (
+        <img src={data.cover} alt={title} loading="lazy" />
       ) : (
         <div class="mock" aria-hidden="true">
           <div class="mock-bar" />
@@ -33,8 +43,12 @@ const title = tr(project.title, lang);
   </div>
   <div class="meta">
     <span class="title">{title}</span>
-    <span class="sub">{tr(project.client, lang)} • {project.year}</span>
+    <span class="sub">{sub}</span>
   </div>
+  <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
+  <ul class="tags">
+    {tags.map((type) => <li>{tr(type.short, lang)}</li>)}
+  </ul>
 </a>
 
 <style>
@@ -116,6 +130,33 @@ const title = tr(project.title, lang);
     flex: none;
     max-width: 50%;
     text-align: right;
+  }
+  .summary {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text-3);
+    max-width: 520px;
+  }
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding: 0;
+  }
+  .tags li {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+  }
+  /* Скрытие карточки фильтром на главной */
+  .card[hidden] {
+    display: none;
   }
   @media (max-width: 520px) {
     .meta {

@@ -1,6 +1,7 @@
-// Весь контент сайта живёт здесь. Каждый текст — пара { en, ru }:
+// Весь контент сайта, кроме кейсов, живёт здесь. Каждый текст — пара { en, ru }:
 // en — основная версия сайта, ru — русская (/ru/...).
-// Места, которые нужно уточнить, помечены комментарием «TODO».
+// Кейсы — в src/content/cases/*.yaml.
+// Места, которые нужно уточнить, помечены «TODO» (на сайте они подсвечены жёлтым).
 import type { Localized } from '../i18n/config';
 
 type L = Localized;
@@ -12,10 +13,18 @@ export const site = {
   name: { en: 'Alexander Edelman', ru: 'Александр Эдельман' } as L,
   initials: 'AE',
   avatar: '/avatar.jpg',
-  bio: {
-    en: 'Learning experience designer in corporate L&D. I build e-learning that changes how people work — and AI tools that make it faster to create.',
-    ru: 'Дизайнер обучения в корпоративном L&D. Создаю курсы, которые меняют то, как люди работают, и ИИ-инструменты, которые ускоряют их разработку.',
+  // Главная фраза в шапке. TODO: утвердить формулировку
+  tagline: {
+    en: 'I design how learning gets built — from the behavior gap to the result, with AI.',
+    ru: 'Проектирую, как создаётся обучение: от разрыва в поведении до результата, с помощью AI.',
   } as L,
+  // Строка под ней (и в подвале)
+  bio: {
+    en: 'Instructional designer with a product mindset. 8 years in corporate L&D and edtech.',
+    ru: 'Методолог с продуктовым мышлением. 8 лет в корпоративном обучении и edtech.',
+  } as L,
+  // Кейс, на который ведёт кнопка «My latest work»
+  latestCase: 'ai-design-stage',
   email: 'hello@alexander-edelman.com',
   telegram: 'https://t.me/lexx_edelman',
   // Куда ведёт кнопка «Связаться» на каждой версии сайта: 'email' или 'telegram'
@@ -28,233 +37,128 @@ export const site = {
 
 // Пункты меню: адреса без языкового префикса, подписи — в src/i18n/ui.ts
 export const nav = [
-  { key: 'nav.projects', href: '/' },
-  { key: 'nav.approach', href: '/approach/' },
+  { key: 'nav.work', href: '/' },
+  { key: 'nav.thinking', href: '/thinking/' },
   { key: 'nav.about', href: '/about/' },
   { key: 'nav.resume', href: '/resume/' },
 ] as const;
 
-// Цвета градиентной подложки карточки, пока нет обложки
-type Tint = [string, string, string];
-
-export interface Project {
-  slug: string; // часть адреса: /projects/slug/
-  title: L;
-  client: L;
-  year: number;
-  description: L;
-  cover?: string; // путь к картинке в public/, например '/projects/factoring.jpg'
-  tint: Tint;
-  role: L;
-  timeline: L;
-  team: L;
-  platform: L;
-  body: Localized<string[]>; // абзацы текста кейса
-}
-
-// Общий абзац для курсов под NDA
-const ndaNote: L = {
-  en: 'The course materials are internal and can’t be shared publicly. I’m happy to walk you through the process, decisions and results on a call.',
-  ru: 'Материалы курса внутренние, поэтому их нельзя показать публично. Могу рассказать о процессе, решениях и результатах на созвоне.',
-};
-
-const role: L = { en: 'Learning solutions manager', ru: 'Менеджер по разработке обучающих решений' };
-
-export const projects: Project[] = [
-  {
-    slug: 'compliance-misselling',
-    title: {
-      en: 'A role-based compliance course on unfair market practices',
-      ru: 'Комплаенс-курс о недобросовестных практиках с выбором роли',
-    },
-    client: { en: 'Sber · Compliance', ru: 'Сбер · Комплаенс' },
-    year: 2026,
-    description: {
-      en: 'Turning dense regulation into a course employees can actually apply: learners pick their role and follow their own branch of scenarios.',
-      ru: 'Как превратить сложное регулирование в курс, который сотрудники применяют на практике: каждый выбирает свою роль и проходит свою ветку сценариев.',
-    },
-    tint: ['#c9d8ff', '#f4d7f0', '#ffd9c7'],
-    role,
-    timeline: { en: '2026', ru: '2026' }, // TODO: сроки
-    team: { en: 'Me, compliance experts, developers', ru: 'Я, эксперты комплаенса, разработчики' }, // TODO
-    platform: { en: 'Web course in the corporate LMS', ru: 'Веб-курс в корпоративной LMS' },
-    body: {
-      en: [
-        'The course explains unfair practices in the financial market to employees in different roles. Instead of one long read, learners choose their role and go through the scenarios that matter for their work.',
-        'Key terms open in pop-ups so the main text stays readable for non-specialists. Progress counts only when learners complete the interactions, not when they scroll to the end.',
-        ndaNote.en,
-      ],
-      ru: [
-        'Курс объясняет недобросовестные практики на финансовом рынке сотрудникам в разных ролях. Вместо одного длинного текста сотрудник выбирает свою роль и проходит сценарии, которые важны именно для его работы.',
-        'Ключевые термины открываются во всплывающих окнах, поэтому основной текст понятен неспециалисту. Прогресс засчитывается за выполненные задания, а не за прокрутку до конца.',
-        ndaNote.ru,
-      ],
-    },
-  },
-  {
-    slug: 'learning-to-learn',
-    title: { en: 'Learning to learn: a course with an AI practice trainer', ru: '«Учись учиться»: курс с ИИ-тренажёром' },
-    client: { en: 'Sber · Corporate learning', ru: 'Сбер · Корпоративное обучение' },
-    year: 2026,
-    description: {
-      en: 'A course on learning skills where theory is followed by practice with an AI trainer that responds to each learner.',
-      ru: 'Курс о навыках обучения, где за теорией следует практика с ИИ-тренажёром, который отвечает каждому ученику.',
-    },
-    tint: ['#ffd6c2', '#f7c6e0', '#d4dcff'],
-    role,
-    timeline: { en: '2026', ru: '2026' }, // TODO
-    team: { en: 'Me, subject-matter experts', ru: 'Я и эксперты' }, // TODO
-    platform: { en: 'E-learning + AI trainer', ru: 'Электронный курс + ИИ-тренажёр' },
-    body: {
-      en: [
-        'TODO: the problem — why employees needed this course and what got in their way.',
-        'TODO: the solution — course structure and how the AI trainer gives practice and feedback.',
-        ndaNote.en,
-      ],
-      ru: [
-        'TODO: проблема — зачем сотрудникам этот курс и что им мешало.',
-        'TODO: решение — структура курса и как ИИ-тренажёр даёт практику и обратную связь.',
-        ndaNote.ru,
-      ],
-    },
-  },
-  {
-    slug: 'factoring',
-    title: { en: 'Making factoring clear for bank employees', ru: 'Курс «Факторинг»: сложный продукт простыми словами' },
-    client: { en: 'Sber · Corporate learning', ru: 'Сбер · Корпоративное обучение' },
-    year: 2026,
-    description: {
-      en: 'A product course that explains a complex financing instrument through cases and practice.',
-      ru: 'Продуктовый курс, который объясняет сложный финансовый инструмент через кейсы и практику.',
-    },
-    tint: ['#d7e3ff', '#e9d9ff', '#ffd6e6'],
-    role,
-    timeline: { en: '2026', ru: '2026' }, // TODO
-    team: { en: 'Me, product experts', ru: 'Я и эксперты продукта' }, // TODO
-    platform: { en: 'SCORM course in the LMS', ru: 'SCORM-курс в LMS' }, // TODO
-    body: {
-      en: ['TODO: the problem, the solution and the result.', ndaNote.en],
-      ru: ['TODO: проблема, решение и результат.', ndaNote.ru],
-    },
-  },
-  {
-    slug: 'personal-effectiveness',
-    title: {
-      en: 'Redesigning a personal effectiveness course',
-      ru: 'Редизайн курса по личной эффективности',
-    },
-    client: { en: 'Sber · Soft skills', ru: 'Сбер · Гибкие навыки' },
-    year: 2026,
-    description: {
-      en: 'Rebuilding an old course around real workdays: managing a constant flow of tasks, with a checklist and a live training to back it up.',
-      ru: 'Как пересобрать старый курс вокруг реального рабочего дня: работа в потоке задач, чек-лист и очный тренинг в поддержку.',
-    },
-    tint: ['#ffcfb8', '#f3d4ff', '#cfe2ff'],
-    role,
-    timeline: { en: '2026', ru: '2026' }, // TODO
-    team: { en: 'Me, trainers', ru: 'Я и тренеры' }, // TODO
-    platform: { en: 'E-learning + checklist + training', ru: 'Курс + чек-лист + тренинг' },
-    body: {
-      en: ['TODO: what was wrong with the old course and what changed.', ndaNote.en],
-      ru: ['TODO: что было не так со старым курсом и что изменилось.', ndaNote.ru],
-    },
-  },
-];
-
-// Страница «Подход»
-export const approach = {
+// Страница «How I think». case — адрес кейса (имя файла без .yaml) или 'TODO'.
+// Черновики позиций: TODO — переписать своими словами.
+export const thinking = {
   intro: {
-    en: 'How I take a learning project from a request to results that show up in the work.',
-    ru: 'Как я веду проект обучения: от запроса до результата, который виден в работе.',
+    en: 'A few positions that shape how I work. Each one links to a case where you can see it in practice.',
+    ru: 'Несколько позиций, на которых строится моя работа. У каждой есть ссылка на кейс, где видно, как это выглядит на практике.',
   } as L,
-  steps: [
+  items: [
     {
-      title: { en: 'Analyze', ru: 'Анализ' },
-      text: {
-        en: 'I start with the business problem, not the content. I talk to stakeholders and experts, run a training needs analysis and define what people should do differently.',
-        ru: 'Начинаю с бизнес-задачи, а не с контента. Говорю с заказчиками и экспертами, анализирую потребность в обучении и формулирую, что люди должны начать делать иначе.',
+      title: {
+        en: 'Content is getting cheap. The value moves to diagnosis, practice and honest measurement.',
+        ru: 'Контент дешевеет. Ценность смещается в диагностику, практику и честное измерение.',
       },
-      tags: ['Training needs analysis', 'Stakeholder interviews'],
+      text: {
+        en: 'With AI, a decent first draft of course text is no longer the hard part. What still takes judgment is understanding what people need to do differently and designing the practice that gets them there. I now spend more of my time on that, and I try to measure whether the learning worked rather than whether people reached the end.',
+        ru: 'С AI приличный черновик текста курса перестал быть сложной частью работы. Сложным остаётся понять, что люди должны делать иначе, и спроектировать практику, которая их к этому приведёт. На это теперь уходит больше моего времени, и я стараюсь измерять, сработало ли обучение, а не дошли ли люди до конца.',
+      },
+      case: 'ai-design-stage',
     },
     {
-      title: { en: 'Design', ru: 'Проектирование' },
-      text: {
-        en: 'I set measurable objectives and pick the right format: a course, practice, a job aid — or no training at all if it won’t solve the problem.',
-        ru: 'Ставлю измеримые цели и выбираю формат: курс, практика, памятка — или вообще не обучение, если оно не решит задачу.',
+      title: {
+        en: 'AI adds the most value in design, not in writing the text.',
+        ru: 'Больше всего AI даёт на этапе проектирования, а не при написании текста.',
       },
-      tags: ['ADDIE', 'Bloom’s taxonomy'],
+      text: {
+        en: 'Generating text is the obvious use of AI, and it mostly speeds up a step that was already fast. The bigger gain comes earlier, when AI helps work through source materials, interviews and the brief to find the behavior gap. That’s why I put AI into the design stage, before anything gets written.',
+        ru: 'Генерация текста — самое очевидное применение AI, и в основном она ускоряет шаг, который и так был быстрым. Больший выигрыш появляется раньше, когда AI помогает разобрать исходные материалы, интервью и ТЗ и найти разрыв в поведении. Поэтому я встроил AI в этап проектирования, до того как что-то написано.',
+      },
+      case: 'ai-design-stage',
     },
     {
-      title: { en: 'Develop', ru: 'Разработка' },
-      text: {
-        en: 'I build interactive e-learning with scenarios, branching and practice, and use AI to speed up drafting, editing and quality checks.',
-        ru: 'Собираю интерактивные курсы со сценариями, ветвлением и практикой, а ИИ использую, чтобы быстрее писать, редактировать и проверять материалы.',
+      title: {
+        en: 'A course without safe practice informs; it doesn’t teach.',
+        ru: 'Курс без безопасной практики информирует, но не учит.',
       },
-      tags: ['E-learning', 'SCORM / xAPI', 'AI-assisted authoring'],
+      text: {
+        en: 'Reading a rule and applying it in a real situation are different skills. People need a place where they can make the wrong call and see what happens without real damage. Even in mandatory compliance training, I look for room to add situational tasks around the required content.',
+        ru: 'Прочитать правило и применить его в рабочей ситуации — разные навыки. Людям нужно место, где можно ошибиться и увидеть последствия без реального ущерба. Даже в обязательном комплаенс-обучении я ищу, где добавить ситуационные задачи вокруг обязательного контента.',
+      },
+      case: 'compliance-misselling',
     },
     {
-      title: { en: 'Launch', ru: 'Запуск' },
-      text: {
-        en: 'I test with real learners, remove friction, publish to the LMS and support the rollout together with the business.',
-        ru: 'Тестирую на реальных сотрудниках, убираю трения, публикую в LMS и сопровождаю запуск вместе с бизнесом.',
+      title: {
+        en: 'Test the riskiest assumption first, and cheaply.',
+        ru: 'Сначала дёшево проверить самое рискованное допущение.',
       },
-      tags: ['Pilot', 'QA', 'LMS'],
+      text: {
+        en: 'Most learning initiatives rest on one or two assumptions nobody has checked. If such an assumption is wrong, everything built on it goes to waste. In the personalization research I proposed testing the hypotheses on mockups and a small group before building any data infrastructure.',
+        ru: 'Большинство инициатив в обучении держатся на одном-двух допущениях, которые никто не проверял. Если такое допущение неверно, всё построенное на нём пропадает. В исследовании персонализации я предложил проверить гипотезы на макетах и небольшой группе, прежде чем строить инфраструктуру данных.',
+      },
+      case: 'personalization-research',
     },
     {
-      title: { en: 'Evaluate', ru: 'Оценка' },
-      text: {
-        en: 'I measure more than completion: reaction, learning, behavior and business results. Then I use the data to improve the next version.',
-        ru: 'Измеряю не только прохождение: реакцию, знания, поведение и бизнес-результат. Данные использую, чтобы улучшить следующую версию.',
+      title: {
+        en: 'A rough first draft moves a project faster than another meeting.',
+        ru: 'Черновой вариант двигает проект быстрее, чем ещё одна встреча.',
       },
-      tags: ['Kirkpatrick model', 'Learning analytics'],
-    },
-  ] as { title: L; text: L; tags: string[] }[],
-  ai: [
-    {
-      title: { en: 'AI practice trainers', ru: 'ИИ-тренажёры' },
       text: {
-        en: 'Learners practice conversations and decisions with an AI that gives instant, personal feedback.',
-        ru: 'Сотрудники отрабатывают диалоги и решения с ИИ, который сразу даёт персональную обратную связь.',
+        en: 'It’s hard for stakeholders to react to an abstract plan and easy to react to something they can see. I’d rather bring a rough prototype early and let people point at what’s wrong. With AI, such drafts are cheap enough to throw away.',
+        ru: 'Заказчику трудно реагировать на абстрактный план и легко на то, что можно увидеть. Я предпочитаю пораньше принести сырой прототип, чтобы люди показали, что не так. С AI такие черновики настолько дешёвые, что их не жалко выбросить.',
       },
+      case: 'TODO', // TODO: связать с кейсом или убрать позицию
     },
     {
-      title: { en: 'Knowledge assistants', ru: 'Ассистенты по базе знаний' },
-      text: {
-        en: 'RAG assistants answer questions from internal documents, so people get help in the flow of work.',
-        ru: 'RAG-ассистенты отвечают на вопросы по внутренним документам, и люди получают помощь прямо в работе.',
+      title: {
+        en: 'The LMS is turning into an open ecosystem.',
+        ru: 'LMS превращается в открытую экосистему.',
       },
-    },
-    {
-      title: { en: 'Faster production', ru: 'Быстрая разработка' },
       text: {
-        en: 'Custom tools automate routine work: course authoring templates, longread drafts, SCORM package checks.',
-        ru: 'Собственные инструменты убирают рутину: шаблоны сборки курсов, черновики лонгридов, проверка SCORM-пакетов.',
+        en: 'Learning no longer has to live inside one closed platform. Standards like xAPI let tools outside the LMS report what people actually did. That changes both what we can measure and what we can build.',
+        ru: 'Обучению больше не обязательно жить внутри одной закрытой платформы. Стандарты вроде xAPI позволяют инструментам вне LMS передавать, что люди на самом деле сделали. Это меняет и то, что мы можем измерять, и то, что можем строить.',
       },
+      case: 'TODO', // TODO: связать с кейсом или заметкой про xAPI
     },
-  ] as { title: L; text: L }[],
+  ] as { title: L; text: L; case: string }[],
 };
 
+// TODO: Александр правит текст About своими словами
 export const about = {
   photoCaption: { en: 'TODO: photo caption', ru: 'TODO: подпись к фото' } as L,
   greeting: { en: 'Hi, I’m Alexander.', ru: 'Привет, я Александр.' } as L,
   headline: {
-    en: 'I design corporate learning and bring AI into how it’s made',
-    ru: 'Проектирую корпоративное обучение и встраиваю ИИ в то, как оно создаётся',
+    en: 'I came to learning design from law, and now I work on how AI changes it',
+    ru: 'Я пришёл в обучение из права, а сейчас занимаюсь тем, как его меняет AI',
   } as L,
   paragraphs: {
     en: [
-      'I work in corporate learning at Sber, where I lead the development of asynchronous e-learning courses — from compliance and finance to soft skills — and gradually move toward managing learning processes as a whole.',
-      'My work starts with the problem, not the content: what people need to do differently and what gets in their way. The learning path, interactions and assessment are built around that.',
-      'Lately I’ve focused on AI in learning: practice trainers, knowledge assistants and tools that speed up course production and quality checks.',
+      'I studied international and civil law at MGIMO. While still at university, I founded a small startup and took an app for private tutors from prototype to MVP with a designer and a developer.',
+      'In 2018 I moved into e-learning at CRMM, a course development studio. I started as a project manager and became lead instructional designer, building practice-focused courses for large corporate clients.',
+      'At Yandex Practicum I designed online programs, including online Master’s programs with universities, and revised them based on completion and NPS data.',
+      'Since 2025 I’ve been at SberUniversity, Sber’s corporate university, where I own e-learning projects end to end. Over the past year my work has shifted toward AI and the way learning gets designed and produced.',
       'TODO: a sentence about you outside of work.',
     ],
     ru: [
-      'Работаю в корпоративном обучении Сбера: руковожу разработкой асинхронных электронных курсов — от комплаенса и финансов до гибких навыков — и постепенно перехожу к управлению процессами обучения целиком.',
-      'Моя работа начинается с задачи, а не с контента: что люди должны делать иначе и что им мешает. Вокруг этого строятся маршрут обучения, интерактивы и оценка.',
-      'Последнее время занимаюсь ИИ в обучении: тренажёрами для практики, ассистентами по базе знаний и инструментами, которые ускоряют разработку и проверку курсов.',
+      'Я учился международному и гражданскому праву в МГИМО. Ещё во время учёбы основал небольшой стартап и вместе с дизайнером и разработчиком довёл приложение для частных репетиторов от прототипа до MVP.',
+      'В 2018 году перешёл в электронное обучение, в студию разработки курсов CRMM. Начинал менеджером проектов, стал ведущим методистом и делал практико-ориентированные курсы для крупных корпоративных клиентов.',
+      'В Яндекс Практикуме проектировал онлайн-программы, включая онлайн-магистратуры с вузами, и дорабатывал их по данным о доходимости и NPS.',
+      'С 2025 года работаю в СберУниверситете, корпоративном университете Сбера, и веду проекты электронного обучения от начала до конца. За последний год моя работа сместилась к AI и к тому, как проектируется и создаётся обучение.',
       'TODO: пара слов о вас вне работы.',
     ],
   } as Localized<string[]>,
+  looking: {
+    en: [
+      'I’m looking for a role at the intersection of L&D and product, where I can own how learning is designed and delivered and be responsible for whether it works.',
+      'That could be an in-house L&D team in a tech or fintech company, or a learning product role in edtech. I’m based in Moscow and open to relocation.',
+    ],
+    ru: [
+      'Ищу роль на стыке L&D и продукта, где можно владеть тем, как обучение проектируется и запускается, и отвечать за то, работает ли оно.',
+      'Это может быть внутренняя L&D-команда в tech- или финтех-компании или продуктовая роль в обучении в edtech. Живу в Москве, готов к переезду.',
+    ],
+  } as Localized<string[]>,
+  languages: [
+    { name: { en: 'Russian', ru: 'Русский' }, level: { en: 'Native', ru: 'Родной' } },
+    { name: { en: 'English', ru: 'Английский' }, level: { en: 'C2', ru: 'C2' } },
+    { name: { en: 'German', ru: 'Немецкий' }, level: { en: 'B2', ru: 'B2' } },
+  ] as { name: L; level: L }[],
   interests: [
     { en: 'AI in learning', ru: 'ИИ в обучении' },
     { en: 'Learning science', ru: 'Наука об обучении' },

@@ -1,0 +1,52 @@
+---
+// Две колонки «было / стало»
+import Prose from './Prose.astro';
+
+interface Props {
+  before: string[];
+  after: string[];
+  labels: { before: string; after: string };
+}
+const { before, after, labels } = Astro.props;
+---
+
+<div class="ba">
+  <div class="col">
+    <p class="label">{labels.before}</p>
+    <Prose items={before} list />
+  </div>
+  <div class="col after">
+    <p class="label">{labels.after}</p>
+    <Prose items={after} list />
+  </div>
+</div>
+
+<style>
+  .ba {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .col {
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .after {
+    background: var(--accent-soft);
+  }
+  .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-3);
+    margin-bottom: 10px;
+  }
+  .after .label {
+    color: var(--accent);
+  }
+  @media (max-width: 600px) {
+    .ba {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

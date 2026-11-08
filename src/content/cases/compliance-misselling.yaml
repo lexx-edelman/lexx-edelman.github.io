@@ -1,0 +1,102 @@
+# Кейс 5. Комплаенс-курс с выбором роли
+order: 5
+title:
+  en: "A role-based compliance course on unfair market practices"
+  ru: "Комплаенс-курс о недобросовестных практиках с выбором роли"
+summary:
+  en: "The client needed proof that every employee had read the mandatory content. The course keeps that and builds practice around it, with situational tasks for each role."
+  ru: "Заказчику нужно было доказуемое ознакомление с обязательным контентом. Курс это сохраняет и добавляет вокруг практику с ситуационными задачами для каждой роли."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026
+types: [experience]
+role:
+  en: "TODO: your role in one phrase"
+  ru: "TODO: ваша роль одной фразой"
+team:
+  en: "TODO: who you worked with, without names"
+  ru: "TODO: с кем работали, без имён"
+timeline: { en: "TODO", ru: "TODO" }
+# status: TODO — курс запущен? (shipped)
+nda: true
+tint: ["#c9d8ff", "#f4d7f0", "#ffd9c7"]
+
+problem:
+  en:
+    - "Employees in different roles run into unfair market practices in different situations, and the regulation that describes them is dense."
+    - "TODO: who the learners are and what they struggled with."
+  ru:
+    - "Сотрудники в разных ролях сталкиваются с недобросовестными практиками в разных ситуациях, а регулирование, которое их описывает, написано сложно."
+    - "TODO: кто учащиеся и в чём им было трудно."
+
+constraints:
+  en:
+    - "The client needed provable evidence that each employee had read the mandatory content. It’s a real requirement, so I designed around it rather than against it."
+  ru:
+    - "Заказчику нужен был доказуемый факт ознакомления каждого сотрудника с обязательным контентом. Это реальное требование, поэтому я проектировал с его учётом, а не в обход."
+
+myRole:
+  me:
+    en: ["TODO: what you did yourself."]
+    ru: ["TODO: что делали сами."]
+  team:
+    en: ["TODO: what compliance experts and developers did."]
+    ru: ["TODO: что делали эксперты комплаенса и разработчики."]
+
+decisions:
+  - title:
+      en: "One text for everyone or a path for each role"
+      ru: "Один текст для всех или маршрут для каждой роли"
+    options:
+      - en: "One long text for all employees"
+        ru: "Один длинный текст для всех сотрудников"
+      - en: "Learners choose their role and go through the scenarios that matter for their work"
+        ru: "Сотрудник выбирает роль и проходит сценарии, важные для его работы"
+    chosen: 1
+    why:
+      en: "TODO: why the role-based path."
+      ru: "TODO: почему маршрут по ролям."
+  - title:
+      en: "What happens to the mandatory content"
+      ru: "Что делать с обязательным контентом"
+    options:
+      - en: "Shorten and rewrite it"
+        ru: "Сократить и переписать его"
+      - en: "Keep it intact and add value around it"
+        ru: "Оставить без изменений и добавить ценность вокруг"
+    chosen: 1
+    why:
+      en: "Proof of acknowledgment was a real requirement. Value came from situational tasks, a “how to apply this” block and plain language around the mandatory text. TODO: check this was a real choice."
+      ru: "Доказуемое ознакомление было реальным требованием. Ценность добавили вокруг обязательного текста: ситуационные задачи, блок «как применить» и простой язык. TODO: проверить, что такая развилка действительно была."
+  - title:
+      en: "What counts as completion"
+      ru: "Что считать прохождением"
+    options:
+      - en: "Scrolling to the end"
+        ru: "Прокрутку до конца"
+      - en: "Completing the interactions"
+        ru: "Выполненные задания"
+    chosen: 1
+    why:
+      en: "TODO: why."
+      ru: "TODO: почему."
+
+artifact:
+  diagram: compliance-structure
+  text:
+    en:
+      - "Key terms open in pop-ups, so the main text stays readable for non-specialists."
+    ru:
+      - "Ключевые термины открываются во всплывающих окнах, поэтому основной текст понятен неспециалисту."
+  caption:
+    en: "Course structure. The mandatory content stays intact, and each role gets its own branch of situational tasks."
+    ru: "Структура курса. Обязательный контент остаётся без изменений, у каждой роли своя ветка ситуационных задач."
+
+outcome:
+  kind: result
+  text:
+    en: ["TODO: numbers, a changed decision, before and after, or an order of magnitude."]
+    ru: ["TODO: цифры, изменённое решение, было и стало или порядок величин."]
+
+learned:
+  en: ["TODO: 1–3 sentences."]
+  ru: ["TODO: 1–3 предложения."]

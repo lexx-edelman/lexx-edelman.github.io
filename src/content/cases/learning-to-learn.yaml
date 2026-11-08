@@ -1,0 +1,99 @@
+# Кейс 2. «Учись учиться»: AI-тренажёр внутри курса
+order: 2
+title:
+  en: "Learning to learn: an AI practice trainer inside a course"
+  ru: "«Учись учиться»: AI-тренажёр внутри курса"
+summary:
+  en: "A conversational trainer that helps employees figure out how they learn. Most of the work went into fitting the dialogue to what the platform could actually run."
+  ru: "Диалоговый тренажёр, который помогает сотруднику понять, как он учится. Основная работа ушла на то, чтобы уложить диалог в то, что умеет платформа."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026
+types: [ai, experience]
+role:
+  en: "Wrote the trainer spec and adapted it to the platform"
+  ru: "Написал спецификацию тренажёра и адаптировал её под платформу"
+team:
+  en: "TODO: who you worked with, without names"
+  ru: "TODO: с кем работали, без имён"
+timeline: { en: "TODO", ru: "TODO" }
+status: shipped
+nda: true
+tint: ["#ffd6c2", "#f7c6e0", "#d4dcff"]
+
+problem:
+  en:
+    - "TODO: why the course needed a trainer and what didn’t work without it."
+  ru:
+    - "TODO: зачем в курсе тренажёр и что не работало без него."
+
+constraints:
+  en:
+    - "The trainer runs inside a company-wide course."
+    - "For each step, the platform accepts only the question text and a field describing what to collect. It generates clarifying follow-up questions on its own."
+  ru:
+    - "Тренажёр работает внутри общекорпоративного курса."
+    - "На каждый шаг платформа принимает только текст вопроса и поле «что собираем». Уточняющие переспросы она генерирует сама."
+
+myRole:
+  me:
+    en:
+      - "I wrote the spec for the dialogue trainer “Find your learning style”. It described the dialogue as a state machine, along with a telemetry schema and the rules for classifying the result."
+      - "When the spec met the platform, I rewrote the dialogue to fit it."
+    ru:
+      - "Написал спецификацию диалогового тренажёра «Определи свой стиль обучения». В ней диалог был описан как конечный автомат, плюс схема телеметрии и правила классификации результата."
+      - "Когда спецификация встретилась с платформой, переписал диалог под её возможности."
+  team:
+    en: ["TODO: who else worked on the trainer and the course."]
+    ru: ["TODO: кто ещё работал над тренажёром и курсом."]
+
+decisions:
+  - title:
+      en: "A detailed dialogue spec or the format the platform accepts"
+      ru: "Подробная спецификация диалога или формат, который принимает платформа"
+    options:
+      - en: "Keep the original YAML spec with a full state machine"
+        ru: "Оставить исходную спецификацию в YAML с полным конечным автоматом"
+      - en: "Rewrite the dialogue as three questions and a final message"
+        ru: "Переписать диалог в три вопроса и итоговое сообщение"
+    chosen: 1
+    why:
+      en: "The platform takes only a question and a “what to collect” field per step and handles follow-ups itself, so a detailed state machine had nowhere to run. I moved the logic into three well-defined questions and a final message."
+      ru: "Платформа принимает на шаг только вопрос и поле «что собираем», а переспросы делает сама, поэтому подробному автомату было негде работать. Я перенёс логику в три чётких вопроса и итоговое сообщение."
+  - title:
+      en: "What the learning style profile is for"
+      ru: "Зачем нужен профиль стиля обучения"
+    options:
+      - en: "Use the profile to decide how course content is structured"
+        ru: "Строить по профилю структуру контента курса"
+      - en: "Use the profile as a starting hypothesis that gets people engaged"
+        ru: "Использовать профиль как стартовую гипотезу для вовлечения"
+    chosen: 1
+    why:
+      en: "The Honey and Mumford profile works as a starting point for the conversation and a reason to engage. It doesn’t decide what the content looks like. TODO: check the wording."
+      ru: "Профиль по Хони и Мамфорду служит отправной точкой для разговора и поводом вовлечься. Структуру контента он не определяет. TODO: проверить формулировку."
+
+artifact:
+  diagram: trainer-flow
+  caption:
+    en: "The dialogue after the rewrite. Each step has one question and one thing to collect, and the platform adds follow-ups on its own."
+    ru: "Диалог после переписывания. На каждом шаге один вопрос и одно поле «что собираем», переспросы платформа добавляет сама."
+
+outcome:
+  kind: result
+  text:
+    en:
+      - "The trainer is live in the course. After launch we added a short survey about using it, so we could collect data on the experience."
+      - "TODO: confirm whether numbers can be published (voluntary completions, rating, pilot results). If not, use an order of magnitude or a qualitative result."
+    ru:
+      - "Тренажёр работает в курсе. После запуска мы добавили короткий опрос об опыте использования, чтобы собирать данные."
+      - "TODO: подтвердить, можно ли публиковать цифры (добровольные прохождения, рейтинг, результат пилота). Если нельзя, дать порядок величин или качественный результат."
+
+learned:
+  en: ["TODO: 1–3 sentences."]
+  ru: ["TODO: 1–3 предложения."]
+
+next:
+  en:
+    - "Working out what a methodologist needs to see in the data export, and how to keep a digital trace of each learner’s learning style."
+  ru:
+    - "Разбираемся, что методологу нужно видеть в выгрузке и как сохранять цифровой след стиля обучения каждого сотрудника."

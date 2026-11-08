@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
-import { site, projects } from '../data/site';
+import { site } from '../data/site';
 import Avatar from '../components/Avatar.astro';
 import TabNav from '../components/TabNav.astro';
 import Footer from '../components/Footer.astro';
@@ -19,11 +19,11 @@ interface Props {
 
 const lang = getLang(Astro.url);
 const t = useTranslations(lang);
+const tagline = tr(site.tagline, lang);
 const bio = tr(site.bio, lang);
 const name = tr(site.name, lang);
-const { title, description = bio, hero = true } = Astro.props;
+const { title, description = `${tagline} ${bio}`, hero = true } = Astro.props;
 const pageTitle = title ? `${title} — ${name}` : `${name} — ${t('meta.portfolio')}`;
-const latest = projects[0];
 const home = localePath('/', lang);
 
 // Ссылки на версии страницы на других языках (для поисковиков)
@@ -64,9 +64,10 @@ const alternates = langs.map((l) => ({
               <Avatar />
             </a>
             <h1 class="hero-name">{name}</h1>
+            <p class="hero-tagline">{tagline}</p>
             <p class="hero-bio">{bio}</p>
             <div class="hero-actions">
-              <Button href={localePath(`/projects/${latest.slug}/`, lang)} icon="star">
+              <Button href={localePath(`/projects/${site.latestCase}/`, lang)} icon="star">
                 {t('hero.latest')}
               </Button>
               <ContactButton>{t('hero.contact')}</ContactButton>
@@ -159,8 +160,17 @@ const alternates = langs.map((l) => ({
     letter-spacing: -0.01em;
   }
 
+  .hero-tagline {
+    margin-top: 14px;
+    max-width: 620px;
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
   .hero-bio {
-    margin-top: 12px;
+    margin-top: 8px;
     max-width: 550px;
     color: var(--text-3);
     font-size: 16px;
@@ -200,6 +210,9 @@ const alternates = langs.map((l) => ({
     }
     .hero-name {
       font-size: 32px;
+    }
+    .hero-tagline {
+      font-size: 18px;
     }
     .page {
       padding-top: 40px;

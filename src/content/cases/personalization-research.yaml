@@ -1,0 +1,90 @@
+# Кейс 4. Исследование персонализации обучения
+order: 4
+title:
+  en: "Researching learning personalization before building it"
+  ru: "Исследование персонализации обучения до инфраструктуры"
+summary:
+  en: "How to personalize learning without building expensive infrastructure for nothing. I mapped the digital traces learners leave and proposed testing the hypotheses cheaply first."
+  ru: "Как персонализировать обучение и не построить дорогую инфраструктуру впустую. Я разметил цифровые следы, которые оставляют сотрудники, и предложил сначала дёшево проверить гипотезы."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026 # TODO: проверить год
+types: [systems]
+role:
+  en: "TODO: your role in one phrase"
+  ru: "TODO: ваша роль одной фразой"
+team:
+  en: "TODO: who you worked with, without names"
+  ru: "TODO: с кем работали, без имён"
+timeline: { en: "TODO", ru: "TODO" }
+# status: TODO — что сейчас с проверкой гипотез (pilot / in-progress)
+nda: true
+tint: ["#ffd9e4", "#dcd6ff", "#cfeaff"]
+
+problem:
+  en:
+    - "The question was how to personalize learning without building expensive infrastructure that might turn out to be useless."
+    - "TODO: who the learners are and what made personalization a topic."
+  ru:
+    - "Вопрос был в том, как персонализировать обучение и не построить дорогую инфраструктуру, которая может оказаться бесполезной."
+    - "TODO: кто учащиеся и почему вообще встал вопрос персонализации."
+
+myRole:
+  me:
+    en: ["TODO: what you did yourself."]
+    ru: ["TODO: что делали сами."]
+
+decisions:
+  - title:
+      en: "Personalize by learning styles (VAK)"
+      ru: "Персонализировать по стилям VAK"
+    options:
+      - en: "Adapt content to visual, auditory and kinesthetic learners"
+        ru: "Подстраивать контент под визуалов, аудиалов и кинестетиков"
+      - en: "Leave VAK out"
+        ru: "Отказаться от VAK"
+    chosen: 1
+    why:
+      en: "There’s no good evidence that matching content to VAK styles improves learning."
+      ru: "Нет надёжных доказательств, что подстройка контента под стили VAK улучшает обучение."
+  - title:
+      en: "Use attention signals"
+      ru: "Использовать сигналы внимания"
+    options:
+      - en: "Personalize based on attention signals"
+        ru: "Персонализировать по сигналам внимания"
+      - en: "Don’t use them"
+        ru: "Не использовать их"
+    chosen: 1
+    why:
+      en: "The data wasn’t reliable enough, and tracking attention raises ethical questions."
+      ru: "Данные недостаточно надёжны, а отслеживание внимания вызывает этические вопросы."
+  - title:
+      en: "Build the infrastructure or test first"
+      ru: "Строить инфраструктуру или сначала проверить"
+    options:
+      - en: "Build data infrastructure, then look for uses"
+        ru: "Построить инфраструктуру данных, потом искать применение"
+      - en: "Test the hypotheses on mockups and a small sample first"
+        ru: "Сначала проверить гипотезы на макетах и малой выборке"
+    chosen: 1
+    why:
+      en: "A hypothesis that fails on a mockup costs little. One that fails after the infrastructure is built costs the whole budget."
+      ru: "Гипотеза, которая не подтвердилась на макете, стоит недорого. Та, что не подтвердилась после постройки инфраструктуры, стоит всего бюджета."
+
+artifact:
+  diagram: personalization-cjm
+  caption:
+    en: "The learner journey in four stages, with the digital traces each stage leaves."
+    ru: "Путь сотрудника в четыре этапа и цифровые следы, которые остаются на каждом."
+
+outcome:
+  kind: result
+  text:
+    en:
+      - "I presented the research to senior leadership, and they decided to test the hypotheses."
+    ru:
+      - "Я представил исследование руководству, и было принято решение тестировать гипотезы."
+
+learned:
+  en: ["TODO: 1–3 sentences."]
+  ru: ["TODO: 1–3 предложения."]

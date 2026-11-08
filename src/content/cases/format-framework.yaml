@@ -1,0 +1,64 @@
+# Кейс 3. Стандарт выбора формата обучения
+order: 3
+title:
+  en: "A framework for choosing learning formats"
+  ru: "Стандарт выбора формата обучения"
+summary:
+  en: "Formats in the learning portfolio were chosen out of habit. The framework ties the choice to the task and to how deeply people need to master it."
+  ru: "Форматы в портфеле обучения выбирали по привычке. Стандарт связывает выбор формата с задачей и нужной глубиной освоения."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026 # TODO: проверить год
+types: [systems]
+role:
+  en: "TODO: what exactly you wrote (definitions, the attribute matrix)"
+  ru: "TODO: что именно писали (определения, матрица атрибутов)"
+team:
+  en: "TODO: who you worked with, without names"
+  ru: "TODO: с кем работали, без имён"
+timeline: { en: "TODO", ru: "TODO" }
+# status: TODO — статус согласования стандарта (shipped / pilot / in-progress)
+nda: true
+tint: ["#d7e3ff", "#e9d9ff", "#ffe2c9"]
+
+problem:
+  en:
+    - "Formats in the learning portfolio were chosen out of habit rather than by the task."
+    - "TODO: who this affected and how it showed up."
+  ru:
+    - "Форматы в портфеле обучения выбирали по привычке, а не под задачу."
+    - "TODO: на ком это сказывалось и в чём проявлялось."
+
+myRole:
+  me:
+    en: ["TODO: what exactly you wrote (definitions, the attribute matrix)."]
+    ru: ["TODO: что именно писали (определения, матрица атрибутов)."]
+
+decisions:
+  - title:
+      en: "How to split learning goals between formats"
+      ru: "Как распределять цели обучения между форматами"
+    options:
+      - en: "Divide goals into cognitive and affective and give each its own formats"
+        ru: "Делить цели на когнитивные и аффективные и закреплять за ними форматы"
+      - en: "Start from the target depth of mastery"
+        ru: "Опираться на целевую глубину освоения"
+    chosen: 1
+    why:
+      en: "TODO: why depth of mastery works better as the basis."
+      ru: "TODO: почему глубина освоения лучше подходит как основа."
+
+artifact:
+  diagram: format-matrix
+  caption:
+    en: "The format is chosen by three criteria. Depth of mastery has three levels: awareness, application and mastery."
+    ru: "Формат выбирается по трём критериям. У глубины освоения три уровня: awareness, application и mastery."
+
+outcome:
+  kind: result
+  text:
+    en: ["TODO: where the framework stands in the approval process."]
+    ru: ["TODO: статус согласования стандарта."]
+
+learned:
+  en: ["TODO: 1–3 sentences."]
+  ru: ["TODO: 1–3 предложения."]

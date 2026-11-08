@@ -1,0 +1,37 @@
+---
+// Архив: кейсы, которые не вошли в основную подборку
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCases } from '../../data/cases';
+import type { Lang } from '../../i18n/config';
+import { localeStaticPaths, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = localeStaticPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const [headA, headB] = t('archive.heading');
+const { archived } = await getCases();
+---
+
+<Base title={t('archive.title')}>
+  <h2 class="section-title reveal">{headA} <span>{headB}</span></h2>
+  <section class="grid">
+    {archived.map((item, i) => <ProjectCard item={item} index={i} />)}
+  </section>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 720px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+  }
+</style>

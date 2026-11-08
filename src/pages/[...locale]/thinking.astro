@@ -1,0 +1,137 @@
+---
+// «How I think»: позиции, каждая со ссылкой на кейс
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { thinking } from '../../data/site';
+import { getCases } from '../../data/cases';
+import type { Lang } from '../../i18n/config';
+import { localePath, localeStaticPaths, tr, useTranslations } from '../../i18n/utils';
+
+export const getStaticPaths = localeStaticPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const [headA, headB] = t('thinking.heading');
+const { all } = await getCases();
+const caseTitle = (id: string) => {
+  const found = all.find((c) => c.id === id);
+  return found ? tr(found.data.title, lang) : undefined;
+};
+---
+
+<Base title={t('thinking.title')}>
+  <section class="thinking">
+    <h2 class="section-title reveal">{headA} <span>{headB}</span></h2>
+    <p class="intro reveal" style="--i:1">{tr(thinking.intro, lang)}</p>
+
+    <ol class="items">
+      {
+        thinking.items.map((item, i) => {
+          const linked = caseTitle(item.case);
+          return (
+            <li class="item reveal" style={`--i:${i + 2}`}>
+              <span class="num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div class="body">
+                <h3>{tr(item.title, lang)}</h3>
+                <p>{tr(item.text, lang)}</p>
+                {linked ? (
+                  <a class="practice" href={localePath(`/projects/${item.case}/`, lang)}>
+                    <span class="practice-label">{t('thinking.practice')}</span>
+                    <span class="practice-case">
+                      {linked}
+                      <Icon name="arrow-up-right" size={14} />
+                    </span>
+                  </a>
+                ) : (
+                  <p class="practice todo">{t('thinking.practice')} · TODO</p>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .thinking {
+    padding-bottom: 64px;
+  }
+  .intro {
+    margin-top: -16px;
+    max-width: 620px;
+    color: var(--text-2);
+  }
+  .items {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 24px;
+    padding: 28px 0;
+  }
+  .item + .item {
+    border-top: 1px solid var(--line);
+  }
+  .num {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .body {
+    max-width: 680px;
+  }
+  .body h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .body > p {
+    margin-top: 8px;
+    color: var(--text-2);
+  }
+  .practice {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  a.practice {
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    transition: background-color 0.2s;
+  }
+  a.practice:hover {
+    background: var(--surface-hover);
+  }
+  .practice-label {
+    color: var(--text-3);
+  }
+  .practice-case {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text);
+  }
+  @media (max-width: 720px) {
+    .item {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .num {
+      font-size: 20px;
+    }
+  }
+</style>

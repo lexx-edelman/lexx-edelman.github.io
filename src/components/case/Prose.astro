@@ -1,0 +1,43 @@
+---
+// Абзацы или пункты списка. Текст с TODO подсвечивается.
+import { isTodo } from '../../data/cases';
+
+interface Props {
+  items: string[];
+  list?: boolean;
+}
+const { items, list = false } = Astro.props;
+---
+
+{
+  list ? (
+    <ul class="prose-list">
+      {items.map((s) => (
+        <li>
+          <span class:list={{ todo: isTodo(s) }}>{s}</span>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    items.map((s) => <p class:list={['prose', { todo: isTodo(s) }]}>{s}</p>)
+  )
+}
+
+<style>
+  .prose {
+    color: var(--text-2);
+    max-width: 640px;
+  }
+  .prose + .prose {
+    margin-top: 12px;
+  }
+  .prose-list {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-2);
+    max-width: 640px;
+  }
+  .prose-list li + li {
+    margin-top: 8px;
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+// Кейс 1. Этап проектирования: входы → AI-этап (разрыв → цели → практика → теория) → сборка → LMS
+import type { Lang } from '../../i18n/config';
+
+const { lang } = Astro.props as { lang: Lang };
+const L = (en: string, ru: string) => (lang === 'ru' ? ru : en);
+
+const inputs = [
+  L('Source materials', 'Исходные материалы'),
+  L('Brief', 'ТЗ'),
+  L('Surveys', 'Опросы'),
+  L('Stakeholder interviews', 'Интервью с заказчиками'),
+];
+const chain = [
+  [L('Behavior', 'Разрыв'), L('gap', 'в поведении')],
+  [L('Learning', 'Цели'), L('objectives', 'обучения')],
+  [L('Practice', 'Практика')],
+  [L('Theory', 'Теория')],
+];
+const chainX = [200, 296, 392, 488];
+---
+
+<svg class="dg" viewBox="0 0 760 214" role="img" aria-label={L('Design stage pipeline', 'Схема этапа проектирования')}>
+  <defs>
+    <marker id="arr-pipeline" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="head"></path>
+    </marker>
+  </defs>
+
+  <!-- Входы -->
+  <text x="0" y="22" class="ts">{L('Inputs', 'На входе')}</text>
+  {
+    inputs.map((label, i) => (
+      <g>
+        <rect x="0" y={36 + i * 44} width="150" height="36" rx="10" class="box" />
+        <text x="75" y={36 + i * 44 + 22} text-anchor="middle" class="t" style="font-size:12px">{label}</text>
+      </g>
+    ))
+  }
+  <line x1="152" y1="120" x2="180" y2="120" class="ln" marker-end="url(#arr-pipeline)" />
+
+  <!-- AI-этап -->
+  <rect x="184" y="20" width="392" height="184" rx="16" class="accent" />
+  <text x="200" y="46" class="t ta">{L('AI-assisted research & design stage', 'AI-этап исследования и проектирования')}</text>
+  {
+    chain.map((lines, i) => (
+      <g>
+        <rect x={chainX[i]} y="88" width="80" height="64" rx="10" class="card" />
+        {lines.map((line, j) => (
+          <text x={chainX[i] + 40} y={(lines.length === 1 ? 124 : 116) + j * 16} text-anchor="middle" class="t" style="font-size:12px">
+            {line}
+          </text>
+        ))}
+        {i < chain.length - 1 && <line x1={chainX[i] + 81} y1="120" x2={chainX[i] + 95} y2="120" class="ln" marker-end="url(#arr-pipeline)" />}
+      </g>
+    ))
+  }
+  <text x="200" y="184" class="ts">{L('Practice is designed before theory', 'Практика проектируется раньше теории')}</text>
+
+  <!-- Сборка и LMS -->
+  <line x1="578" y1="104" x2="604" y2="104" class="ln" marker-end="url(#arr-pipeline)" />
+  <rect x="608" y="72" width="152" height="64" rx="10" class="box" />
+  <text x="684" y="95" text-anchor="middle" class="t" style="font-size:12px">{L('Assembly tool', 'Инструмент сборки')}</text>
+  <text x="684" y="111" text-anchor="middle" class="ts">{L('builds the xAPI package', 'собирает xAPI-пакет')}</text>
+  <text x="684" y="127" text-anchor="middle" class="ts">{L('made by a colleague', 'создан коллегой')}</text>
+  <line x1="684" y1="138" x2="684" y2="166" class="ln" marker-end="url(#arr-pipeline)" />
+  <rect x="608" y="170" width="152" height="34" rx="10" class="box" />
+  <text x="684" y="191" text-anchor="middle" class="t" style="font-size:12px">LMS</text>
+</svg>

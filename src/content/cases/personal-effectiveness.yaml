@@ -1,0 +1,19 @@
+# Архив. Редизайн курса по личной эффективности
+order: 102
+archived: true
+title:
+  en: "Redesigning a personal effectiveness course"
+  ru: "Редизайн курса по личной эффективности"
+summary:
+  en: "Rebuilding an old course around real workdays, with a checklist and a live training to back it up."
+  ru: "Как пересобрать старый курс вокруг реального рабочего дня, с чек-листом и очным тренингом в поддержку."
+company: { en: "Sber", ru: "Сбер" }
+year: 2026
+types: [experience]
+role: { en: "Learning solutions manager", ru: "Менеджер по разработке обучающих решений" }
+team: { en: "Me and trainers", ru: "Я и тренеры" }
+nda: true
+tint: ["#ffcfb8", "#f3d4ff", "#cfe2ff"]
+overview:
+  en: ["TODO: what was wrong with the old course and what changed."]
+  ru: ["TODO: что было не так со старым курсом и что изменилось."]

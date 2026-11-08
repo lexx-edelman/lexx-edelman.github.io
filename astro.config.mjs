@@ -10,8 +10,10 @@ export default defineConfig({
 
   // Старые адреса, которые могли сохраниться в закладках и ссылках
   redirects: {
-    '/experiments': '/approach/',
-    '/ru/experiments': '/ru/approach/',
+    '/experiments': '/thinking/',
+    '/ru/experiments': '/ru/thinking/',
+    '/approach': '/thinking/',
+    '/ru/approach': '/ru/thinking/',
     ...Object.fromEntries(
       ['finance-dashboard', 'music-app', 'portfolio-system', 'finance-teams'].flatMap((slug) => [
         [`/projects/${slug}`, '/'],
