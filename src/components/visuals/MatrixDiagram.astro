@@ -1,0 +1,105 @@
+---
+// Упрощённая матрица 2×2 с двумя осями. Не воспроизводит реальную матрицу.
+interface Axis {
+  title: string;
+  low: string;
+  high: string;
+}
+interface Props {
+  x: Axis;
+  y: Axis;
+  cells: string[][]; // [строка][столбец], строка 0 — верх (high по Y)
+}
+const { x, y, cells } = Astro.props;
+---
+
+<div class="matrix">
+  <div class="y-axis">
+    <span class="axis-title">{y.title}</span>
+    <span class="tick">{y.high}</span>
+    <span class="tick">{y.low}</span>
+  </div>
+  <div class="grid">
+    {cells.flat().map((cell) => <div class="cell">{cell}</div>)}
+  </div>
+  <div class="x-axis">
+    <span class="tick">{x.low}</span>
+    <span class="tick">{x.high}</span>
+    <span class="axis-title">{x.title}</span>
+  </div>
+</div>
+
+<style>
+  .matrix {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'y grid'
+      '. x';
+    gap: 10px 12px;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .y-axis {
+    grid-area: y;
+    display: grid;
+    grid-template-rows: auto 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+    width: 96px;
+  }
+  .grid {
+    grid-area: grid;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    border-left: 1.5px solid var(--viz-line);
+    border-bottom: 1.5px solid var(--viz-line);
+    padding: 0 0 8px 8px;
+  }
+  .cell {
+    display: grid;
+    place-items: center;
+    min-height: 72px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--viz-surface);
+    box-shadow: inset 0 0 0 1.5px var(--line);
+    text-align: center;
+    font-size: var(--viz-text);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .x-axis {
+    grid-area: x;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
+    padding-left: 8px;
+  }
+  .x-axis .axis-title {
+    grid-column: span 2;
+  }
+  .x-axis .tick {
+    text-align: center;
+  }
+  .axis-title {
+    font-size: var(--viz-small);
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .tick {
+    font-size: var(--viz-small);
+    font-weight: 500;
+    color: var(--text-3);
+  }
+  @media (max-width: 480px) {
+    .y-axis {
+      width: 72px;
+    }
+    .cell {
+      min-height: 64px;
+      padding: 8px;
+    }
+  }
+</style>

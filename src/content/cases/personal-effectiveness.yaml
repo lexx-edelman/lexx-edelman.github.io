@@ -13,7 +13,6 @@ types: [experience]
 role: { en: "Learning solutions manager", ru: "Менеджер по разработке обучающих решений" }
 team: { en: "Me and trainers", ru: "Я и тренеры" }
 nda: true
-tint: ["#ffcfb8", "#f3d4ff", "#cfe2ff"]
 overview:
   en: ["TODO: what was wrong with the old course and what changed."]
   ru: ["TODO: что было не так со старым курсом и что изменилось."]

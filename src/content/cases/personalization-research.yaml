@@ -18,7 +18,6 @@ team:
 timeline: { en: "TODO", ru: "TODO" }
 # status: TODO — что сейчас с проверкой гипотез (pilot / in-progress)
 nda: true
-tint: ["#ffd9e4", "#dcd6ff", "#cfeaff"]
 
 problem:
   en:
@@ -35,30 +34,6 @@ myRole:
 
 decisions:
   - title:
-      en: "Personalize by learning styles (VAK)"
-      ru: "Персонализировать по стилям VAK"
-    options:
-      - en: "Adapt content to visual, auditory and kinesthetic learners"
-        ru: "Подстраивать контент под визуалов, аудиалов и кинестетиков"
-      - en: "Leave VAK out"
-        ru: "Отказаться от VAK"
-    chosen: 1
-    why:
-      en: "There’s no good evidence that matching content to VAK styles improves learning."
-      ru: "Нет надёжных доказательств, что подстройка контента под стили VAK улучшает обучение."
-  - title:
-      en: "Use attention signals"
-      ru: "Использовать сигналы внимания"
-    options:
-      - en: "Personalize based on attention signals"
-        ru: "Персонализировать по сигналам внимания"
-      - en: "Don’t use them"
-        ru: "Не использовать их"
-    chosen: 1
-    why:
-      en: "The data wasn’t reliable enough, and tracking attention raises ethical questions."
-      ru: "Данные недостаточно надёжны, а отслеживание внимания вызывает этические вопросы."
-  - title:
       en: "Build the infrastructure or test first"
       ru: "Строить инфраструктуру или сначала проверить"
     options:
@@ -71,12 +46,6 @@ decisions:
       en: "A hypothesis that fails on a mockup costs little. One that fails after the infrastructure is built costs the whole budget."
       ru: "Гипотеза, которая не подтвердилась на макете, стоит недорого. Та, что не подтвердилась после постройки инфраструктуры, стоит всего бюджета."
 
-artifact:
-  diagram: personalization-cjm
-  caption:
-    en: "The learner journey in four stages, with the digital traces each stage leaves."
-    ru: "Путь сотрудника в четыре этапа и цифровые следы, которые остаются на каждом."
-
 outcome:
   kind: result
   text:
@@ -88,3 +57,48 @@ outcome:
 learned:
   en: ["TODO: 1–3 sentences."]
   ru: ["TODO: 1–3 предложения."]
+
+visuals:
+  # Отвергнутые идеи — перед карточкой развилки
+  - type: rejected
+    section: decisions
+    placement: before
+    label:
+      en: "Two rejected ideas. Learning styles, because there is no evidence they affect outcomes. Attention signals from video and sessions, because of unreliable data and privacy concerns."
+      ru: "Две отвергнутые идеи. Стили обучения — нет доказательств, что они влияют на результат. Сигналы внимания по видео и сессиям — ненадёжные данные и вопросы приватности."
+    items:
+      - title: { en: "Learning styles (visual / auditory / kinesthetic)", ru: "Стили обучения (визуалы / аудиалы / кинестетики)" }
+        reason: { en: "No evidence they affect outcomes.", ru: "Нет доказательств, что они влияют на результат." }
+      - title: { en: "Attention signals from video and sessions", ru: "Сигналы внимания по видео и сессиям" }
+        reason: { en: "Unreliable data and privacy concerns.", ru: "Ненадёжные данные и вопросы приватности." }
+
+  # Как проверяли: сначала дёшево
+  - type: flow
+    section: decisions
+    label:
+      en: "Three steps. Mockups, then a small test group, then a decision on infrastructure."
+      ru: "Три шага. Макеты, затем небольшая тестовая группа, затем решение об инфраструктуре."
+    caption:
+      en: "Test the riskiest assumption first."
+      ru: "Сначала проверить самое рискованное допущение."
+    steps:
+      - title: { en: "Mockups", ru: "Макеты" }
+      - title: { en: "Small test group", ru: "Небольшая тестовая группа" }
+      - title: { en: "Decide on infrastructure", ru: "Решение об инфраструктуре" }
+
+  # Главный визуал: путь сотрудника в четыре этапа, под каждым — общий вопрос
+  - type: flow
+    section: artifact
+    cover: true
+    label:
+      en: "The learner journey in four stages, each with a question. Choosing a course, what would make this person want to start. Starting, how they prefer to begin. Going through, what kind of feedback helps them. Finishing, did it stick."
+      ru: "Путь сотрудника в четыре этапа, у каждого свой вопрос. Выбор курса — что побудит начать. Старт — как удобнее начинать. Прохождение — какая обратная связь помогает. Завершение — закрепилось ли."
+    steps:
+      - title: { en: "Choosing a course", ru: "Выбор курса" }
+        note: { en: "What would make this person want to start?", ru: "Что побудит этого человека начать?" }
+      - title: { en: "Starting", ru: "Старт" }
+        note: { en: "How does this person prefer to begin?", ru: "Как этому человеку удобнее начинать?" }
+      - title: { en: "Going through", ru: "Прохождение" }
+        note: { en: "What kind of feedback helps them?", ru: "Какая обратная связь ему помогает?" }
+      - title: { en: "Finishing", ru: "Завершение" }
+        note: { en: "Did it stick?", ru: "Закрепилось ли?" }

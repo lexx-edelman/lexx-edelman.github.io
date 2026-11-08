@@ -1,5 +1,6 @@
 ---
 // Карточка кейса на главной, в архиве и в блоке «Другие работы»
+import CaseCover from './case/CaseCover.astro';
 import { caseTypes, isTodo, type Case } from '../data/cases';
 import { getLang, localePath, tr } from '../i18n/utils';
 
@@ -9,7 +10,6 @@ interface Props {
 }
 const { item, index = 0 } = Astro.props;
 const data = item.data;
-const [a, b, c] = data.tint;
 const lang = getLang(Astro.url);
 const title = tr(data.title, lang);
 const summary = tr(data.summary, lang);
@@ -23,23 +23,8 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
   style={`--i:${index}`}
   data-types={data.types.join(' ')}
 >
-  <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${item.id}`}>
-    {
-      data.cover ? (
-        <img src={data.cover} alt={title} loading="lazy" />
-      ) : (
-        <div class="mock" aria-hidden="true">
-          <div class="mock-bar" />
-          <div class="mock-row">
-            <div class="mock-block tall" />
-            <div class="mock-col">
-              <div class="mock-block" />
-              <div class="mock-block" />
-            </div>
-          </div>
-        </div>
-      )
-    }
+  <div class="cover" transition:name={`cover-${item.id}`}>
+    {data.cover ? <img src={data.cover} alt={title} loading="lazy" /> : <CaseCover item={item} lang={lang} />}
   </div>
   <div class="meta">
     <span class="title">{title}</span>
@@ -60,11 +45,7 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
     aspect-ratio: 4 / 3;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background:
-      radial-gradient(120% 90% at 0% 0%, var(--a), transparent 60%),
-      radial-gradient(120% 90% at 100% 0%, var(--b), transparent 60%),
-      radial-gradient(140% 100% at 50% 100%, var(--c), transparent 70%),
-      #eef0f6;
+    background: var(--viz-neutral);
   }
   .cover img {
     width: 100%;
@@ -72,43 +53,12 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
     object-fit: cover;
     transition: transform 0.6s var(--ease);
   }
-  .card:hover .cover img,
-  .card:hover .mock {
-    transform: scale(1.025);
-  }
-
-  /* Заглушка «экрана», пока нет обложки */
-  .mock {
-    position: absolute;
-    inset: 9% 6% 0 6%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 14px;
-    border-radius: 14px 14px 0 0;
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow: 0 10px 30px rgba(30, 40, 80, 0.12);
+  .cover :global(.cover-art) {
     transition: transform 0.6s var(--ease);
-    transform-origin: 50% 100%;
   }
-  .mock-bar {
-    height: 22%;
-    border-radius: 10px;
-    background: #1d2733;
-  }
-  .mock-row {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 10px;
-  }
-  .mock-col {
-    display: grid;
-    gap: 10px;
-  }
-  .mock-block {
-    border-radius: 10px;
-    background: #eef0f4;
+  .card:hover .cover img,
+  .card:hover .cover :global(.cover-art) {
+    transform: scale(1.025);
   }
 
   .meta {

@@ -29,7 +29,11 @@ npm run build   # готовый сайт в папке dist/
   - `types` — теги и фильтры на главной: `systems`, `ai`, `experience`.
   - Разделы страницы: `problem`, `constraints`, `myRole`, `decisions`, `cut`, `artifact`, `outcome`, `learned`, `next`.
     Нет раздела в файле — его нет на странице. Описание всех полей — `src/content.config.ts`.
-  - Схемы (SVG) — `src/components/diagrams/`, подключаются через `artifact.diagram`.
+  - Иллюстрации — список `visuals` в YAML кейса: тип (`flow`, `chain`, `chat`, `scale`, `matrix`,
+    `rejected`, `stats`, `rule-task`, `item-analysis`), раздел страницы и тексты en / ru.
+    Компоненты — `src/components/visuals/`. `cover: true` — по этому визуалу рисуется обложка карточки.
+  - Все примеры в иллюстрациях выдуманные и из другой области: никаких реальных артефактов работодателя.
+  - Данные графика item analysis — условные, `node scripts/generate-item-analysis.mjs`.
 - **TODO** — недописанные места. На сайте любой текст с `TODO` подсвечен жёлтым, чтобы его не пропустить.
   Перед публикацией проверьте поиском, что `TODO` не осталось.
 - **Фото и картинки** — кладите в `public/` и указывайте путь:

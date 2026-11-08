@@ -8,7 +8,8 @@ import Icon from '../../../components/Icon.astro';
 import AtAGlance from '../../../components/case/AtAGlance.astro';
 import DecisionCard from '../../../components/case/DecisionCard.astro';
 import BeforeAfter from '../../../components/case/BeforeAfter.astro';
-import Diagram from '../../../components/case/Diagram.astro';
+import CaseVisual from '../../../components/case/CaseVisual.astro';
+import CaseCover from '../../../components/case/CaseCover.astro';
 import Prose from '../../../components/case/Prose.astro';
 import { caseTypes, getCases, statusLabels, type Case } from '../../../data/cases';
 import type { Lang } from '../../../i18n/config';
@@ -29,7 +30,6 @@ const d = item.data;
 const t = useTranslations(lang);
 const title = tr(d.title, lang);
 const summary = tr(d.summary, lang);
-const [a, b, c] = d.tint;
 
 const glance = [
   { label: t('case.role'), value: tr(d.role, lang) },
@@ -51,6 +51,12 @@ const pos = featured.findIndex((c) => c.id === item.id);
 const more = [1, 2].map((k) => featured[(Math.max(pos, -1) + k + featured.length) % featured.length]).filter((c) => c.id !== item.id);
 
 const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'), why: t('case.why') };
+
+// Визуалы раздела: до или после его текста
+type Section = Case['data']['visuals'][number]['section'];
+const visualsFor = (section: Section, placement: 'before' | 'after') =>
+  d.visuals.map((v, i) => ({ v, i })).filter(({ v }) => v.section === section && v.placement === placement);
+const has = (section: Section) => d.visuals.some((v) => v.section === section);
 ---
 
 <Base title={title} description={summary} hero={false}>
@@ -65,8 +71,8 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
       <p class:list={['lead', { todo: summary.includes('TODO') }]}>{summary}</p>
     </header>
 
-    <div class="cover" style={`--a:${a};--b:${b};--c:${c}`} transition:name={`cover-${item.id}`}>
-      {d.cover && <img src={d.cover} alt={title} />}
+    <div class="cover" transition:name={`cover-${item.id}`}>
+      {d.cover ? <img src={d.cover} alt={title} /> : <CaseCover item={item} lang={lang} />}
     </div>
 
     <div class="glance">
@@ -83,19 +89,22 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
     }
 
     {
-      d.problem && (
+      (d.problem || has('problem')) && (
         <section class="block">
           <h2>{t('case.problem')}</h2>
-          <Prose items={tr(d.problem, lang)} />
+          {visualsFor('problem', 'before').map(({ v, i }) => <CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} />)}
+          {d.problem && <Prose items={tr(d.problem, lang)} />}
+          {visualsFor('problem', 'after').map(({ v, i }) => <div class="after"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
         </section>
       )
     }
 
     {
-      d.constraints && (
+      (d.constraints || has('constraints')) && (
         <section class="block">
           <h2>{t('case.constraints')}</h2>
-          <Prose items={tr(d.constraints, lang)} list />
+          {d.constraints && <Prose items={tr(d.constraints, lang)} list />}
+          {visualsFor('constraints', 'after').map(({ v, i }) => <div class="after"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
         </section>
       )
     }
@@ -121,21 +130,27 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
     }
 
     {
-      d.decisions && (
+      (d.decisions || has('decisions')) && (
         <section class="block">
           <h2>{t('case.decisions')}</h2>
-          <div class="decisions">
-            {d.decisions.map((dec, i) => (
-              <DecisionCard
-                index={i}
-                title={tr(dec.title, lang)}
-                options={dec.options.map((o) => tr(o, lang))}
-                chosen={dec.chosen}
-                why={tr(dec.why, lang)}
-                labels={decisionLabels}
-              />
-            ))}
-          </div>
+          {visualsFor('decisions', 'before').map(({ v, i }) => <div class="before"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
+          {d.decisions && (
+            <div class="decisions">
+              {d.decisions.map((dec, i) => (
+                <DecisionCard
+                  index={i}
+                  title={tr(dec.title, lang)}
+                  options={dec.options.map((o) => tr(o, lang))}
+                  chosen={dec.chosen}
+                  sketches={dec.sketches}
+                  between={dec.between && tr(dec.between, lang)}
+                  why={tr(dec.why, lang)}
+                  labels={decisionLabels}
+                />
+              ))}
+            </div>
+          )}
+          {visualsFor('decisions', 'after').map(({ v, i }) => <div class="after"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
         </section>
       )
     }
@@ -150,25 +165,30 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
     }
 
     {
-      d.artifact && (
+      (d.artifact || has('artifact')) && (
         <section class="block">
           <h2>{t('case.artifact')}</h2>
-          {d.artifact.text && (
+          {d.artifact?.text && (
             <div class="artifact-text">
               <Prose items={tr(d.artifact.text, lang)} />
             </div>
           )}
-          <Diagram name={d.artifact.diagram} caption={d.artifact.caption && tr(d.artifact.caption, lang)} lang={lang} />
+          {[...visualsFor('artifact', 'before'), ...visualsFor('artifact', 'after')].map(({ v, i }) => (
+            <div class="stack">
+              <CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} />
+            </div>
+          ))}
         </section>
       )
     }
 
     {
-      d.outcome && (
+      (d.outcome || has('outcome')) && (
         <section class="block">
-          <h2>{d.outcome.kind === 'plan' ? t('case.plan') : t('case.outcome')}</h2>
-          {d.outcome.text && <Prose items={tr(d.outcome.text, lang)} />}
-          {d.outcome.before && d.outcome.after && (
+          <h2>{d.outcome?.kind === 'plan' ? t('case.plan') : t('case.outcome')}</h2>
+          {visualsFor('outcome', 'before').map(({ v, i }) => <div class="before"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
+          {d.outcome?.text && <Prose items={tr(d.outcome.text, lang)} />}
+          {d.outcome?.before && d.outcome?.after && (
             <div class="ba">
               <BeforeAfter
                 before={tr(d.outcome.before, lang)}
@@ -177,6 +197,7 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
               />
             </div>
           )}
+          {visualsFor('outcome', 'after').map(({ v, i }) => <div class="after"><CaseVisual visual={v} lang={lang} id={`${item.id}-${i}`} /></div>)}
         </section>
       )
     }
@@ -264,11 +285,8 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background:
-      radial-gradient(120% 90% at 0% 0%, var(--a), transparent 60%),
-      radial-gradient(120% 90% at 100% 0%, var(--b), transparent 60%),
-      radial-gradient(140% 100% at 50% 100%, var(--c), transparent 70%),
-      #eef0f6;
+    position: relative;
+    background: var(--viz-neutral);
   }
   .cover img {
     width: 100%;
@@ -304,6 +322,15 @@ const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'),
   }
   .artifact-text {
     margin-bottom: 20px;
+  }
+  .stack + .stack {
+    margin-top: 32px;
+  }
+  .before {
+    margin-bottom: 20px;
+  }
+  .after {
+    margin-top: 20px;
   }
   .ba {
     margin-top: 16px;

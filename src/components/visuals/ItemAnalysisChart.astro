@@ -1,0 +1,141 @@
+---
+// Scatter-график item analysis на синтетических данных.
+// Статичный SVG, собирается при сборке сайта; подписи — HTML поверх, чтобы не мельчить на телефоне.
+// Данные: src/data/visuals/item-analysis.json (scripts/generate-item-analysis.mjs)
+import { analyzeItems, Y_MAX, zones } from '../../data/visuals/itemAnalysis';
+
+const W = 600;
+const H = 360;
+const { easy, hard, flat } = zones;
+const px = (p: number) => p * W;
+const py = (d: number) => H - (d / Y_MAX) * H;
+const pct = (v: number, max: number) => `${(v / max) * 100}%`;
+
+interface Props {
+  labels: { x: string; y: string; easy: string; hard: string; flat: string };
+}
+const { labels } = Astro.props;
+const { items } = analyzeItems();
+const xTicks = [0, 0.5, 1];
+const yTicks = [0, 0.2, 0.4, 0.6];
+---
+
+<div class="chart">
+  <span class="y-title">{labels.y}</span>
+  <div class="plot-wrap">
+    <div class="y-ticks" aria-hidden="true">
+      {yTicks.map((v) => <span style={`bottom:${pct(v, Y_MAX)}`}>{v.toFixed(1)}</span>)}
+    </div>
+    <div class="plot">
+      <svg class="viz-sketch" viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+        <rect x="0" y="0" width={W} height={H} style="fill: var(--viz-surface)" />
+        <!-- Проблемные зоны -->
+        <rect x="0" y="0" width={px(hard)} height={H} class="zone-fill" />
+        <rect x={px(easy)} y="0" width={W - px(easy)} height={H} class="zone-fill" />
+        <rect x="0" y={py(flat)} width={W} height={H - py(flat)} class="zone-fill" />
+        <line x1={px(hard)} y1="0" x2={px(hard)} y2={H} class="ln ln-muted" stroke-dasharray="4 4" />
+        <line x1={px(easy)} y1="0" x2={px(easy)} y2={H} class="ln ln-muted" stroke-dasharray="4 4" />
+        <line x1="0" y1={py(flat)} x2={W} y2={py(flat)} class="ln ln-muted" stroke-dasharray="4 4" />
+        <!-- Оси -->
+        <line x1="0.75" y1="0" x2="0.75" y2={H} class="ln" />
+        <line x1="0" y1={H - 0.75} x2={W} y2={H - 0.75} class="ln" />
+        <!-- Вопросы -->
+        {
+          items.map((it) =>
+            it.flagged ? (
+              <circle cx={px(it.p)} cy={py(it.d)} r="8" class="fill-accent" />
+            ) : (
+              <circle cx={px(it.p)} cy={py(it.d)} r="6.5" class="fill-line" style="opacity: 0.55" />
+            ),
+          )
+        }
+      </svg>
+      <span class="zone zone-hard">{labels.hard}</span>
+      <span class="zone zone-easy">{labels.easy}</span>
+      <span class="zone zone-flat">{labels.flat}</span>
+    </div>
+  </div>
+  <div class="x-ticks" aria-hidden="true">
+    {xTicks.map((v) => <span style={`left:${pct(v, 1)}`}>{v === 0 ? '0' : v === 1 ? '1' : '0.5'}</span>)}
+  </div>
+  <span class="x-title">{labels.x}</span>
+</div>
+
+<style>
+  .chart {
+    display: grid;
+    gap: 6px;
+    max-width: 640px;
+    margin-inline: auto;
+    font-size: var(--viz-small);
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  .y-title,
+  .x-title {
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .x-title {
+    margin-top: 2px;
+    padding-left: 32px;
+  }
+  .plot-wrap {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 6px;
+  }
+  .y-ticks {
+    position: relative;
+  }
+  .y-ticks span {
+    position: absolute;
+    right: 0;
+    transform: translateY(50%);
+    font-variant-numeric: tabular-nums;
+  }
+  .plot {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .x-ticks {
+    position: relative;
+    height: 16px;
+    margin-left: 32px;
+  }
+  .x-ticks span {
+    position: absolute;
+    transform: translateX(-50%);
+    font-variant-numeric: tabular-nums;
+  }
+  .x-ticks span:first-child {
+    transform: none;
+  }
+  .x-ticks span:last-child {
+    transform: translateX(-100%);
+  }
+  .zone {
+    position: absolute;
+    color: var(--viz-muted-text);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  /* Узкие вертикальные полосы — подпись вертикально */
+  .zone-hard,
+  .zone-easy {
+    top: 8px;
+    writing-mode: vertical-rl;
+  }
+  .zone-hard {
+    left: 4px;
+  }
+  .zone-easy {
+    right: 4px;
+  }
+  .zone-flat {
+    left: 50%;
+    bottom: 6px;
+    transform: translateX(-50%);
+  }
+</style>

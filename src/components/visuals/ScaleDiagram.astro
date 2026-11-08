@@ -1,0 +1,85 @@
+---
+// Шкала уровней: ступени слева направо (на телефоне — сверху вниз)
+interface Props {
+  levels: { title: string; text: string }[];
+}
+const { levels } = Astro.props;
+---
+
+<ol class="scale" style={`--n:${levels.length}`}>
+  {
+    levels.map((level, i) => (
+      <li class:list={['level', { top: i === levels.length - 1 }]} style={`--k:${i}`}>
+        <span class="bar" aria-hidden="true" />
+        <span class="title">{level.title}</span>
+        <span class="text">{level.text}</span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .scale {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+  .level {
+    display: grid;
+    grid-template-rows: calc(16px + (var(--n) - 1) * 20px) auto auto;
+    gap: 6px;
+  }
+  /* Ступенька растёт с уровнем */
+  .bar {
+    align-self: end;
+    height: calc(16px + var(--k) * 20px);
+    border-radius: 8px;
+    background: var(--viz-surface);
+    box-shadow: inset 0 0 0 1.5px var(--viz-line);
+  }
+  .top .bar {
+    background: var(--viz-accent-soft);
+    box-shadow: inset 0 0 0 1.5px var(--viz-accent);
+  }
+  .title {
+    margin-top: 4px;
+    font-size: var(--viz-text);
+    font-weight: 700;
+  }
+  .top .title {
+    color: var(--viz-accent);
+  }
+  .text {
+    font-size: var(--viz-small);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-3);
+  }
+  @media (max-width: 560px) {
+    .scale {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+    .level {
+      grid-template-columns: 56px minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      align-self: auto;
+      column-gap: 12px;
+      row-gap: 2px;
+      align-items: center;
+    }
+    .bar {
+      grid-row: span 2;
+      align-self: center;
+      height: 12px;
+      width: calc(16px + var(--k) * 20px);
+    }
+    .title {
+      margin-top: 0;
+    }
+  }
+</style>

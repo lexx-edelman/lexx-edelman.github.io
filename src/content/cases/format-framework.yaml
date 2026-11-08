@@ -18,7 +18,6 @@ team:
 timeline: { en: "TODO", ru: "TODO" }
 # status: TODO — статус согласования стандарта (shipped / pilot / in-progress)
 nda: true
-tint: ["#d7e3ff", "#e9d9ff", "#ffe2c9"]
 
 problem:
   en:
@@ -47,12 +46,6 @@ decisions:
       en: "TODO: why depth of mastery works better as the basis."
       ru: "TODO: почему глубина освоения лучше подходит как основа."
 
-artifact:
-  diagram: format-matrix
-  caption:
-    en: "The format is chosen by three criteria. Depth of mastery has three levels: awareness, application and mastery."
-    ru: "Формат выбирается по трём критериям. У глубины освоения три уровня: awareness, application и mastery."
-
 outcome:
   kind: result
   text:
@@ -62,3 +55,34 @@ outcome:
 learned:
   en: ["TODO: 1–3 sentences."]
   ru: ["TODO: 1–3 предложения."]
+
+visuals:
+  # Главный визуал: три уровня глубины освоения с общими описаниями
+  - type: scale
+    section: artifact
+    cover: true
+    label:
+      en: "A scale of three levels of mastery. Awareness means knowing the idea exists, application means using it in typical situations, mastery means handling unusual cases."
+      ru: "Шкала из трёх уровней освоения. Осведомлённость — знать, что это существует, применение — использовать в типовых ситуациях, мастерство — справляться с нестандартными случаями."
+    levels:
+      - title: { en: "Awareness", ru: "Осведомлённость" }
+        text: { en: "Knows the idea exists and where to look it up.", ru: "Знает, что это существует и где посмотреть." }
+      - title: { en: "Application", ru: "Применение" }
+        text: { en: "Uses it in typical situations at work.", ru: "Использует в типовых рабочих ситуациях." }
+      - title: { en: "Mastery", ru: "Мастерство" }
+        text: { en: "Handles unusual cases and can explain them to others.", ru: "Справляется с нестандартными случаями и может объяснить их другим." }
+
+  # Упрощённая матрица: общие оси и общие форматы, не реальная матрица
+  - type: matrix
+    section: artifact
+    label:
+      en: "A simplified two by two matrix. Target depth on one axis, how often people need it on the other. Short reference for awareness needed often, an AI tutor for awareness needed rarely, a practice-based course for mastery needed often, a simulation for mastery needed rarely."
+      ru: "Упрощённая матрица два на два. По одной оси — целевая глубина, по другой — как часто это нужно. Короткая памятка для осведомлённости, нужной часто, AI-тьютор для осведомлённости, нужной редко, курс с практикой для мастерства, нужного часто, симуляция для мастерства, нужного редко."
+    caption:
+      en: "A simplified matrix with generic formats, not the real framework."
+      ru: "Упрощённая матрица с общими форматами, а не реальный стандарт."
+    x: { title: { en: "How often people need it", ru: "Как часто это нужно" }, low: { en: "Rarely", ru: "Редко" }, high: { en: "Often", ru: "Часто" } }
+    y: { title: { en: "Target depth", ru: "Целевая глубина" }, low: { en: "Awareness", ru: "Осведомлённость" }, high: { en: "Mastery", ru: "Мастерство" } }
+    cells:
+      - [{ en: "Simulation", ru: "Симуляция" }, { en: "Practice-based course", ru: "Курс с практикой" }]
+      - [{ en: "AI tutor", ru: "AI-тьютор" }, { en: "Short reference", ru: "Короткая памятка" }]

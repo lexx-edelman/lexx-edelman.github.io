@@ -4,3 +4,8 @@ dist/
 .DS_Store
 .env*
 .vercel
+
+# Рабочие планы и список TODO (репозиторий публичный)
+portfolio-redesign-plan.md
+portfolio-illustrations-plan.md
+TODO-content.md

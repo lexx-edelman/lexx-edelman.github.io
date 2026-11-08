@@ -18,7 +18,6 @@ team:
 timeline: { en: "TODO", ru: "TODO" }
 # status: TODO — курс запущен? (shipped)
 nda: true
-tint: ["#c9d8ff", "#f4d7f0", "#ffd9c7"]
 
 problem:
   en:
@@ -81,15 +80,13 @@ decisions:
       ru: "TODO: почему."
 
 artifact:
-  diagram: compliance-structure
   text:
     en:
       - "Key terms open in pop-ups, so the main text stays readable for non-specialists."
+      - "Below is the idea on a made-up rule: the same requirement as a text to confirm and as a situational task."
     ru:
       - "Ключевые термины открываются во всплывающих окнах, поэтому основной текст понятен неспециалисту."
-  caption:
-    en: "Course structure. The mandatory content stays intact, and each role gets its own branch of situational tasks."
-    ru: "Структура курса. Обязательный контент остаётся без изменений, у каждой роли своя ветка ситуационных задач."
+      - "Ниже идея на выдуманном правиле: одно и то же требование в виде текста для подтверждения и в виде ситуационной задачи."
 
 outcome:
   kind: result
@@ -100,3 +97,35 @@ outcome:
 learned:
   en: ["TODO: 1–3 sentences."]
   ru: ["TODO: 1–3 предложения."]
+
+visuals:
+  # Главный визуал: «было / стало» на выдуманном правиле, не из реального курса
+  - type: rule-task
+    section: artifact
+    cover: true
+    label:
+      en: "Before and after on a made-up rule about not offering products a client doesn’t need. Before, a dense regulatory text to read and confirm. After, a situational task with three answers and feedback."
+      ru: "Было и стало на выдуманном правиле о том, что нельзя предлагать клиенту ненужный продукт. Было — плотный нормативный текст, который нужно прочитать и подтвердить. Стало — ситуационная задача с тремя ответами и пояснениями."
+    caption:
+      en: "The rule and the task are made up and are not from the real course."
+      ru: "Правило и задача выдуманы и не взяты из настоящего курса."
+    rule:
+      en: "4.2. An employee shall not offer, recommend or otherwise promote to a client any product or service that does not correspond to the needs, objectives and financial situation of the client as identified in accordance with the established procedure, including in cases where such product or service is suggested by automated systems. Failure to comply with this clause constitutes a breach of the conduct requirements."
+      ru: "4.2. Работник не вправе предлагать, рекомендовать или иным образом продвигать клиенту продукт или услугу, не соответствующие потребностям, целям и финансовому положению клиента, выявленным в установленном порядке, в том числе в случаях, когда такой продукт или услуга предложены автоматизированными системами. Несоблюдение настоящего пункта является нарушением требований к поведению работников."
+    question:
+      en: "A client asks how to send money abroad. The system suggests offering them an investment product as well. What do you do?"
+      ru: "Клиент спрашивает, как отправить деньги за границу. Система подсказывает заодно предложить ему инвестиционный продукт. Что вы сделаете?"
+    options:
+      - text: { en: "Offer the investment product, since the system suggested it", ru: "Предложу инвестиционный продукт, раз система подсказала" }
+        feedback:
+          en: "The client didn’t ask about investing and you don’t know their goals. A system prompt doesn’t make the offer appropriate."
+          ru: "Клиент не спрашивал об инвестициях, и вы не знаете его целей. Подсказка системы не делает предложение уместным."
+      - text: { en: "Help with the transfer and don’t mention anything else", ru: "Помогу с переводом и больше ничего не буду предлагать" }
+        feedback:
+          en: "This follows the rule. But if the client has a need you could help with, you won’t find out."
+          ru: "Это соответствует правилу. Но если у клиента есть потребность, с которой вы могли бы помочь, вы о ней не узнаете."
+      - text: { en: "Help with the transfer, then ask what the client is planning before suggesting anything", ru: "Помогу с переводом и спрошу о планах клиента, прежде чем что-то предлагать" }
+        best: true
+        feedback:
+          en: "The best option. You offer something only if it matches a need the client has told you about."
+          ru: "Лучший вариант. Вы предлагаете продукт, только если он отвечает потребности, о которой рассказал сам клиент."

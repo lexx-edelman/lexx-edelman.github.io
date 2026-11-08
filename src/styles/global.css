@@ -14,6 +14,17 @@
   --todo-bg: #fff6cc;
   --todo-line: #e8c547;
 
+  /* Роли цветов для схем и иллюстраций (тёмной темы на сайте нет) */
+  --viz-accent: var(--accent); /* выбранное / главное */
+  --viz-accent-soft: var(--accent-soft);
+  --viz-neutral: var(--surface); /* фон блоков и обложек */
+  --viz-surface: #ffffff; /* карточки внутри схем */
+  --viz-muted: #b4b9c0; /* отвергнутое */
+  --viz-muted-text: #9aa0a7;
+  --viz-line: #8e959c; /* линии и стрелки, 1.5px */
+  --viz-text: 13px; /* подписи блоков */
+  --viz-small: 12px; /* мелкие пояснения */
+
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 10px;
@@ -184,24 +195,16 @@ button {
   }
 }
 
-/* ---------- Схемы в кейсах (общий стиль для всех SVG) ---------- */
-.dg {
-  display: block;
-  width: 100%;
-  height: auto;
-  font-family: var(--font);
-}
-.dg .box { fill: var(--surface); }
-.dg .card { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
-.dg .accent { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
-.dg .solid { fill: var(--accent); }
-.dg .ln { stroke: var(--text-3); stroke-width: 1.5; fill: none; }
-.dg .ln-accent { stroke: var(--accent); }
-.dg .dash { stroke-dasharray: 4 4; }
-.dg .head { fill: var(--text-3); }
-.dg .t { font-size: 13px; font-weight: 700; fill: var(--text); }
-.dg .ts { font-size: 11.5px; font-weight: 600; fill: var(--text-3); }
-.dg .ta { fill: var(--accent); }
-.dg .tw { fill: #fff; }
-.dg .todo-box { fill: var(--todo-bg); stroke: var(--todo-line); stroke-width: 1; }
-.dg .todo-t { font-size: 11.5px; font-weight: 700; fill: #5c4a00; }
+/* ---------- Визуалы в кейсах: одна серия для всех схем ---------- */
+.viz-sketch { display: block; width: 100%; height: auto; }
+.viz-sketch .b { fill: var(--viz-surface); stroke: var(--viz-line); stroke-width: 1.5; }
+.viz-sketch .b-accent { fill: var(--viz-accent-soft); stroke: var(--viz-accent); stroke-width: 1.5; }
+.viz-sketch .b-muted { fill: none; stroke: var(--viz-muted); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.viz-sketch .fill-accent { fill: var(--viz-accent); }
+.viz-sketch .fill-muted { fill: var(--viz-muted); }
+.viz-sketch .fill-line { fill: var(--viz-line); }
+.viz-sketch .ln { stroke: var(--viz-line); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.viz-sketch .ln-muted { stroke: var(--viz-muted); }
+.viz-sketch .ln-accent { stroke: var(--viz-accent); }
+.viz-sketch text { font-family: var(--font); font-size: var(--viz-small); font-weight: 600; fill: var(--text-3); }
+.viz-sketch .zone-fill { fill: var(--viz-muted); fill-opacity: 0.22; }

@@ -1,0 +1,114 @@
+---
+// Визуал кейса по данным из YAML: выбирает компонент по type и оборачивает в Diagram
+import Diagram from './Diagram.astro';
+import FlowDiagram from '../visuals/FlowDiagram.astro';
+import ExampleChain from '../visuals/ExampleChain.astro';
+import ChatMockup from '../visuals/ChatMockup.astro';
+import ScaleDiagram from '../visuals/ScaleDiagram.astro';
+import MatrixDiagram from '../visuals/MatrixDiagram.astro';
+import RejectedIdeas from '../visuals/RejectedIdeas.astro';
+import StatBlock from '../visuals/StatBlock.astro';
+import RuleTask from '../visuals/RuleTask.astro';
+import ItemAnalysisChart from '../visuals/ItemAnalysisChart.astro';
+import type { Case } from '../../data/cases';
+import type { Lang } from '../../i18n/config';
+import { tr, useTranslations } from '../../i18n/utils';
+import { analyzeItems, fill } from '../../data/visuals/itemAnalysis';
+
+type Visual = Case['data']['visuals'][number];
+interface Props {
+  visual: Visual;
+  lang: Lang;
+  id: string; // уникальный id на странице
+}
+const { visual: v, lang, id } = Astro.props;
+const t = useTranslations(lang);
+const L = (x: { en: string; ru: string }) => tr(x, lang);
+const caption = v.caption && L(v.caption);
+
+let label = L(v.label);
+let summary: string | undefined;
+if (v.type === 'item-analysis') {
+  const stats = analyzeItems();
+  label = fill(t('viz.ia.label'), stats);
+  summary = fill(t('viz.ia.summary'), stats);
+}
+---
+
+{
+  v.type === 'flow' && (
+    <Diagram label={label} caption={caption}>
+      <FlowDiagram
+        steps={v.steps.map((s) => ({ title: L(s.title), note: s.note && L(s.note), checkpoint: s.checkpoint }))}
+        end={v.end && { title: L(v.end.title), note: v.end.note && L(v.end.note) }}
+      />
+    </Diagram>
+  )
+}
+{
+  v.type === 'chain' && (
+    <Diagram label={label} caption={caption}>
+      <ExampleChain steps={v.steps.map((s) => ({ label: L(s.label), text: L(s.text), accent: s.accent }))} />
+    </Diagram>
+  )
+}
+{
+  v.type === 'chat' && (
+    <Diagram label={label} caption={caption}>
+      <ChatMockup title={L(v.title)} messages={v.messages.map((m) => ({ from: m.from, text: L(m.text), final: m.final }))} />
+    </Diagram>
+  )
+}
+{
+  v.type === 'scale' && (
+    <Diagram label={label} caption={caption}>
+      <ScaleDiagram levels={v.levels.map((l) => ({ title: L(l.title), text: L(l.text) }))} />
+    </Diagram>
+  )
+}
+{
+  v.type === 'matrix' && (
+    <Diagram label={label} caption={caption}>
+      <MatrixDiagram
+        x={{ title: L(v.x.title), low: L(v.x.low), high: L(v.x.high) }}
+        y={{ title: L(v.y.title), low: L(v.y.low), high: L(v.y.high) }}
+        cells={v.cells.map((row) => row.map(L))}
+      />
+    </Diagram>
+  )
+}
+{
+  v.type === 'rejected' && (
+    <Diagram label={label} caption={caption} bare>
+      <RejectedIdeas items={v.items.map((i) => ({ title: L(i.title), reason: L(i.reason) }))} />
+    </Diagram>
+  )
+}
+{
+  v.type === 'stats' && (
+    <Diagram label={label} caption={caption}>
+      <StatBlock items={v.items.map((i) => ({ value: i.value, label: L(i.label) }))} />
+    </Diagram>
+  )
+}
+{
+  v.type === 'rule-task' && (
+    <Diagram label={label} caption={caption} interactive bare>
+      <RuleTask
+        id={id}
+        rule={L(v.rule)}
+        question={L(v.question)}
+        options={v.options.map((o) => ({ text: L(o.text), feedback: L(o.feedback), best: o.best }))}
+      />
+    </Diagram>
+  )
+}
+{
+  v.type === 'item-analysis' && (
+    <Diagram label={label} caption={caption} summary={summary} illustrative>
+      <ItemAnalysisChart
+        labels={{ x: t('viz.ia.x'), y: t('viz.ia.y'), easy: t('viz.ia.easy'), hard: t('viz.ia.hard'), flat: t('viz.ia.flat') }}
+      />
+    </Diagram>
+  )
+}

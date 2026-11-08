@@ -18,7 +18,6 @@ team:
 timeline: { en: "TODO", ru: "TODO" }
 status: pilot
 nda: true
-tint: ["#cfd9ff", "#e6d6ff", "#d2f0ea"]
 
 problem:
   en:
@@ -67,15 +66,13 @@ decisions:
     why: { en: "TODO: why practice comes before theory.", ru: "TODO: почему практика идёт раньше теории." }
 
 artifact:
-  diagram: ai-design-pipeline
   text:
     en:
-      - "The stage takes everything we know before production starts, including source materials, the brief, surveys and interviews with stakeholders. AI helps turn it into a chain that goes from the behavior gap to learning objectives, then to practice, and only then to theory."
+      - "The stage takes everything we know before production starts, including source materials, the brief, surveys and interviews with stakeholders. AI helps turn it into a chain that goes from the behavior gap to learning outcomes, then to practice, and only then to theory."
+      - "Below is the same chain on a made-up example from a different field."
     ru:
       - "Этап собирает всё, что известно до начала производства: исходные материалы, ТЗ, опросы и интервью с заказчиками. AI помогает превратить это в цепочку от разрыва в поведении к целям обучения, затем к практике и только потом к теории."
-  caption:
-    en: "The design stage, from inputs to an outline that goes into assembly."
-    ru: "Этап проектирования: от входных материалов до структуры, которая уходит в сборку."
+      - "Ниже та же цепочка на выдуманном примере из другой области."
 
 outcome:
   kind: plan
@@ -90,3 +87,55 @@ outcome:
 learned:
   en: ["TODO: 1–3 sentences."]
   ru: ["TODO: 1–3 предложения."]
+
+visuals:
+  # Пайплайн этапа. TODO: подтвердить, где реально стоит проверка человеком (сейчас — разрыв и цели)
+  - type: flow
+    section: artifact
+    label:
+      en: "Process diagram. Source materials and stakeholder interviews lead to the behavior gap, then learning outcomes, practice and theory. A human review follows the behavior gap and the learning outcomes. The course build is a separate stage with a colleague’s tool."
+      ru: "Схема процесса. Исходные материалы и интервью с заказчиками ведут к разрыву в поведении, затем к целям обучения, практике и теории. После разрыва в поведении и целей обучения стоит проверка человеком. Сборка курса — отдельный этап на инструменте коллеги."
+    steps:
+      - title: { en: "Source materials & stakeholder interviews", ru: "Исходные материалы и интервью с заказчиками" }
+      - title: { en: "Behavior gap", ru: "Разрыв в поведении" }
+        checkpoint: true
+      - title: { en: "Learning outcomes", ru: "Цели обучения" }
+        checkpoint: true
+      - title: { en: "Practice", ru: "Практика" }
+      - title: { en: "Theory", ru: "Теория" }
+    end:
+      title: { en: "Course build", ru: "Сборка курса" }
+      note: { en: "build stage — built by a colleague", ru: "этап сборки — инструмент коллеги" }
+
+  # Главный визуал кейса: та же цепочка на синтетическом примере (поддержка клиентов в SaaS)
+  - type: chain
+    section: artifact
+    cover: true
+    label:
+      en: "Worked example in five steps, from customer support in a software company. From what agents do now, to what they should do, a learning outcome, practice, and the theory that practice needs."
+      ru: "Пример в пять шагов из поддержки клиентов в софтверной компании. От того, что сотрудники делают сейчас, к тому, что должны делать, к цели обучения, практике и теории, которая для неё нужна."
+    caption:
+      en: "A made-up example from customer support in a SaaS company."
+      ru: "Выдуманный пример из поддержки клиентов в SaaS-компании."
+    steps:
+      - label: { en: "What people do now", ru: "Что люди делают сейчас" }
+        text:
+          en: "Support agents close tickets after sending a template answer, without checking whether the problem is actually solved."
+          ru: "Сотрудники поддержки закрывают обращение после шаблонного ответа и не проверяют, решена ли проблема на самом деле."
+      - label: { en: "What they should do", ru: "Что они должны делать" }
+        text:
+          en: "Confirm the problem is solved before closing, and note what fixed it."
+          ru: "Убедиться, что проблема решена, прежде чем закрыть обращение, и записать, что помогло."
+      - label: { en: "Learning outcome", ru: "Цель обучения" }
+        text:
+          en: "Given a customer ticket, the agent verifies the resolution with the customer and documents the fix before closing."
+          ru: "Получив обращение клиента, сотрудник сверяет с клиентом, что проблема решена, и фиксирует решение до закрытия."
+      - label: { en: "Practice", ru: "Практика" }
+        accent: true
+        text:
+          en: "Three simulated tickets where the template answer looks right but doesn’t solve the problem. The learner decides whether to close and why."
+          ru: "Три смоделированных обращения, где шаблонный ответ выглядит верным, но проблему не решает. Сотрудник решает, закрывать ли обращение и почему."
+      - label: { en: "Theory (only what practice needs)", ru: "Теория (только то, что нужно для практики)" }
+        text:
+          en: "A short checklist for verifying a resolution."
+          ru: "Короткий чек-лист для проверки, что проблема решена."

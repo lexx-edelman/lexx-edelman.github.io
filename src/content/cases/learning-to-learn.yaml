@@ -18,7 +18,6 @@ team:
 timeline: { en: "TODO", ru: "TODO" }
 status: shipped
 nda: true
-tint: ["#ffd6c2", "#f7c6e0", "#d4dcff"]
 
 problem:
   en:
@@ -47,18 +46,23 @@ myRole:
     ru: ["TODO: кто ещё работал над тренажёром и курсом."]
 
 decisions:
+  # Главный визуал кейса: режим «A vs B» с эскизами
   - title:
       en: "A detailed dialogue spec or the format the platform accepts"
       ru: "Подробная спецификация диалога или формат, который принимает платформа"
+    sketches: [dialogue-graph, three-steps]
     options:
-      - en: "Keep the original YAML spec with a full state machine"
-        ru: "Оставить исходную спецификацию в YAML с полным конечным автоматом"
-      - en: "Rewrite the dialogue as three questions and a final message"
-        ru: "Переписать диалог в три вопроса и итоговое сообщение"
+      - en: "Full dialogue engine in the original spec"
+        ru: "Полный движок диалога из исходной спецификации"
+      - en: "Three questions and a result, rebuilt for the platform’s constraints"
+        ru: "Три вопроса и результат, пересобранные под ограничения платформы"
     chosen: 1
+    between:
+      en: "The platform accepts only the question text and a description of what to collect at each step. It generates follow-up questions on its own."
+      ru: "Платформа принимает только текст вопроса и описание того, что собираем на каждом шаге. Уточняющие вопросы она генерирует сама."
     why:
-      en: "The platform takes only a question and a “what to collect” field per step and handles follow-ups itself, so a detailed state machine had nowhere to run. I moved the logic into three well-defined questions and a final message."
-      ru: "Платформа принимает на шаг только вопрос и поле «что собираем», а переспросы делает сама, поэтому подробному автомату было негде работать. Я перенёс логику в три чётких вопроса и итоговое сообщение."
+      en: "A detailed state machine had nowhere to run on this platform, so I moved the logic into three well-defined questions and a final message."
+      ru: "Подробному автомату на этой платформе было негде работать, поэтому я перенёс логику в три чётких вопроса и итоговое сообщение."
   - title:
       en: "What the learning style profile is for"
       ru: "Зачем нужен профиль стиля обучения"
@@ -71,12 +75,6 @@ decisions:
     why:
       en: "The Honey and Mumford profile works as a starting point for the conversation and a reason to engage. It doesn’t decide what the content looks like. TODO: check the wording."
       ru: "Профиль по Хони и Мамфорду служит отправной точкой для разговора и поводом вовлечься. Структуру контента он не определяет. TODO: проверить формулировку."
-
-artifact:
-  diagram: trainer-flow
-  caption:
-    en: "The dialogue after the rewrite. Each step has one question and one thing to collect, and the platform adds follow-ups on its own."
-    ru: "Диалог после переписывания. На каждом шаге один вопрос и одно поле «что собираем», переспросы платформа добавляет сама."
 
 outcome:
   kind: result
@@ -97,3 +95,37 @@ next:
     - "Working out what a methodologist needs to see in the data export, and how to keep a digital trace of each learner’s learning style."
   ru:
     - "Разбираемся, что методологу нужно видеть в выгрузке и как сохранять цифровой след стиля обучения каждого сотрудника."
+
+visuals:
+  # Синтетический диалог. TODO: проверить, что вопросы не совпадают с реальным тренажёром
+  - type: chat
+    section: artifact
+    label:
+      en: "A made-up example of a dialogue with the trainer. Two questions about how the learner picked up something new at work, then a final message that suggests starting with worked examples."
+      ru: "Выдуманный пример диалога с тренажёром. Два вопроса о том, как сотрудник осваивал новое на работе, и итоговое сообщение с советом начинать с разобранных примеров."
+    caption:
+      en: "A made-up dialogue. The questions are not from the real trainer."
+      ru: "Выдуманный диалог. Вопросы не из настоящего тренажёра."
+    title: { en: "Learning style check", ru: "Как вы учитесь" }
+    messages:
+      - from: bot
+        text:
+          en: "Think about the last time you had to learn something new at work. What did you do first?"
+          ru: "Вспомните, когда вам последний раз нужно было освоить что-то новое на работе. С чего вы начали?"
+      - from: learner
+        text:
+          en: "I found someone who’d done it before and asked them to show me."
+          ru: "Нашёл того, кто уже это делал, и попросил показать."
+      - from: bot
+        text:
+          en: "And when something went wrong along the way, what helped you most?"
+          ru: "А когда по ходу что-то шло не так, что помогало больше всего?"
+      - from: learner
+        text:
+          en: "Trying again on my own, then checking with them."
+          ru: "Попробовать ещё раз самому, а потом свериться с ним."
+      - from: bot
+        final: true
+        text:
+          en: "Looks like you learn best by watching an example and then practicing. In this course, start with the worked examples in each module."
+          ru: "Похоже, вам лучше всего подходит сначала посмотреть пример, а потом попрактиковаться. В этом курсе начинайте с разобранных примеров в каждом модуле."

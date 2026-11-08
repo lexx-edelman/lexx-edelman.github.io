@@ -1,0 +1,155 @@
+---
+// «Было / стало» на одном выдуманном правиле:
+// было — плотный нормативный текст и «прочитать и подтвердить»,
+// стало — ситуационная задача с вариантами и пояснением после выбора.
+// Пояснение показывается без JavaScript: через :checked у радиокнопок.
+import BeforeAfter from '../case/BeforeAfter.astro';
+import { getLang, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  id: string;
+  rule: string;
+  question: string;
+  options: { text: string; feedback: string; best?: boolean }[];
+}
+const { id, rule, question, options } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
+const name = `rule-task-${id}`;
+---
+
+<BeforeAfter labels={{ before: t('viz.rule.before'), after: t('viz.rule.after') }}>
+  <Fragment slot="before">
+    <div class="doc">
+      <p class="doc-text">{rule}</p>
+      <p class="doc-label">{t('viz.rule.read')}</p>
+      <span class="confirm" aria-hidden="true">
+        <span class="box"></span>
+        {t('viz.rule.confirm')}
+      </span>
+    </div>
+  </Fragment>
+  <Fragment slot="after">
+    <fieldset class="task">
+      <legend class="task-label">{t('viz.rule.task')}</legend>
+      <p class="question">{question}</p>
+      {
+        options.map((o, i) => (
+          <div class="option">
+            <input type="radio" name={name} id={`${name}-${i}`} />
+            <label for={`${name}-${i}`}>{o.text}</label>
+            <p class:list={['feedback', { best: o.best }]}>{o.feedback}</p>
+          </div>
+        ))
+      }
+      <p class="hint">{t('viz.rule.pick')}</p>
+    </fieldset>
+  </Fragment>
+</BeforeAfter>
+
+<style>
+  .doc {
+    display: grid;
+    gap: 12px;
+  }
+  .doc-text {
+    padding: 14px;
+    border-radius: var(--radius-md);
+    background: var(--viz-surface);
+    font-size: var(--viz-small);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text-2);
+    text-align: justify;
+    hyphens: auto;
+  }
+  .doc-label {
+    font-size: var(--viz-small);
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .confirm {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--viz-text);
+    font-weight: 600;
+    color: var(--text-2);
+  }
+  .box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1.5px var(--viz-line);
+    background: var(--viz-surface);
+  }
+
+  .task {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .task-label {
+    padding: 0;
+    margin-bottom: 4px;
+    font-size: var(--viz-small);
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .question {
+    margin-bottom: 4px;
+    font-size: var(--viz-text);
+    font-weight: 700;
+    line-height: 1.45;
+  }
+  .option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .option label {
+    display: block;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--viz-surface);
+    box-shadow: inset 0 0 0 1.5px var(--line);
+    font-size: var(--viz-text);
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .option label:hover {
+    box-shadow: inset 0 0 0 1.5px var(--viz-line);
+  }
+  .option input:focus-visible + label {
+    outline: 2px solid #6b7cff;
+    outline-offset: 2px;
+  }
+  .option input:checked + label {
+    box-shadow: inset 0 0 0 1.5px var(--viz-accent);
+  }
+  .feedback {
+    display: none;
+    margin: 6px 2px 4px;
+    font-size: var(--viz-small);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text-2);
+  }
+  .feedback.best {
+    color: var(--viz-accent);
+  }
+  .option input:checked ~ .feedback {
+    display: block;
+  }
+  .hint {
+    font-size: var(--viz-small);
+    font-weight: 500;
+    color: var(--text-3);
+  }
+  .task:has(input:checked) .hint {
+    display: none;
+  }
+</style>

@@ -1,0 +1,239 @@
+---
+// Обложка кейса — уменьшенная схема его главного визуала (visual с cover: true
+// или развилка с эскизами), нарисованная из тех же данных, без текста.
+// Архивные кейсы и кейсы без главного визуала — типографическая обложка.
+import Sketch from '../visuals/Sketch.astro';
+import { caseTypes, type Case } from '../../data/cases';
+import { analyzeItems, Y_MAX, zones } from '../../data/visuals/itemAnalysis';
+import type { Lang } from '../../i18n/config';
+import { tr } from '../../i18n/utils';
+
+interface Props {
+  item: Case;
+  lang: Lang;
+}
+const { item, lang } = Astro.props;
+const d = item.data;
+const main = d.archived ? undefined : d.visuals.find((v) => v.cover);
+const versus = d.archived || main ? undefined : d.decisions?.find((dec) => dec.sketches?.length);
+const typeLabel = caseTypes
+  .filter((type) => d.types.includes(type.id))
+  .map((type) => tr(type.label, lang))
+  .join(' · ');
+
+// Ряд блоков по центру
+const row = (n: number, width = 340, gap = 16) => {
+  const w = (width - gap * (n - 1)) / n;
+  const x0 = (400 - width) / 2;
+  return Array.from({ length: n }, (_, i) => ({ x: x0 + i * (w + gap), w }));
+};
+---
+
+<div class="cover-art">
+  {
+    main?.type === 'flow' &&
+      (() => {
+        const blocks = [
+          ...main.steps.map((s) => ({ kind: s.checkpoint ? 'b-accent' : 'b', note: Boolean(s.note) })),
+          ...(main.end ? [{ kind: 'b-muted', note: false }] : []),
+        ];
+        const cells = row(blocks.length);
+        const hasNotes = blocks.some((b) => b.note);
+        const y = hasNotes ? 100 : 118;
+        return (
+          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+            {cells.map((c, i) => (
+              <g>
+                <rect x={c.x} y={y} width={c.w} height="64" rx="10" class={blocks[i].kind} />
+                {blocks[i].note && (
+                  <g>
+                    <rect x={c.x + 6} y={y + 80} width={c.w - 12} height="6" rx="3" class="fill-muted" />
+                    <rect x={c.x + 6} y={y + 92} width={(c.w - 12) * 0.6} height="6" rx="3" class="fill-muted" />
+                  </g>
+                )}
+                {i < cells.length - 1 && <line x1={c.x + c.w + 3} y1={y + 32} x2={c.x + c.w + 13} y2={y + 32} class="ln" />}
+              </g>
+            ))}
+          </svg>
+        );
+      })()
+  }
+
+  {
+    main?.type === 'chain' &&
+      (() => {
+        const n = main.steps.length;
+        const h = 28;
+        const gap = 14;
+        const y0 = (300 - (n * h + (n - 1) * gap)) / 2;
+        return (
+          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+            <line x1="104" y1={y0 + h / 2} x2="104" y2={y0 + (n - 1) * (h + gap) + h / 2} class="ln" />
+            {main.steps.map((s, i) => (
+              <g>
+                <circle cx="104" cy={y0 + i * (h + gap) + h / 2} r="9" class={s.accent ? 'fill-accent' : 'b'} />
+                <rect x="128" y={y0 + i * (h + gap)} width={170 - (i % 2) * 30} height={h} rx="8" class={s.accent ? 'b-accent' : 'b'} />
+              </g>
+            ))}
+          </svg>
+        );
+      })()
+  }
+
+  {
+    main?.type === 'scale' && (
+      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+        {row(main.levels.length, 280, 20).map((c, i, all) => (
+          <rect
+            x={c.x}
+            y={210 - (i + 1) * 36}
+            width={c.w}
+            height={(i + 1) * 36}
+            rx="10"
+            class={i === all.length - 1 ? 'b-accent' : 'b'}
+          />
+        ))}
+        <line x1="60" y1="211" x2="340" y2="211" class="ln" />
+      </svg>
+    )
+  }
+
+  {
+    main?.type === 'matrix' && (
+      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+        <line x1="110" y1="60" x2="110" y2="240" class="ln" />
+        <line x1="110" y1="240" x2="300" y2="240" class="ln" />
+        {[0, 1].map((r) => [0, 1].map((col) => <rect x={122 + col * 90} y={66 + r * 84} width="80" height="74" rx="10" class="b" />))}
+      </svg>
+    )
+  }
+
+  {
+    main?.type === 'chat' && (
+      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+        {main.messages.slice(0, 5).map((m, i) => {
+          const w = m.from === 'bot' ? 170 : 130;
+          const x = m.from === 'bot' ? 90 : 310 - w;
+          return <rect x={x} y={52 + i * 42} width={w} height="30" rx="12" class={m.final ? 'b-accent' : m.from === 'bot' ? 'b' : 'fill-line'} />;
+        })}
+      </svg>
+    )
+  }
+
+  {
+    main?.type === 'rejected' && (
+      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+        {main.items.map((_, i) => (
+          <g>
+            <rect x="90" y={100 + i * 56} width="220" height="40" rx="10" class="b-muted" />
+            <line x1="110" y1={120 + i * 56} x2="250" y2={120 + i * 56} class="ln ln-muted" />
+          </g>
+        ))}
+      </svg>
+    )
+  }
+
+  {
+    main?.type === 'item-analysis' &&
+      (() => {
+        const { items } = analyzeItems();
+        const X0 = 80;
+        const Y0 = 60;
+        const W = 240;
+        const H = 180;
+        const px = (p: number) => X0 + p * W;
+        const py = (v: number) => Y0 + H - (v / Y_MAX) * H;
+        return (
+          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+            <rect x={X0} y={Y0} width={W} height={H} style="fill: var(--viz-surface)" />
+            <rect x={X0} y={Y0} width={zones.hard * W} height={H} class="zone-fill" />
+            <rect x={px(zones.easy)} y={Y0} width={(1 - zones.easy) * W} height={H} class="zone-fill" />
+            <rect x={X0} y={py(zones.flat)} width={W} height={Y0 + H - py(zones.flat)} class="zone-fill" />
+            <line x1={X0} y1={Y0} x2={X0} y2={Y0 + H} class="ln" />
+            <line x1={X0} y1={Y0 + H} x2={X0 + W} y2={Y0 + H} class="ln" />
+            {items.map((it) => (
+              <circle cx={px(it.p)} cy={py(it.d)} r={it.flagged ? 5 : 4} class={it.flagged ? 'fill-accent' : 'fill-line'} style={it.flagged ? '' : 'opacity: 0.5'} />
+            ))}
+          </svg>
+        );
+      })()
+  }
+
+  {
+    main?.type === 'rule-task' && (
+      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
+        <rect x="56" y="70" width="130" height="160" rx="12" class="b" />
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <rect x="72" y={88 + i * 14} width={i === 6 ? 60 : 98} height="5" rx="2.5" class="fill-muted" />
+        ))}
+        <rect x="72" y="200" width="14" height="14" rx="4" class="b" />
+        <line x1="196" y1="150" x2="208" y2="150" class="ln" />
+        <rect x="218" y="78" width="126" height="10" rx="5" class="fill-line" />
+        {main.options.map((o, i) => (
+          <rect x="218" y={104 + i * 40} width="126" height="30" rx="8" class={o.best ? 'b-accent' : 'b'} />
+        ))}
+      </svg>
+    )
+  }
+
+  {
+    versus && (
+      <div class="versus">
+        {versus.sketches!.map((kind, i) => (
+          <div class="versus-side">
+            <Sketch kind={kind} muted={versus.chosen !== undefined && i !== versus.chosen} thumbnail />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    !main && !versus && (
+      <div class="typo">
+        <span class="typo-title">{tr(d.title, lang)}</span>
+        <span class="typo-type">{typeLabel}</span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .cover-art {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 6%;
+    background: var(--viz-neutral);
+  }
+  .cover-art > :global(.viz-sketch) {
+    width: 100%;
+    height: 100%;
+  }
+  .versus {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8%;
+    align-items: center;
+    width: 92%;
+  }
+  .typo {
+    display: grid;
+    gap: 10px;
+    align-self: end;
+    justify-self: start;
+    max-width: 85%;
+  }
+  .typo-title {
+    font-size: clamp(18px, 2.4vw, 26px);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .typo-type {
+    font-size: var(--viz-small);
+    font-weight: 600;
+    color: var(--text-3);
+  }
+</style>

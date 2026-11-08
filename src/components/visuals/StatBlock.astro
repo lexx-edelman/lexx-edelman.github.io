@@ -1,0 +1,47 @@
+---
+// Крупные цифры результата. Использовать только для подтверждённых цифр.
+interface Props {
+  items: { value: string; label: string }[];
+}
+const { items } = Astro.props;
+---
+
+<dl class="stats">
+  {
+    items.map((item) => (
+      <div>
+        <dt>{item.label}</dt>
+        <dd>{item.value}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin: 0;
+  }
+  .stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--viz-surface);
+  }
+  dd {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--viz-accent);
+  }
+  dt {
+    font-size: var(--viz-small);
+    font-weight: 600;
+    color: var(--text-3);
+  }
+</style>

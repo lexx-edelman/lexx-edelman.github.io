@@ -1,0 +1,96 @@
+---
+// Цепочка трансформации на одном примере: карточки сверху вниз со стрелками
+interface Props {
+  steps: { label: string; text: string; accent?: boolean }[];
+}
+const { steps } = Astro.props;
+---
+
+<ol class="chain">
+  {
+    steps.map((step, i) => (
+      <li class:list={['link', { accent: step.accent }]}>
+        <span class="num" aria-hidden="true">
+          {i + 1}
+        </span>
+        <div class="card">
+          <span class="label">{step.label}</span>
+          <span class="text">{step.text}</span>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .chain {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  /* Линия-стрелка между номерами */
+  .link:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 13.25px;
+    top: 34px;
+    bottom: -10px;
+    width: 1.5px;
+    background: var(--viz-line);
+  }
+  .num {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-top: 10px;
+    border-radius: 50%;
+    background: var(--viz-surface);
+    box-shadow: inset 0 0 0 1.5px var(--viz-line);
+    font-size: var(--viz-small);
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .accent .num {
+    background: var(--viz-accent);
+    box-shadow: none;
+    color: #fff;
+  }
+  .card {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: var(--viz-surface);
+    box-shadow: inset 0 0 0 1.5px var(--line);
+  }
+  .accent .card {
+    background: var(--viz-accent-soft);
+    box-shadow: inset 0 0 0 1.5px var(--viz-accent);
+  }
+  .label {
+    font-size: var(--viz-small);
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .accent .label {
+    color: var(--viz-accent);
+  }
+  .text {
+    font-size: var(--viz-text);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+  }
+</style>

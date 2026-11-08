@@ -13,7 +13,6 @@ types: [experience]
 role: { en: "Learning solutions manager", ru: "Менеджер по разработке обучающих решений" }
 team: { en: "Me and product experts", ru: "Я и эксперты продукта" }
 nda: true
-tint: ["#d7e3ff", "#e9d9ff", "#ffd6e6"]
 overview:
   en: ["TODO: the problem, the solution and the result."]
   ru: ["TODO: проблема, решение и результат."]

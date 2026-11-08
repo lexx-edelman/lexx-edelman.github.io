@@ -1,71 +1,74 @@
 ---
-// Обёртка для SVG-схем: рамка, подпись, прокрутка на узких экранах.
-// Имя схемы задаётся в YAML кейса (artifact.diagram).
-import type { Lang } from '../../i18n/config';
+// Обёртка для любого визуала в кейсе: рамка, текстовое описание для скринридеров,
+// вывод рядом с графиком, подпись и обязательная пометка об упрощении.
+import { getLang, useTranslations } from '../../i18n/utils';
 import { isTodo } from '../../data/cases';
-import AiDesignPipeline from '../diagrams/AiDesignPipeline.astro';
-import TrainerFlow from '../diagrams/TrainerFlow.astro';
-import FormatMatrix from '../diagrams/FormatMatrix.astro';
-import PersonalizationCjm from '../diagrams/PersonalizationCjm.astro';
-import ComplianceStructure from '../diagrams/ComplianceStructure.astro';
-
-const diagrams = {
-  'ai-design-pipeline': AiDesignPipeline,
-  'trainer-flow': TrainerFlow,
-  'format-matrix': FormatMatrix,
-  'personalization-cjm': PersonalizationCjm,
-  'compliance-structure': ComplianceStructure,
-} as const;
 
 interface Props {
-  name?: string;
-  caption?: string;
-  lang: Lang;
+  label: string; // описание картинки для скринридеров
+  caption?: string; // подпись над пометкой об упрощении
+  summary?: string; // краткий текстовый вывод (для графиков)
+  illustrative?: boolean; // добавить «Данные условные»
+  interactive?: boolean; // внутри есть элементы управления — не прятать их за role="img"
+  bare?: boolean; // без рамки (для визуалов со своими карточками)
 }
-const { name, caption, lang } = Astro.props;
-const Svg = name ? diagrams[name as keyof typeof diagrams] : undefined;
+const { label, caption, summary, illustrative = false, interactive = false, bare = false } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
+const notes = [illustrative ? t('viz.illustrative') : '', t('viz.disclaimer')].filter(Boolean).join(' ');
 ---
 
-{
-  Svg && (
-    <figure class="diagram">
-      <div class="frame">
-        <div class="scroll">
-          <Svg lang={lang} />
-        </div>
-      </div>
-      {caption && <figcaption class:list={{ todo: isTodo(caption) }}>{caption}</figcaption>}
-    </figure>
-  )
-}
+<figure class="visual">
+  <div
+    class:list={['frame', { bare }]}
+    role={interactive ? 'group' : 'img'}
+    aria-label={label}
+  >
+    <slot />
+  </div>
+  {summary && <p class="summary">{summary}</p>}
+  <figcaption>
+    {caption && <span class:list={['caption', { todo: isTodo(caption) }]}>{caption}</span>}
+    <span class="disclaimer">{notes}</span>
+  </figcaption>
+</figure>
 
 <style>
-  .diagram {
+  .visual {
     margin: 0;
   }
+  .visual + :global(.visual) {
+    margin-top: 32px;
+  }
   .frame {
+    padding: 24px;
     border-radius: var(--radius-lg);
-    background: var(--bg);
-    box-shadow: inset 0 0 0 1px var(--line);
-    overflow: hidden;
+    background: var(--viz-neutral);
   }
-  .scroll {
-    padding: 28px;
-    overflow-x: auto;
+  .frame.bare {
+    padding: 0;
+    background: none;
   }
-  /* На телефоне схема не сжимается до нечитаемого размера, а прокручивается внутри рамки */
-  .scroll :global(.dg) {
-    min-width: 620px;
+  .summary {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--text-2);
+    max-width: 640px;
   }
   figcaption {
+    display: grid;
+    gap: 2px;
     margin-top: 10px;
-    font-size: 13px;
+    font-size: var(--viz-small);
     font-weight: 600;
     color: var(--text-3);
   }
+  .disclaimer {
+    color: var(--viz-muted-text);
+    font-weight: 500;
+  }
   @media (max-width: 640px) {
-    .scroll {
-      padding: 20px;
+    .frame:not(.bare) {
+      padding: 16px;
     }
   }
 </style>
