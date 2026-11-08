@@ -19,7 +19,7 @@ const { featured, archived } = await getCases();
     <button type="button" class="filter" data-filter="all" aria-pressed="true">{t('work.all')}</button>
     {
       caseTypes.map((type) => (
-        <button type="button" class="filter" data-filter={type.id} aria-pressed="false">
+        <button type="button" class={`filter type-${type.id}`} data-filter={type.id} aria-pressed="false">
           {tr(type.label, lang)}
         </button>
       ))
@@ -89,8 +89,8 @@ const { featured, archived } = await getCases();
     color: var(--text);
   }
   .filter[aria-pressed='true'] {
-    background: var(--text);
-    color: var(--bg);
+    background: var(--t-accent, var(--text));
+    color: #fff;
   }
   .grid {
     display: grid;

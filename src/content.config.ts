@@ -9,13 +9,11 @@ const text = z.object({ en: z.string(), ru: z.string() });
 const paragraphs = z.object({ en: z.array(z.string()), ru: z.array(z.string()) });
 
 // Визуалы. Все примеры в них синтетические и из другой предметной области.
-// section — в каком разделе страницы показать, placement — до или после текста раздела,
-// cover: true — по этому визуалу рисуется обложка карточки.
+// section — в каком разделе страницы показать, placement — до или после текста раздела.
 const sections = z.enum(['problem', 'constraints', 'myRole', 'decisions', 'cut', 'artifact', 'outcome', 'learned']);
 const visualBase = {
   section: sections,
   placement: z.enum(['before', 'after']).default('after'),
-  cover: z.boolean().default(false),
   label: text, // текстовое описание для скринридеров
   caption: text.optional(), // подпись; под ней всегда идёт пометка об упрощении
 };
@@ -78,6 +76,44 @@ const visual = z.discriminatedUnion('type', [
   }),
 ]);
 
+// Обложка карточки — фрагмент выдуманного интерфейса с моментом выбора.
+// type — цвет обложки (по умолчанию первый тип из types).
+// Все тексты синтетические и не из банковской области.
+const fragment = z.discriminatedUnion('variant', [
+  z.object({
+    variant: z.literal('task-card'), // задание: ситуация и два варианта, один верный
+    label: text,
+    situation: text,
+    options: z.array(z.object({ text: text, accent: z.boolean().default(false) })).length(2),
+    feedback: text, // появляется после «нажатия»
+  }),
+  z.object({
+    variant: z.literal('chat'), // последний пузырь появляется с эффектом печати
+    messages: z.array(z.object({ from: z.enum(['bot', 'user']), text: text })).min(2).max(3),
+  }),
+  z.object({
+    variant: z.literal('picker'), // два параметра → результат; второй параметр переключается
+    params: z.array(z.object({ question: text, value: text, alt: text.optional() })).length(2),
+    result: text,
+    altResult: text,
+  }),
+  z.object({
+    variant: z.literal('catalog-card'), // карточка курса; подзаголовок меняется на персональный
+    title: text,
+    meta: text,
+    subtitle: text,
+    altSubtitle: text,
+    badge: text,
+    cta: text,
+  }),
+  z.object({
+    variant: z.literal('review-row'), // строки аналитики теста; у одной появляется флажок
+    rows: z
+      .array(z.object({ question: text, difficulty: z.string(), discrimination: z.string(), flag: text.optional() }))
+      .length(3),
+  }),
+]);
+
 const cases = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/cases' }),
   schema: z.object({
@@ -93,7 +129,9 @@ const cases = defineCollection({
     order: z.number(), // порядок на главной
     archived: z.boolean().default(false), // true — кейс только в архиве
     nda: z.boolean().default(false), // показать примечание о закрытых материалах
-    cover: z.string().optional(), // своя картинка вместо схемы-обложки (путь в public/)
+    cover: z.string().optional(), // своя картинка вместо обложки-фрагмента (путь в public/)
+    coverFragment: fragment.optional(),
+    coverType: z.enum(['systems', 'ai', 'experience']).optional(), // цвет обложки, если не первый тип
 
     // Разделы страницы, в порядке показа
     overview: paragraphs.optional(), // только для архивных кейсов

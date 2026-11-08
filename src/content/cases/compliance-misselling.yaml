@@ -102,7 +102,6 @@ visuals:
   # Главный визуал: «было / стало» на выдуманном правиле, не из реального курса
   - type: rule-task
     section: artifact
-    cover: true
     label:
       en: "Before and after on a made-up rule about not offering products a client doesn’t need. Before, a dense regulatory text to read and confirm. After, a situational task with three answers and feedback."
       ru: "Было и стало на выдуманном правиле о том, что нельзя предлагать клиенту ненужный продукт. Было — плотный нормативный текст, который нужно прочитать и подтвердить. Стало — ситуационная задача с тремя ответами и пояснениями."
@@ -129,3 +128,16 @@ visuals:
         feedback:
           en: "The best option. You offer something only if it matches a need the client has told you about."
           ru: "Лучший вариант. Вы предлагаете продукт, только если он отвечает потребности, о которой рассказал сам клиент."
+
+# Обложка карточки: выдуманная ситуационная задача (не из реального курса)
+coverFragment:
+  variant: task-card
+  label: { en: "Situation", ru: "Ситуация" }
+  situation:
+    en: "A client wants to send money abroad. The system suggests also offering an investment product. What do you do?"
+    ru: "Клиент хочет отправить деньги за границу. Система подсказывает заодно предложить инвестиционный продукт. Что вы сделаете?"
+  options:
+    - text: { en: "Offer it anyway", ru: "Всё равно предложить" }
+    - text: { en: "Ask what they need first", ru: "Сначала спросить о целях" }
+      accent: true
+  feedback: { en: "That’s the rule in practice.", ru: "Так правило работает на практике." }

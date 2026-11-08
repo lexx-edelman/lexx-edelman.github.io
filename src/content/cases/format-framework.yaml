@@ -60,7 +60,6 @@ visuals:
   # Главный визуал: три уровня глубины освоения с общими описаниями
   - type: scale
     section: artifact
-    cover: true
     label:
       en: "A scale of three levels of mastery. Awareness means knowing the idea exists, application means using it in typical situations, mastery means handling unusual cases."
       ru: "Шкала из трёх уровней освоения. Осведомлённость — знать, что это существует, применение — использовать в типовых ситуациях, мастерство — справляться с нестандартными случаями."
@@ -86,3 +85,15 @@ visuals:
     cells:
       - [{ en: "Simulation", ru: "Симуляция" }, { en: "Practice-based course", ru: "Курс с практикой" }]
       - [{ en: "AI tutor", ru: "AI-тьютор" }, { en: "Short reference", ru: "Короткая памятка" }]
+
+# Обложка карточки: мини-инструмент выбора формата (не реальные критерии стандарта)
+coverFragment:
+  variant: picker
+  params:
+    - question: { en: "What should people be able to do?", ru: "Что люди должны уметь?" }
+      value: { en: "Apply it on the job", ru: "Применять в работе" }
+    - question: { en: "How often will they need it?", ru: "Как часто это понадобится?" }
+      value: { en: "Once, then occasionally", ru: "Один раз, потом иногда" }
+      alt: { en: "Every day, in the moment", ru: "Каждый день, прямо в работе" }
+  result: { en: "Practice-based course with a simulation", ru: "Курс с практикой и симуляцией" }
+  altResult: { en: "Short reference at the point of need", ru: "Короткая памятка под рукой" }

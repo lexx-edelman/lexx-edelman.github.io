@@ -89,7 +89,6 @@ visuals:
   # Главный визуал: путь сотрудника в четыре этапа, под каждым — общий вопрос
   - type: flow
     section: artifact
-    cover: true
     label:
       en: "The learner journey in four stages, each with a question. Choosing a course, what would make this person want to start. Starting, how they prefer to begin. Going through, what kind of feedback helps them. Finishing, did it stick."
       ru: "Путь сотрудника в четыре этапа, у каждого свой вопрос. Выбор курса — что побудит начать. Старт — как удобнее начинать. Прохождение — какая обратная связь помогает. Завершение — закрепилось ли."
@@ -102,3 +101,15 @@ visuals:
         note: { en: "What kind of feedback helps them?", ru: "Какая обратная связь ему помогает?" }
       - title: { en: "Finishing", ru: "Завершение" }
         note: { en: "Did it stick?", ru: "Закрепилось ли?" }
+
+# Обложка карточки: карточка выдуманного курса с персональной подписью.
+# Цвет — AI, как в задаче по обложкам; тип работы для фильтров не меняется.
+coverType: ai
+coverFragment:
+  variant: catalog-card
+  title: { en: "Negotiating with suppliers", ru: "Переговоры с поставщиками" }
+  meta: { en: "Course · 40 min", ru: "Курс · 40 мин" }
+  subtitle: { en: "A 40-minute course on negotiation basics", ru: "40-минутный курс об основах переговоров" }
+  altSubtitle: { en: "Built for people who like to start with a real case", ru: "Для тех, кто любит начинать с реального кейса" }
+  badge: { en: "personalized", ru: "для вас" }
+  cta: { en: "Start", ru: "Начать" }

@@ -110,7 +110,6 @@ visuals:
   # Главный визуал кейса: та же цепочка на синтетическом примере (поддержка клиентов в SaaS)
   - type: chain
     section: artifact
-    cover: true
     label:
       en: "Worked example in five steps, from customer support in a software company. From what agents do now, to what they should do, a learning outcome, practice, and the theory that practice needs."
       ru: "Пример в пять шагов из поддержки клиентов в софтверной компании. От того, что сотрудники делают сейчас, к тому, что должны делать, к цели обучения, практике и теории, которая для неё нужна."
@@ -139,3 +138,16 @@ visuals:
         text:
           en: "A short checklist for verifying a resolution."
           ru: "Короткий чек-лист для проверки, что проблема решена."
+
+# Обложка карточки: задание из выдуманной практики (поддержка клиентов)
+coverFragment:
+  variant: task-card
+  label: { en: "Practice · ticket 2 of 3", ru: "Практика · обращение 2 из 3" }
+  situation:
+    en: "“Thanks for the steps! Still getting the same error though.”"
+    ru: "«Спасибо за инструкцию! Но ошибка всё та же.»"
+  options:
+    - text: { en: "Close ticket", ru: "Закрыть обращение" }
+    - text: { en: "Follow up", ru: "Уточнить у клиента" }
+      accent: true
+  feedback: { en: "Right call: the problem isn’t solved yet.", ru: "Верно: проблема ещё не решена." }

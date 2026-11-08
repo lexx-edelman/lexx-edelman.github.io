@@ -129,3 +129,18 @@ visuals:
         text:
           en: "Looks like you learn best by watching an example and then practicing. In this course, start with the worked examples in each module."
           ru: "Похоже, вам лучше всего подходит сначала посмотреть пример, а потом попрактиковаться. В этом курсе начинайте с разобранных примеров в каждом модуле."
+
+# Обложка карточки: выдуманный диалог. TODO: проверить, что вопросы не совпадают с реальным тренажёром
+coverFragment:
+  variant: chat
+  messages:
+    - from: bot
+      text:
+        en: "Think of the last new thing you learned at work. What did you do first?"
+        ru: "Вспомните, что новое вы последний раз осваивали на работе. С чего начали?"
+    - from: user
+      text: { en: "Asked someone to show me", ru: "Попросил кого-то показать" }
+    - from: bot
+      text:
+        en: "You learn best from an example, then practice. Start with the worked cases."
+        ru: "Вам подходит сначала пример, потом практика. Начните с разобранных кейсов."

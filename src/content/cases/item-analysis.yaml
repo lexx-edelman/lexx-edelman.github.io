@@ -48,8 +48,24 @@ visuals:
   # TODO: подтвердить, что кейс будет, и описать решения по итогам анализа
   - type: item-analysis
     section: artifact
-    cover: true
     label: { en: "Item analysis chart", ru: "График анализа заданий" }
     caption:
       en: "Each dot is a test question. Questions in the shaded zones are worth reviewing."
       ru: "Каждая точка — вопрос теста. Вопросы в затенённых зонах стоит пересмотреть."
+
+# Обложка карточки: строки аналитики теста на условных данных
+coverFragment:
+  variant: review-row
+  rows:
+    - question: { en: "Q2 · Pick a chart for a trend over time", ru: "В2 · Выберите график для тренда" }
+      difficulty: "0.62"
+      discrimination: "0.41"
+    - question: { en: "Q5 · What does the median show?", ru: "В5 · Что показывает медиана?" }
+      difficulty: "0.96"
+      discrimination: "0.06"
+      flag:
+        en: "Almost everyone gets this right — doesn’t tell us anything"
+        ru: "Почти все отвечают верно — ничего не говорит о знаниях"
+    - question: { en: "Q8 · Find the leak in the funnel", ru: "В8 · Найдите утечку в воронке" }
+      difficulty: "0.48"
+      discrimination: "0.37"

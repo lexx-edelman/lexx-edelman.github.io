@@ -31,7 +31,10 @@ npm run build   # готовый сайт в папке dist/
     Нет раздела в файле — его нет на странице. Описание всех полей — `src/content.config.ts`.
   - Иллюстрации — список `visuals` в YAML кейса: тип (`flow`, `chain`, `chat`, `scale`, `matrix`,
     `rejected`, `stats`, `rule-task`, `item-analysis`), раздел страницы и тексты en / ru.
-    Компоненты — `src/components/visuals/`. `cover: true` — по этому визуалу рисуется обложка карточки.
+    Компоненты — `src/components/visuals/`.
+  - Обложка карточки — `coverFragment` в YAML кейса: фрагмент выдуманного интерфейса
+    (`task-card`, `chat`, `picker`, `catalog-card`, `review-row`). Цвет — по первому типу из `types`
+    или по `coverType`. Компонент — `src/components/case/CaseCover.astro`.
   - Все примеры в иллюстрациях выдуманные и из другой области: никаких реальных артефактов работодателя.
   - Данные графика item analysis — условные, `node scripts/generate-item-analysis.mjs`.
 - **TODO** — недописанные места. На сайте любой текст с `TODO` подсвечен жёлтым, чтобы его не пропустить.

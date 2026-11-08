@@ -1,12 +1,14 @@
 ---
-// Обложка кейса — уменьшенная схема его главного визуала (visual с cover: true
-// или развилка с эскизами), нарисованная из тех же данных, без текста.
-// Архивные кейсы и кейсы без главного визуала — типографическая обложка.
-import Sketch from '../visuals/Sketch.astro';
+// Обложка кейса — крупный фрагмент выдуманного интерфейса с моментом выбора.
+// Шаблон и тексты — coverFragment в YAML кейса; цвет — по типу работы
+// (coverType или первый тип из types). Архивные кейсы — типографическая обложка.
+//
+// Анимация: на десктопе — при наведении на карточку; на телефоне и на странице
+// кейса — один раз, когда обложка появляется на экране. При prefers-reduced-motion
+// сразу показывается конечное состояние.
 import { caseTypes, type Case } from '../../data/cases';
-import { analyzeItems, Y_MAX, zones } from '../../data/visuals/itemAnalysis';
 import type { Lang } from '../../i18n/config';
-import { tr } from '../../i18n/utils';
+import { tr, useTranslations } from '../../i18n/utils';
 
 interface Props {
   item: Case;
@@ -14,174 +16,49 @@ interface Props {
 }
 const { item, lang } = Astro.props;
 const d = item.data;
-const main = d.archived ? undefined : d.visuals.find((v) => v.cover);
-const versus = d.archived || main ? undefined : d.decisions?.find((dec) => dec.sketches?.length);
+const t = useTranslations(lang);
+const L = (x: { en: string; ru: string }) => tr(x, lang);
+const f = d.archived ? undefined : d.coverFragment;
+const type = d.archived ? 'experience' : (d.coverType ?? d.types[0]);
 const typeLabel = caseTypes
-  .filter((type) => d.types.includes(type.id))
-  .map((type) => tr(type.label, lang))
+  .filter((ct) => d.types.includes(ct.id))
+  .map((ct) => tr(ct.label, lang))
   .join(' · ');
-
-// Ряд блоков по центру
-const row = (n: number, width = 340, gap = 16) => {
-  const w = (width - gap * (n - 1)) / n;
-  const x0 = (400 - width) / 2;
-  return Array.from({ length: n }, (_, i) => ({ x: x0 + i * (w + gap), w }));
-};
 ---
 
-<div class="cover-art">
+<div class={`cover-art type-${type}`} data-cover aria-hidden="true">
   {
-    main?.type === 'flow' &&
-      (() => {
-        const blocks = [
-          ...main.steps.map((s) => ({ kind: s.checkpoint ? 'b-accent' : 'b', note: Boolean(s.note) })),
-          ...(main.end ? [{ kind: 'b-muted', note: false }] : []),
-        ];
-        const cells = row(blocks.length);
-        const hasNotes = blocks.some((b) => b.note);
-        const y = hasNotes ? 100 : 118;
-        return (
-          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-            {cells.map((c, i) => (
-              <g>
-                <rect x={c.x} y={y} width={c.w} height="64" rx="10" class={blocks[i].kind} />
-                {blocks[i].note && (
-                  <g>
-                    <rect x={c.x + 6} y={y + 80} width={c.w - 12} height="6" rx="3" class="fill-muted" />
-                    <rect x={c.x + 6} y={y + 92} width={(c.w - 12) * 0.6} height="6" rx="3" class="fill-muted" />
-                  </g>
-                )}
-                {i < cells.length - 1 && <line x1={c.x + c.w + 3} y1={y + 32} x2={c.x + c.w + 13} y2={y + 32} class="ln" />}
-              </g>
+    f?.variant === 'task-card' && (
+      <div class="frag-wrap">
+        <div class="frag task">
+          <span class="f-label">{L(f.label)}</span>
+          <p class="f-text">{L(f.situation)}</p>
+          <div class="f-buttons">
+            {f.options.map((o) => (
+              <span class:list={['f-btn', { accent: o.accent }]}>{L(o.text)}</span>
             ))}
-          </svg>
-        );
-      })()
-  }
-
-  {
-    main?.type === 'chain' &&
-      (() => {
-        const n = main.steps.length;
-        const h = 28;
-        const gap = 14;
-        const y0 = (300 - (n * h + (n - 1) * gap)) / 2;
-        return (
-          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-            <line x1="104" y1={y0 + h / 2} x2="104" y2={y0 + (n - 1) * (h + gap) + h / 2} class="ln" />
-            {main.steps.map((s, i) => (
-              <g>
-                <circle cx="104" cy={y0 + i * (h + gap) + h / 2} r="9" class={s.accent ? 'fill-accent' : 'b'} />
-                <rect x="128" y={y0 + i * (h + gap)} width={170 - (i % 2) * 30} height={h} rx="8" class={s.accent ? 'b-accent' : 'b'} />
-              </g>
-            ))}
-          </svg>
-        );
-      })()
-  }
-
-  {
-    main?.type === 'scale' && (
-      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-        {row(main.levels.length, 280, 20).map((c, i, all) => (
-          <rect
-            x={c.x}
-            y={210 - (i + 1) * 36}
-            width={c.w}
-            height={(i + 1) * 36}
-            rx="10"
-            class={i === all.length - 1 ? 'b-accent' : 'b'}
-          />
-        ))}
-        <line x1="60" y1="211" x2="340" y2="211" class="ln" />
-      </svg>
+          </div>
+        </div>
+        <p class="f-after">
+          <span class="tick">✓</span> {L(f.feedback)}
+        </p>
+      </div>
     )
   }
 
   {
-    main?.type === 'matrix' && (
-      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-        <line x1="110" y1="60" x2="110" y2="240" class="ln" />
-        <line x1="110" y1="240" x2="300" y2="240" class="ln" />
-        {[0, 1].map((r) => [0, 1].map((col) => <rect x={122 + col * 90} y={66 + r * 84} width="80" height="74" rx="10" class="b" />))}
-      </svg>
-    )
-  }
-
-  {
-    main?.type === 'chat' && (
-      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-        {main.messages.slice(0, 5).map((m, i) => {
-          const w = m.from === 'bot' ? 170 : 130;
-          const x = m.from === 'bot' ? 90 : 310 - w;
-          return <rect x={x} y={52 + i * 42} width={w} height="30" rx="12" class={m.final ? 'b-accent' : m.from === 'bot' ? 'b' : 'fill-line'} />;
-        })}
-      </svg>
-    )
-  }
-
-  {
-    main?.type === 'rejected' && (
-      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-        {main.items.map((_, i) => (
-          <g>
-            <rect x="90" y={100 + i * 56} width="220" height="40" rx="10" class="b-muted" />
-            <line x1="110" y1={120 + i * 56} x2="250" y2={120 + i * 56} class="ln ln-muted" />
-          </g>
-        ))}
-      </svg>
-    )
-  }
-
-  {
-    main?.type === 'item-analysis' &&
-      (() => {
-        const { items } = analyzeItems();
-        const X0 = 80;
-        const Y0 = 60;
-        const W = 240;
-        const H = 180;
-        const px = (p: number) => X0 + p * W;
-        const py = (v: number) => Y0 + H - (v / Y_MAX) * H;
-        return (
-          <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-            <rect x={X0} y={Y0} width={W} height={H} style="fill: var(--viz-surface)" />
-            <rect x={X0} y={Y0} width={zones.hard * W} height={H} class="zone-fill" />
-            <rect x={px(zones.easy)} y={Y0} width={(1 - zones.easy) * W} height={H} class="zone-fill" />
-            <rect x={X0} y={py(zones.flat)} width={W} height={Y0 + H - py(zones.flat)} class="zone-fill" />
-            <line x1={X0} y1={Y0} x2={X0} y2={Y0 + H} class="ln" />
-            <line x1={X0} y1={Y0 + H} x2={X0 + W} y2={Y0 + H} class="ln" />
-            {items.map((it) => (
-              <circle cx={px(it.p)} cy={py(it.d)} r={it.flagged ? 5 : 4} class={it.flagged ? 'fill-accent' : 'fill-line'} style={it.flagged ? '' : 'opacity: 0.5'} />
-            ))}
-          </svg>
-        );
-      })()
-  }
-
-  {
-    main?.type === 'rule-task' && (
-      <svg class="viz-sketch" viewBox="0 0 400 300" aria-hidden="true">
-        <rect x="56" y="70" width="130" height="160" rx="12" class="b" />
-        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-          <rect x="72" y={88 + i * 14} width={i === 6 ? 60 : 98} height="5" rx="2.5" class="fill-muted" />
-        ))}
-        <rect x="72" y="200" width="14" height="14" rx="4" class="b" />
-        <line x1="196" y1="150" x2="208" y2="150" class="ln" />
-        <rect x="218" y="78" width="126" height="10" rx="5" class="fill-line" />
-        {main.options.map((o, i) => (
-          <rect x="218" y={104 + i * 40} width="126" height="30" rx="8" class={o.best ? 'b-accent' : 'b'} />
-        ))}
-      </svg>
-    )
-  }
-
-  {
-    versus && (
-      <div class="versus">
-        {versus.sketches!.map((kind, i) => (
-          <div class="versus-side">
-            <Sketch kind={kind} muted={versus.chosen !== undefined && i !== versus.chosen} thumbnail />
+    f?.variant === 'chat' && (
+      <div class="frag chat">
+        {f.messages.map((m, i) => (
+          <div class:list={['bubble', m.from, { last: i === f.messages.length - 1 }]}>
+            <span class="bubble-text">{L(m.text)}</span>
+            {i === f.messages.length - 1 && (
+              <span class="dots">
+                <i />
+                <i />
+                <i />
+              </span>
+            )}
           </div>
         ))}
       </div>
@@ -189,7 +66,69 @@ const row = (n: number, width = 340, gap = 16) => {
   }
 
   {
-    !main && !versus && (
+    f?.variant === 'picker' && (
+      <div class="frag picker">
+        {f.params.map((p) => (
+          <div class="param">
+            <span class="f-label">{L(p.question)}</span>
+            <span class:list={['value', { swaps: Boolean(p.alt) }]}>
+              <span class="v-a">{L(p.value)}</span>
+              {p.alt && <span class="v-b">{L(p.alt)}</span>}
+            </span>
+          </div>
+        ))}
+        <div class="result">
+          <span class="f-label">{t('cover.result')}</span>
+          <span class="swap">
+            <span class="v-a">{L(f.result)}</span>
+            <span class="v-b">{L(f.altResult)}</span>
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    f?.variant === 'catalog-card' && (
+      <div class="frag catalog">
+        <div class="banner">
+          <span class="badge">{L(f.badge)}</span>
+        </div>
+        <div class="catalog-body">
+          <span class="f-label">{L(f.meta)}</span>
+          <p class="f-title">{L(f.title)}</p>
+          <span class="swap subtitle">
+            <span class="v-a">{L(f.subtitle)}</span>
+            <span class="v-b">{L(f.altSubtitle)}</span>
+          </span>
+          <span class="f-btn cta">{L(f.cta)}</span>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    f?.variant === 'review-row' && (
+      <div class="frag review">
+        <div class="row head">
+          <span>{t('cover.question')}</span>
+          <span>{t('cover.difficulty')}</span>
+          <span>{t('cover.discrimination')}</span>
+        </div>
+        {f.rows.map((r) => (
+          <div class:list={['row', { flagged: Boolean(r.flag) }]}>
+            <span class="q">{L(r.question)}</span>
+            <span class="num">{r.difficulty}</span>
+            <span class="num">{r.discrimination}</span>
+            {r.flag && <span class="flag">⚑ {L(r.flag)}</span>}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    !f && (
       <div class="typo">
         <span class="typo-title">{tr(d.title, lang)}</span>
         <span class="typo-type">{typeLabel}</span>
@@ -198,42 +137,460 @@ const row = (n: number, width = 340, gap = 16) => {
   }
 </div>
 
+<script>
+  // Один раз проиграть анимацию, когда обложка видна (телефоны и страница кейса),
+  // или сразу показать конечное состояние, если анимации отключены.
+  function initCovers() {
+    const covers = document.querySelectorAll<HTMLElement>('[data-cover]:not([data-ready])');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const noHover = window.matchMedia('(hover: none)').matches;
+    const io =
+      'IntersectionObserver' in window
+        ? new IntersectionObserver(
+            (entries) =>
+              entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                e.target.classList.add('played');
+                io?.unobserve(e.target);
+              }),
+            { threshold: 0.6 },
+          )
+        : undefined;
+    covers.forEach((el) => {
+      el.dataset.ready = '1';
+      if (reduced) return el.classList.add('played');
+      const inCard = Boolean(el.closest('a.card'));
+      if (noHover || !inCard) io ? io.observe(el) : el.classList.add('played');
+    });
+  }
+  initCovers();
+  document.addEventListener('astro:page-load', initCovers);
+</script>
+
 <style>
   .cover-art {
     position: absolute;
     inset: 0;
     display: grid;
     place-items: center;
-    padding: 6%;
-    background: var(--viz-neutral);
+    padding: 5%;
+    background: var(--t-bg);
+    color: var(--t-ink);
+    container-type: inline-size;
   }
-  .cover-art > :global(.viz-sketch) {
+
+  /* Фрагмент масштабируется вместе с обложкой: все размеры в em */
+  .frag,
+  .frag-wrap {
+    width: 90cqw;
+    font-size: clamp(9px, 3.75cqw, 19px);
+  }
+  .frag-wrap .frag {
     width: 100%;
-    height: 100%;
+    font-size: 1em;
   }
-  .versus {
+  .frag {
+    display: grid;
+    gap: 0.75em;
+    padding: 1.15em 1.25em;
+    border-radius: 1em;
+    background: var(--viz-surface);
+    box-shadow: 0 0.5em 1.5em rgba(4, 17, 31, 0.08);
+    color: var(--text);
+    text-align: left;
+  }
+  .task {
+    gap: 0.9em;
+    padding: 1.5em 1.4em;
+  }
+  .f-label {
+    font-size: 0.85em;
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .f-text {
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .f-title {
+    font-size: 1.15em;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .f-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8%;
-    align-items: center;
-    width: 92%;
+    gap: 0.5em;
   }
+  .f-btn {
+    display: grid;
+    place-items: center;
+    min-height: 2.6em;
+    padding: 0.5em 0.75em;
+    border-radius: 0.7em;
+    background: var(--surface);
+    font-size: 0.92em;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--text-2);
+    transition:
+      background-color 0.25s,
+      color 0.25s,
+      box-shadow 0.25s;
+  }
+  .f-btn.accent {
+    background: var(--viz-surface);
+    color: var(--t-accent);
+    box-shadow: inset 0 0 0 1.5px var(--t-accent);
+  }
+  .f-after {
+    margin-top: 0.8em;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: var(--t-ink-2);
+    opacity: 0;
+    transform: translateY(-0.3em);
+    transition:
+      opacity 0.3s,
+      transform 0.3s var(--ease);
+  }
+  .tick {
+    display: inline-grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    margin-right: 0.3em;
+    border-radius: 50%;
+    background: var(--t-accent);
+    color: #fff;
+    font-size: 0.85em;
+  }
+
+  /* --- Чат --- */
+  .chat {
+    gap: 0.6em;
+  }
+  .bubble {
+    position: relative;
+    max-width: 85%;
+    padding: 0.65em 0.9em;
+    border-radius: 1em;
+    font-size: 0.95em;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .bubble.bot {
+    justify-self: start;
+    background: var(--surface);
+    border-top-left-radius: 0.3em;
+  }
+  .bubble.user {
+    justify-self: end;
+    background: var(--t-accent);
+    color: #fff;
+    border-top-right-radius: 0.3em;
+  }
+  /* Последнее сообщение: сначала видно только «печатает…», потом текст */
+  .bubble.last {
+    background: transparent;
+    transition: background-color 0.2s;
+  }
+  .bubble.last .bubble-text {
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .dots {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    gap: 0.3em;
+    padding: 0.85em 1em;
+    border-radius: 1em;
+    border-top-left-radius: 0.3em;
+    background: var(--surface);
+    transition: opacity 0.15s;
+  }
+  .dots i {
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    background: var(--text-3);
+  }
+
+  /* --- Picker --- */
+  .param,
+  .result {
+    display: grid;
+    gap: 0.35em;
+  }
+  .value,
+  .swap {
+    display: grid;
+  }
+  .value {
+    padding: 0.55em 0.8em;
+    border-radius: 0.7em;
+    background: var(--surface);
+    font-weight: 700;
+  }
+  .value > *,
+  .swap > * {
+    grid-area: 1 / 1;
+    transition:
+      opacity 0.3s,
+      transform 0.3s var(--ease);
+  }
+  .v-b {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  .value.swaps {
+    box-shadow: inset 0 0 0 1.5px var(--t-accent);
+  }
+  .result {
+    padding: 0.75em 0.9em;
+    border-radius: 0.8em;
+    background: var(--t-bg);
+    color: var(--t-ink);
+  }
+  .result .f-label {
+    color: var(--t-ink-2);
+  }
+  .result .swap {
+    font-size: 1.05em;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* --- Карточка курса --- */
+  .catalog {
+    padding: 0;
+    overflow: hidden;
+    gap: 0;
+  }
+  .banner {
+    position: relative;
+    height: 4.5em;
+    background: color-mix(in srgb, var(--t-accent) 14%, white);
+  }
+  .banner::before,
+  .banner::after {
+    content: '';
+    position: absolute;
+    left: 1.25em;
+    height: 0.5em;
+    border-radius: 0.25em;
+  }
+  .banner::before {
+    top: 1.6em;
+    width: 3.2em;
+    background: var(--t-accent);
+  }
+  .banner::after {
+    top: 2.5em;
+    width: 5em;
+    background: color-mix(in srgb, var(--t-accent) 45%, white);
+  }
+  .badge {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    padding: 0.25em 0.65em;
+    border-radius: 999px;
+    background: var(--t-accent);
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0.8);
+    transition:
+      opacity 0.25s,
+      transform 0.35s var(--spring);
+  }
+  .catalog-body {
+    display: grid;
+    gap: 0.45em;
+    padding: 1em 1.25em 1.2em;
+  }
+  .subtitle {
+    font-size: 0.95em;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-2);
+  }
+  .subtitle .v-b {
+    color: var(--t-ink-2);
+  }
+  .cta {
+    justify-self: start;
+    min-height: 2.3em;
+    margin-top: 0.35em;
+    padding-inline: 1.2em;
+    background: var(--t-accent);
+    color: #fff;
+  }
+
+  /* --- Аналитика теста --- */
+  /* Общие колонки для всех строк: ширина цифр по заголовкам */
+  .review {
+    grid-template-columns: minmax(0, 1fr) max-content max-content;
+    gap: 0;
+    padding: 0.6em 0.4em;
+  }
+  .row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    column-gap: 0.9em;
+    align-items: center;
+    padding: 0.6em 0.8em;
+    border-radius: 0.6em;
+    font-size: 0.92em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  .row.head {
+    font-size: 0.82em;
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .row .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .row.head span:not(:first-child) {
+    text-align: right;
+  }
+  .q {
+    line-height: 1.3;
+  }
+  .flag {
+    grid-column: 1 / -1;
+    margin-top: 0.35em;
+    font-size: 0.88em;
+    font-weight: 700;
+    color: var(--t-ink-2);
+    opacity: 0;
+    transform: translateY(-0.2em);
+    transition:
+      opacity 0.3s,
+      transform 0.3s var(--ease);
+  }
+
+  /* --- Типографическая обложка (архив) --- */
   .typo {
     display: grid;
-    gap: 10px;
+    gap: 0.6em;
     align-self: end;
     justify-self: start;
     max-width: 85%;
+    font-size: clamp(12px, 2.4cqw, 15px);
   }
   .typo-title {
-    font-size: clamp(18px, 2.4vw, 26px);
+    font-size: 1.7em;
     font-weight: 600;
     line-height: 1.2;
-    color: var(--text);
+    color: var(--t-ink);
   }
   .typo-type {
-    font-size: var(--viz-small);
-    font-weight: 600;
-    color: var(--text-3);
+    font-weight: 700;
+    color: var(--t-ink-2);
+  }
+
+  /* ===== Конечное состояние: наведение на карточку (десктоп) или класс .played ===== */
+  @media (hover: hover) {
+    :global(.card:hover) .f-btn.accent {
+      background: var(--t-accent);
+      color: #fff;
+      animation: press 0.4s var(--ease);
+    }
+    :global(.card:hover) .f-after,
+    :global(.card:hover) .flag {
+      opacity: 1;
+      transform: none;
+      transition-delay: 0.2s;
+    }
+    :global(.card:hover) .bubble.last {
+      background: var(--surface);
+      transition-delay: 0.3s;
+    }
+    :global(.card:hover) .bubble.last .bubble-text {
+      opacity: 1;
+      transition-delay: 0.35s;
+    }
+    :global(.card:hover) .dots {
+      opacity: 0;
+      transition-delay: 0.35s;
+    }
+    :global(.card:hover) .swaps .v-a,
+    :global(.card:hover) .swap .v-a {
+      opacity: 0;
+      transform: translateY(-0.4em);
+    }
+    :global(.card:hover) .v-b {
+      opacity: 1;
+      transform: none;
+    }
+    :global(.card:hover) .swap .v-b {
+      transition-delay: 0.15s;
+    }
+    :global(.card:hover) .badge {
+      opacity: 1;
+      transform: none;
+    }
+    :global(.card:hover) .row.flagged {
+      background: color-mix(in srgb, var(--t-accent) 10%, white);
+    }
+  }
+  .played .f-btn.accent {
+    background: var(--t-accent);
+    color: #fff;
+    animation: press 0.4s var(--ease);
+  }
+  .played .f-after,
+  .played .flag {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.2s;
+  }
+  .played .bubble.last {
+    background: var(--surface);
+    transition-delay: 0.3s;
+  }
+  .played .bubble.last .bubble-text {
+    opacity: 1;
+    transition-delay: 0.35s;
+  }
+  .played .dots {
+    opacity: 0;
+    transition-delay: 0.35s;
+  }
+  .played .swaps .v-a,
+  .played .swap .v-a {
+    opacity: 0;
+    transform: translateY(-0.4em);
+  }
+  .played .v-b {
+    opacity: 1;
+    transform: none;
+  }
+  .played .swap .v-b {
+    transition-delay: 0.15s;
+  }
+  .played .badge {
+    opacity: 1;
+    transform: none;
+  }
+  .played .row.flagged {
+    background: color-mix(in srgb, var(--t-accent) 10%, white);
+  }
+
+  @keyframes press {
+    40% {
+      transform: scale(0.94);
+    }
   }
 </style>

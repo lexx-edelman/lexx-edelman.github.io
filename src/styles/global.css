@@ -23,6 +23,20 @@
   --viz-muted-text: #9aa0a7;
   --viz-line: #8e959c; /* линии и стрелки, 1.5px */
   --viz-text: 13px; /* подписи блоков */
+
+  /* Цвета типов работы: фон обложки, акцент, текст на фоне (тёмной темы на сайте нет) */
+  --type-systems-bg: #eeedfe;
+  --type-systems-accent: #534ab7;
+  --type-systems-ink: #26215c;
+  --type-systems-ink-2: #3c3489;
+  --type-ai-bg: #e1f5ee;
+  --type-ai-accent: #0f6e56;
+  --type-ai-ink: #04342c;
+  --type-ai-ink-2: #085041;
+  --type-experience-bg: #faece7;
+  --type-experience-accent: #993c1d;
+  --type-experience-ink: #4a1b0c;
+  --type-experience-ink-2: #712b13;
   --viz-small: 12px; /* мелкие пояснения */
 
   --radius-lg: 20px;
@@ -208,3 +222,8 @@ button {
 .viz-sketch .ln-accent { stroke: var(--viz-accent); }
 .viz-sketch text { font-family: var(--font); font-size: var(--viz-small); font-weight: 600; fill: var(--text-3); }
 .viz-sketch .zone-fill { fill: var(--viz-muted); fill-opacity: 0.22; }
+
+/* Класс типа работы задаёт локальные цвета: --t-bg, --t-accent, --t-ink, --t-ink-2 */
+.type-systems { --t-bg: var(--type-systems-bg); --t-accent: var(--type-systems-accent); --t-ink: var(--type-systems-ink); --t-ink-2: var(--type-systems-ink-2); }
+.type-ai { --t-bg: var(--type-ai-bg); --t-accent: var(--type-ai-accent); --t-ink: var(--type-ai-ink); --t-ink-2: var(--type-ai-ink-2); }
+.type-experience { --t-bg: var(--type-experience-bg); --t-accent: var(--type-experience-accent); --t-ink: var(--type-experience-ink); --t-ink-2: var(--type-experience-ink-2); }
