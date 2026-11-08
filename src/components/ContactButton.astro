@@ -1,0 +1,25 @@
+---
+// Кнопка «Связаться»: способ связи зависит от языка страницы
+// (настраивается в site.contactBy в src/data/site.ts)
+import Button from './Button.astro';
+import { site } from '../data/site';
+import { getLang } from '../i18n/utils';
+
+interface Props {
+  size?: 'md' | 'sm';
+}
+const { size = 'md' } = Astro.props;
+const via = site.contactBy[getLang(Astro.url)];
+---
+
+{
+  via === 'telegram' ? (
+    <Button href={site.telegram} variant="ghost" icon="telegram" size={size} external>
+      <slot />
+    </Button>
+  ) : (
+    <Button email={site.email} variant="ghost" icon="mail" size={size}>
+      <slot />
+    </Button>
+  )
+}

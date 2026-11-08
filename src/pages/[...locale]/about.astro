@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Button from '../../components/Button.astro';
+import ContactButton from '../../components/ContactButton.astro';
 import { about, site } from '../../data/site';
 import type { Lang } from '../../i18n/config';
 import { localeStaticPaths, tr, useTranslations } from '../../i18n/utils';
@@ -27,7 +27,7 @@ const [booksA, booksB] = t('about.books');
       </h2>
       {tr(about.paragraphs, lang).map((p) => <p>{p}</p>)}
       <div class="intro-cta">
-        <Button href={site.callUrl} variant="ghost" icon="phone" size="sm" external>{t('about.call')}</Button>
+        <ContactButton size="sm">{t('about.call')}</ContactButton>
       </div>
     </div>
   </section>

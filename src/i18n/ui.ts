@@ -18,14 +18,13 @@ export const ui = {
 
     'footer.links': 'Links',
     'footer.contact': 'Contact',
-    'footer.call': 'Schedule a call',
     'copy.done': 'Copied!',
 
     'about.title': 'About',
     'about.interests': ["What I'm into", 'right now'],
     'about.values': ['The values', 'behind my work'],
     'about.books': ['Books', 'I keep coming back to'],
-    'about.call': 'Book a call',
+    'about.call': 'Get in touch',
 
     'approach.title': 'Approach',
     'approach.process': ['How I work', 'step by step'],
@@ -64,14 +63,13 @@ export const ui = {
 
     'footer.links': 'Ссылки',
     'footer.contact': 'Контакты',
-    'footer.call': 'Назначить звонок',
     'copy.done': 'Скопировано!',
 
     'about.title': 'Обо мне',
     'about.interests': ['Чем я увлекаюсь', 'сейчас'],
     'about.values': ['Ценности', 'в моей работе'],
     'about.books': ['Книги', 'к которым я возвращаюсь'],
-    'about.call': 'Назначить звонок',
+    'about.call': 'Написать в Telegram',
 
     'approach.title': 'Подход',
     'approach.process': ['Как я работаю', 'по шагам'],

@@ -17,10 +17,12 @@ export const site = {
     ru: 'Дизайнер обучения в корпоративном L&D. Создаю курсы, которые меняют то, как люди работают, и ИИ-инструменты, которые ускоряют их разработку.',
   } as L,
   email: 'hello@alexander-edelman.com',
-  callUrl: 'https://cal.com', // TODO: ссылка на запись на звонок
+  telegram: 'https://t.me/lexx_edelman',
+  // Куда ведёт кнопка «Связаться» на каждой версии сайта: 'email' или 'telegram'
+  contactBy: { en: 'email', ru: 'telegram' } as Localized<'email' | 'telegram'>,
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/alex-edelman', icon: 'linkedin' },
-    { label: 'Telegram', href: 'https://t.me/lexx_edelman', icon: 'telegram' },
+    { label: 'Telegram', href: 'https://t.me/lexx_edelman', icon: 'telegram' }, // та же ссылка, что site.telegram
   ],
 };
 

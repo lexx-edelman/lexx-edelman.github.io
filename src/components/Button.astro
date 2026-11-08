@@ -1,22 +1,28 @@
 ---
 // Кнопка с hover-анимацией как в Tabfolio:
 //  icon="star"  — тёмная кнопка, справа влетает вращающаяся звёздочка
-//  icon="phone" — светлая кнопка, справа «выпрыгивает» тёмный кружок с телефоном
+//  icon="phone" | "mail" | "telegram" — светлая кнопка, справа «выпрыгивает» тёмный кружок с иконкой
+//  email="…" — ссылка mailto, адрес собирается в браузере (спрятан от спам-ботов)
 interface Props {
-  href: string;
+  href?: string;
+  email?: string;
   variant?: 'dark' | 'ghost';
-  icon?: 'star' | 'phone';
+  icon?: 'star' | 'phone' | 'mail' | 'telegram';
   size?: 'md' | 'sm';
   external?: boolean;
 }
 
-const { href, variant = 'dark', icon, size = 'md', external = false } = Astro.props;
+const { href = '#', email, variant = 'dark', icon, size = 'md', external = false } = Astro.props;
+const bubble = icon === 'phone' || icon === 'mail' || icon === 'telegram';
+const rev = (s: string) => s.split('').reverse().join('');
+const mail = email ? { 'data-mu': rev(email.split('@')[0]), 'data-md': rev(email.split('@')[1]) } : {};
 ---
 
 <a
   href={href}
-  class:list={['fx-btn', `fx-btn--${variant}`, `fx-btn--${size}`, icon && `has-${icon}`]}
+  class:list={['fx-btn', `fx-btn--${variant}`, `fx-btn--${size}`, bubble && 'has-bubble', email && 'js-mailto']}
   {...external ? { target: '_blank', rel: 'noopener' } : {}}
+  {...mail}
 >
   <span class="fx-label"><slot /></span>
   {
@@ -29,15 +35,36 @@ const { href, variant = 'dark', icon, size = 'md', external = false } = Astro.pr
     )
   }
   {
-    icon === 'phone' && (
+    bubble && (
       <span class="fx-icon fx-bubble" aria-hidden="true">
         <svg viewBox="0 0 24 24">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+          {icon === 'phone' && (
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+          )}
+          {icon === 'mail' && (
+            <>
+              <rect x="3" y="5" width="18" height="14" rx="3" />
+              <path d="m4 7.5 8 5.5 8-5.5" />
+            </>
+          )}
+          {icon === 'telegram' && <path d="M21 4 3 11l6.5 2.2M21 4l-3 16-8.5-6.8M21 4 9.5 13.2V19l3-3.2" />}
         </svg>
       </span>
     )
   }
 </a>
+
+<script>
+  // Собираем mailto из перевёрнутых частей адреса
+  const rev = (s: string) => s.split('').reverse().join('');
+  function initMailto() {
+    document.querySelectorAll<HTMLAnchorElement>('a.js-mailto').forEach((a) => {
+      a.href = `mailto:${rev(a.dataset.mu ?? '')}@${rev(a.dataset.md ?? '')}`;
+    });
+  }
+  initMailto();
+  document.addEventListener('astro:page-load', initMailto);
+</script>
 
 <style>
   .fx-btn {
@@ -108,10 +135,10 @@ const { href, variant = 'dark', icon, size = 'md', external = false } = Astro.pr
   }
 
   /* Кружок с телефоном */
-  .has-phone {
+  .has-bubble {
     --bubble: 26px;
   }
-  .fx-btn--sm.has-phone {
+  .fx-btn--sm.has-bubble {
     --bubble: 22px;
   }
   .fx-bubble {
@@ -156,7 +183,7 @@ const { href, variant = 'dark', icon, size = 'md', external = false } = Astro.pr
       width: var(--icon);
       margin-left: var(--gap);
     }
-    .fx-btn.has-phone:hover {
+    .fx-btn.has-bubble:hover {
       padding-right: calc((var(--h) - var(--bubble)) / 2);
     }
 
