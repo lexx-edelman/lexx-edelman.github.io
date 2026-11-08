@@ -1,5 +1,6 @@
 # Кейс 6. Анализ тестовых заданий в Яндекс Практикуме
 order: 6
+draft: true # не публикуется, пока в кейсе есть TODO
 title:
   en: "Item analysis at Yandex Practicum"
   ru: "Анализ тестовых заданий в Яндекс Практикуме"
@@ -64,8 +65,8 @@ coverFragment:
       difficulty: "0.96"
       discrimination: "0.06"
       flag:
-        en: "Almost everyone gets this right — doesn’t tell us anything"
-        ru: "Почти все отвечают верно — ничего не говорит о знаниях"
+        en: "Almost everyone gets this right — the question doesn’t test anything"
+        ru: "Почти все отвечают верно — вопрос ничего не проверяет"
     - question: { en: "Q8 · Find the leak in the funnel", ru: "В8 · Найдите утечку в воронке" }
       difficulty: "0.48"
       discrimination: "0.37"

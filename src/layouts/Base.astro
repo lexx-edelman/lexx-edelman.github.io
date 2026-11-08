@@ -67,7 +67,7 @@ const alternates = langs.map((l) => ({
             <p class="hero-tagline">{tagline}</p>
             <p class="hero-bio">{bio}</p>
             <div class="hero-actions">
-              <Button href={localePath(`/projects/${site.latestCase}/`, lang)} icon="star">
+              <Button href={localePath(`/projects/${site.featuredCase}/`, lang)} icon="star">
                 {t('hero.latest')}
               </Button>
               <ContactButton>{t('hero.contact')}</ContactButton>

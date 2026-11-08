@@ -13,7 +13,7 @@ export const ui = {
     'nav.home': 'Home',
     'lang.label': 'Language',
 
-    'hero.latest': 'My latest work',
+    'hero.latest': 'Featured case',
     'hero.contact': "Let's chat",
 
     'footer.links': 'Links',
@@ -36,6 +36,7 @@ export const ui = {
     'work.all': 'All',
     'work.more': 'More projects',
     'work.read': 'Read the case',
+    'work.viewAll': 'View all',
     'work.moreText': 'Earlier courses that are not part of the main selection.',
     'archive.title': 'More projects',
     'archive.heading': ['More projects', 'earlier courses'],
@@ -115,7 +116,7 @@ export const ui = {
     'nav.home': 'На главную',
     'lang.label': 'Язык',
 
-    'hero.latest': 'Последняя работа',
+    'hero.latest': 'Главный кейс',
     'hero.contact': 'Связаться',
 
     'footer.links': 'Ссылки',
@@ -138,6 +139,7 @@ export const ui = {
     'work.all': 'Все',
     'work.more': 'Другие проекты',
     'work.read': 'Читать кейс',
+    'work.viewAll': 'Смотреть все',
     'work.moreText': 'Более ранние курсы, которые не вошли в основную подборку.',
     'archive.title': 'Другие проекты',
     'archive.heading': ['Другие проекты', 'более ранние курсы'],

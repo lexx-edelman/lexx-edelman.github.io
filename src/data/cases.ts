@@ -8,11 +8,15 @@ export type CaseStatus = NonNullable<Case['data']['status']>;
 
 const byOrder = (a: Case, b: Case) => a.data.order - b.data.order;
 
+// Черновики (draft: true) не попадают никуда: ни на главную, ни в сборку страниц.
 export async function getCases() {
-  const all = (await getCollection('cases')).sort(byOrder);
+  const all = (await getCollection('cases', (c) => !c.data.draft)).sort(byOrder);
+  const main = all.filter((c) => !c.data.archived);
   return {
     all,
-    featured: all.filter((c) => !c.data.archived),
+    main, // все кейсы главной по порядку
+    featured: main.filter((c) => c.data.featured), // крупные карточки
+    rest: main.filter((c) => !c.data.featured), // сетка в две колонки
     archived: all.filter((c) => c.data.archived),
   };
 }
@@ -41,6 +45,10 @@ export const statusLabels: Record<CaseStatus, Localized> = {
   pilot: { en: 'Pilot', ru: 'Пилот' },
   'in-progress': { en: 'In progress', ru: 'В работе' },
 };
+
+/** Типы кейса в том порядке, как они записаны в types (первый — основной) */
+export const typesOf = (c: Case) =>
+  c.data.types.map((id) => caseTypes.find((type) => type.id === id)!).filter(Boolean);
 
 /** Текст ещё не дописан: на сайте подсвечивается жёлтым */
 export const isTodo = (s: string) => s.includes('TODO');

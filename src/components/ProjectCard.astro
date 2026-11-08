@@ -1,24 +1,28 @@
 ---
-// Карточка кейса. layout="row" — на главной: обложка слева, текст справа
-// (на телефоне — друг под другом). layout="grid" — в архиве и в блоке «Другие работы».
+// Карточка кейса.
+//   layout="row"     — крупная (featured) на главной: обложка слева, текст справа.
+//   layout="compact" — в сетке из двух колонок: обложка сверху, текст снизу.
+// На телефоне обе — обложка сверху, текст снизу.
+// В сетке карточка занимает две строки (обложка и текст) через subgrid,
+// поэтому обложки в одном ряду одной высоты — по самой высокой.
 import CaseCover from './case/CaseCover.astro';
 import Icon from './Icon.astro';
-import { caseTypes, isTodo, type Case } from '../data/cases';
+import { isTodo, typesOf, type Case } from '../data/cases';
 import { getLang, localePath, tr, useTranslations } from '../i18n/utils';
 
 interface Props {
   item: Case;
   index?: number;
-  layout?: 'grid' | 'row';
+  layout?: 'compact' | 'row';
 }
-const { item, index = 0, layout = 'grid' } = Astro.props;
+const { item, index = 0, layout = 'compact' } = Astro.props;
 const data = item.data;
 const lang = getLang(Astro.url);
+const t = useTranslations(lang);
 const title = tr(data.title, lang);
 const summary = tr(data.summary, lang);
-const tags = caseTypes.filter((type) => data.types.includes(type.id));
+const tags = typesOf(item);
 const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
-const t = useTranslations(lang);
 ---
 
 <a
@@ -30,96 +34,67 @@ const t = useTranslations(lang);
   <div class="cover" transition:name={`cover-${item.id}`}>
     {data.cover ? <img src={data.cover} alt={title} loading="lazy" /> : <CaseCover item={item} lang={lang} />}
   </div>
-  {
-    layout === 'row' ? (
-      <div class="info">
-        <span class="eyebrow">{sub}</span>
-        <span class="title">{title}</span>
-        <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
-        <ul class="tags">
-          {tags.map((type) => (
-            <li>{tr(type.short, lang)}</li>
-          ))}
-        </ul>
-        <span class="read">
-          {t('work.read')} <Icon name="arrow-up-right" size={14} />
-        </span>
-      </div>
-    ) : (
-      <>
-        <div class="meta">
-          <span class="title">{title}</span>
-          <span class="sub">{sub}</span>
-        </div>
-        <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
-        <ul class="tags">
-          {tags.map((type) => (
-            <li>{tr(type.short, lang)}</li>
-          ))}
-        </ul>
-      </>
-    )
-  }
+  <div class="info">
+    <span class="eyebrow">{sub}</span>
+    <span class="title">{title}</span>
+    <p class:list={['summary', { todo: isTodo(summary) }]}>{summary}</p>
+    <ul class="tags">
+      {tags.map((type) => <li>{tr(type.short, lang)}</li>)}
+    </ul>
+    <span class="read">
+      {t('work.read')} <Icon name="arrow-up-right" size={14} />
+    </span>
+  </div>
 </a>
 
 <style>
-  .card {
-    display: block;
-  }
   .cover {
     position: relative;
-    aspect-ratio: 4 / 3;
+    display: grid;
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: var(--viz-neutral);
   }
   .cover img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     transition: transform 0.6s var(--ease);
   }
-  .cover :global(.cover-art) {
-    transition: transform 0.6s var(--ease);
-  }
-  .card:hover .cover img,
-  .card:hover .cover :global(.cover-art) {
+  .card:hover .cover img {
     transform: scale(1.025);
   }
 
-  .meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 12px;
+  .info {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 8px;
+  }
+  .eyebrow {
     font-size: 14px;
     font-weight: 600;
     color: var(--text-3);
   }
   .title {
-    transition: color 0.2s;
-  }
-  .card:hover .title {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
     color: var(--text);
   }
-  .sub {
-    flex: none;
-    max-width: 50%;
-    text-align: right;
-  }
   .summary {
-    margin-top: 6px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.45;
-    color: var(--text-3);
-    max-width: 520px;
+    color: var(--text-2);
+    max-width: 560px;
   }
   .tags {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 10px 0 0;
+    margin: 2px 0 0;
     padding: 0;
   }
   .tags li {
@@ -130,55 +105,63 @@ const t = useTranslations(lang);
     font-weight: 600;
     color: var(--text-2);
   }
-  /* --- Строка на главной: обложка слева, текст справа --- */
+  .read {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition:
+      color 0.2s,
+      gap 0.2s var(--ease);
+  }
+  .card:hover .read {
+    color: var(--text);
+    gap: 7px;
+  }
+
+  /* --- Компактная: в сетке; две строки родительской сетки (обложка, текст) --- */
+  .compact {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 16px;
+  }
+  /* 1–2 строки описания */
+  .compact .summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  /* --- Крупная: обложка слева, текст справа --- */
   .row {
     display: grid;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: 48px;
     align-items: center;
   }
-  .info {
-    display: grid;
-    justify-items: start;
-    gap: 10px;
-  }
-  .eyebrow {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-3);
-  }
   .row .title {
     font-size: 26px;
-    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.01em;
-    color: var(--text);
   }
   .row .summary {
-    margin-top: 2px;
     font-size: 16px;
-    color: var(--text-2);
   }
-  .row .tags {
-    margin-top: 4px;
+
+  /* Скрытие карточки фильтром на главной */
+  .card[hidden] {
+    display: none;
   }
-  .read {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-2);
-    transition: color 0.2s, gap 0.2s var(--ease);
-  }
-  .row:hover .read {
-    color: var(--text);
-    gap: 7px;
-  }
-  @media (max-width: 860px) {
+
+  @media (max-width: 768px) {
     .row {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
     }
     .row .title {
@@ -186,22 +169,6 @@ const t = useTranslations(lang);
     }
     .row .summary {
       font-size: 15px;
-    }
-  }
-
-  /* Скрытие карточки фильтром на главной */
-  .card[hidden] {
-    display: none;
-  }
-  @media (max-width: 520px) {
-    .meta {
-      flex-direction: column;
-      gap: 2px;
-    }
-    .sub {
-      max-width: none;
-      text-align: left;
-      font-weight: 500;
     }
   }
 </style>

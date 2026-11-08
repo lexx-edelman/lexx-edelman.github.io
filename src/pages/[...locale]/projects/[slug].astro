@@ -11,7 +11,7 @@ import BeforeAfter from '../../../components/case/BeforeAfter.astro';
 import CaseVisual from '../../../components/case/CaseVisual.astro';
 import CaseCover from '../../../components/case/CaseCover.astro';
 import Prose from '../../../components/case/Prose.astro';
-import { caseTypes, getCases, statusLabels, type Case } from '../../../data/cases';
+import { getCases, statusLabels, typesOf, type Case } from '../../../data/cases';
 import type { Lang } from '../../../i18n/config';
 import { localePath, localeStaticPaths, tr, useTranslations } from '../../../i18n/utils';
 
@@ -38,17 +38,16 @@ const glance = [
   ...(d.archived ? [] : [{ label: t('case.status'), value: d.status ? tr(statusLabels[d.status], lang) : 'TODO' }]),
   {
     label: t('case.type'),
-    value: caseTypes
-      .filter((type) => d.types.includes(type.id))
+    value: typesOf(item)
       .map((type) => tr(type.label, lang))
       .join(', '),
   },
 ];
 
 // «Другие работы»: следующие два кейса из основной подборки
-const { featured } = await getCases();
-const pos = featured.findIndex((c) => c.id === item.id);
-const more = [1, 2].map((k) => featured[(Math.max(pos, -1) + k + featured.length) % featured.length]).filter((c) => c.id !== item.id);
+const { main } = await getCases();
+const pos = main.findIndex((c) => c.id === item.id);
+const more = [1, 2].map((k) => main[(Math.max(pos, -1) + k + main.length) % main.length]).filter((c) => c.id !== item.id);
 
 const decisionLabels = { decision: t('case.decision'), chosen: t('case.chosen'), why: t('case.why') };
 
@@ -282,15 +281,14 @@ const has = (section: Section) => d.visuals.some((v) => v.section === section);
   }
   .cover {
     margin-top: 40px;
-    aspect-ratio: 16 / 9;
+    display: grid;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    position: relative;
     background: var(--viz-neutral);
   }
   .cover img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
   }
   .glance {

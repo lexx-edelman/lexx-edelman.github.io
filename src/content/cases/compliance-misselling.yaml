@@ -138,6 +138,6 @@ coverFragment:
     ru: "Клиент хочет отправить деньги за границу. Система подсказывает заодно предложить инвестиционный продукт. Что вы сделаете?"
   options:
     - text: { en: "Offer it anyway", ru: "Всё равно предложить" }
-    - text: { en: "Ask what they need first", ru: "Сначала спросить о целях" }
+    - text: { en: "Ask first", ru: "Сначала спросить" }
       accent: true
   feedback: { en: "That’s the rule in practice.", ru: "Так правило работает на практике." }

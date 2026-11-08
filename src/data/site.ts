@@ -23,8 +23,8 @@ export const site = {
     en: 'Instructional designer with a product mindset. 8 years in corporate L&D and edtech.',
     ru: 'Методолог с продуктовым мышлением. 8 лет в корпоративном обучении и edtech.',
   } as L,
-  // Кейс, на который ведёт кнопка «My latest work»
-  latestCase: 'ai-design-stage',
+  // Кейс, на который ведёт кнопка «Featured case» / «Главный кейс»
+  featuredCase: 'ai-design-stage',
   email: 'hello@alexander-edelman.com',
   telegram: 'https://t.me/lexx_edelman',
   // Куда ведёт кнопка «Связаться» на каждой версии сайта: 'email' или 'telegram'

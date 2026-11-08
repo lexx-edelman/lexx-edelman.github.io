@@ -128,6 +128,8 @@ const cases = defineCollection({
     status: z.enum(['shipped', 'pilot', 'in-progress']).optional(), // нет — на странице будет TODO
     order: z.number(), // порядок на главной
     archived: z.boolean().default(false), // true — кейс только в архиве
+    featured: z.boolean().default(false), // true — крупная карточка вверху главной
+    draft: z.boolean().default(false), // true — кейс нигде не публикуется (пока в нём есть TODO)
     nda: z.boolean().default(false), // показать примечание о закрытых материалах
     cover: z.string().optional(), // своя картинка вместо обложки-фрагмента (путь в public/)
     coverFragment: fragment.optional(),

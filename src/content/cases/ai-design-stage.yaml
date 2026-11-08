@@ -1,5 +1,6 @@
 # Кейс 1. AI-этап проектирования в производстве курсов
 order: 1
+featured: true
 title:
   en: "An AI-assisted design stage for course production"
   ru: "AI-этап проектирования в производстве курсов"

@@ -1,4 +1,7 @@
 ---
+// Главная. Кейсы с featured: true — крупные карточки в одну колонку,
+// остальные — сетка в две колонки. «Другие проекты» (архив) встаёт в свободную
+// ячейку сетки, если кейсов в ней нечётное число, иначе — плашкой на всю ширину.
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import Icon from '../../components/Icon.astro';
@@ -10,7 +13,9 @@ export const getStaticPaths = localeStaticPaths;
 
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
-const { featured, archived } = await getCases();
+const { featured, rest, archived } = await getCases();
+const moreInGrid = archived.length > 0 && rest.length % 2 === 1;
+const archiveHref = localePath('/archive/', lang);
 ---
 
 <Base>
@@ -26,13 +31,40 @@ const { featured, archived } = await getCases();
     }
   </div>
 
-  <section class="grid" aria-label={t('nav.work')}>
-    {featured.map((item, i) => <ProjectCard item={item} index={i} layout="row" />)}
-  </section>
+  <div class="work" aria-label={t('nav.work')} role="region">
+    <section class="featured">
+      {featured.map((item, i) => <ProjectCard item={item} index={i} layout="row" />)}
+    </section>
+
+    <section class="grid">
+      {rest.map((item, i) => <ProjectCard item={item} index={i + featured.length} />)}
+      {
+        moreInGrid && (
+          <a href={archiveHref} class="more-card reveal" style={`--i:${rest.length + featured.length}`}>
+            <div class="more-cover">
+              <span class="more-cover-title">{t('work.more')}</span>
+              <ul>
+                {archived.map((a) => (
+                  <li>{tr(a.data.title, lang)}</li>
+                ))}
+              </ul>
+            </div>
+            <div class="more-info">
+              <span class="more-title">{t('work.more')}</span>
+              <span class="more-text">{t('work.moreText')}</span>
+              <span class="more-read">
+                {t('work.viewAll')} <Icon name="arrow-up-right" size={14} />
+              </span>
+            </div>
+          </a>
+        )
+      }
+    </section>
+  </div>
 
   {
-    archived.length > 0 && (
-      <a href={localePath('/archive/', lang)} class="more">
+    archived.length > 0 && !moreInGrid && (
+      <a href={archiveHref} class="more">
         <span>
           <span class="more-title">{t('work.more')}</span>
           <span class="more-text">{t('work.moreText')}</span>
@@ -50,7 +82,7 @@ const { featured, archived } = await getCases();
     bar.dataset.ready = '1';
     bar.hidden = false;
     const buttons = bar.querySelectorAll<HTMLButtonElement>('.filter');
-    const cards = document.querySelectorAll<HTMLElement>('.grid .card');
+    const cards = document.querySelectorAll<HTMLElement>('.work .card[data-types]');
     buttons.forEach((btn) =>
       btn.addEventListener('click', () => {
         const id = btn.dataset.filter ?? 'all';
@@ -82,7 +114,9 @@ const { featured, archived } = await getCases();
     font-size: 13px;
     font-weight: 600;
     color: var(--text-2);
-    transition: background-color 0.2s, color 0.2s;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
   }
   .filter:hover {
     background: var(--surface-hover);
@@ -92,11 +126,81 @@ const { featured, archived } = await getCases();
     background: var(--t-accent, var(--text));
     color: #fff;
   }
+
+  .work {
+    display: grid;
+    gap: 64px;
+    padding-bottom: 64px;
+  }
+  .featured {
+    display: grid;
+    gap: 56px;
+  }
+  .featured:empty {
+    display: none;
+  }
+  /* Каждая карточка занимает две строки (обложка + текст) — см. ProjectCard */
   .grid {
     display: grid;
-    gap: 72px;
-    padding-bottom: 72px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
   }
+
+  /* «Другие проекты» в свободной ячейке сетки — того же размера, что карточки */
+  .more-card {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 16px;
+  }
+  .more-cover {
+    display: grid;
+    align-content: center;
+    gap: 14px;
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: background-color 0.2s;
+  }
+  .more-card:hover .more-cover {
+    background: var(--surface-hover);
+  }
+  .more-cover-title {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .more-cover ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-3);
+  }
+  .more-info {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 8px;
+  }
+  .more-read {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: gap 0.2s var(--ease);
+  }
+  .more-card:hover .more-read {
+    gap: 7px;
+    color: var(--text);
+  }
+
   .more {
     display: flex;
     align-items: center;
@@ -113,16 +217,33 @@ const { featured, archived } = await getCases();
   }
   .more-title {
     display: block;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .more .more-title {
+    font-size: 16px;
     font-weight: 600;
   }
   .more-text {
     display: block;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .more .more-text {
     margin-top: 2px;
     font-size: 14px;
     color: var(--text-3);
   }
-  @media (max-width: 860px) {
+
+  @media (max-width: 768px) {
+    .work {
+      gap: 48px;
+    }
+    .featured {
+      gap: 48px;
+    }
     .grid {
+      grid-template-columns: 1fr;
       gap: 48px;
     }
   }

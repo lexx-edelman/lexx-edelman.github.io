@@ -8,7 +8,7 @@ summary:
   ru: "Как персонализировать обучение и не построить дорогую инфраструктуру впустую. Я разметил цифровые следы, которые оставляют сотрудники, и предложил сначала дёшево проверить гипотезы."
 company: { en: "Sber", ru: "Сбер" }
 year: 2026 # TODO: проверить год
-types: [systems]
+types: [ai, systems]
 role:
   en: "TODO: your role in one phrase"
   ru: "TODO: ваша роль одной фразой"
@@ -108,6 +108,6 @@ coverFragment:
   title: { en: "Negotiating with suppliers", ru: "Переговоры с поставщиками" }
   meta: { en: "Course · 40 min", ru: "Курс · 40 мин" }
   subtitle: { en: "A 40-minute course on negotiation basics", ru: "40-минутный курс об основах переговоров" }
-  altSubtitle: { en: "Built for people who like to start with a real case", ru: "Для тех, кто любит начинать с реального кейса" }
-  badge: { en: "personalized", ru: "для вас" }
+  altSubtitle: { en: "Built for people who like to start with a real case", ru: "Для тех, кто любит начинать с реального случая" }
+  badge: { en: "personalized", ru: "персонализировано" }
   cta: { en: "Start", ru: "Начать" }

@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import noTodo from './integrations/no-todo.mjs';
 
 export default defineConfig({
   // Адрес сайта (нужен для ссылок между EN и RU версиями в поиске).
@@ -7,6 +8,8 @@ export default defineConfig({
   site: 'https://alexander-edelman.com',
   trailingSlash: 'ignore',
   devToolbar: { enabled: false },
+  // Сборка падает, если на страницах остался текст TODO
+  integrations: [noTodo()],
 
   // Старые адреса, которые могли сохраниться в закладках и ссылках
   redirects: {

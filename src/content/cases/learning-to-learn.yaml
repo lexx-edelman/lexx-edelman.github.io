@@ -1,5 +1,6 @@
 # Кейс 2. «Учись учиться»: AI-тренажёр внутри курса
 order: 2
+featured: true
 title:
   en: "Learning to learn: an AI practice trainer inside a course"
   ru: "«Учись учиться»: AI-тренажёр внутри курса"
@@ -142,5 +143,5 @@ coverFragment:
       text: { en: "Asked someone to show me", ru: "Попросил кого-то показать" }
     - from: bot
       text:
-        en: "You learn best from an example, then practice. Start with the worked cases."
-        ru: "Вам подходит сначала пример, потом практика. Начните с разобранных кейсов."
+        en: "Looks like you learn best from an example, then practice. Start with the worked cases."
+        ru: "Похоже, вам лучше всего подходит пример, а потом практика. Начните с разобранных кейсов."
