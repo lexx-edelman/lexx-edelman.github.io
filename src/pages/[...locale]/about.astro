@@ -17,7 +17,7 @@ const [booksA, booksB] = t('about.books');
 <Base title={t('about.title')}>
   <section class="intro reveal">
     <figure class="photo">
-      <div class="photo-img" aria-hidden="true"></div>
+      <img class="photo-img" src={about.photo} alt={tr(site.name, lang)} width="960" height="1440" loading="eager" />
       <figcaption class:list={{ todo: tr(about.photoCaption, lang).includes('TODO') }}>{tr(about.photoCaption, lang)}</figcaption>
     </figure>
     <div class="intro-text">
@@ -107,12 +107,13 @@ const [booksA, booksB] = t('about.books');
     margin: 0;
   }
   .photo-img {
-    aspect-ratio: 4 / 3;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 15%;
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(80% 70% at 30% 20%, #cfe0f5, transparent 70%),
-      radial-gradient(90% 80% at 80% 90%, #e9d7c6, transparent 70%),
-      #dfe3ea;
+    background: #111;
   }
   figcaption {
     margin-top: 10px;
@@ -234,6 +235,9 @@ const [booksA, booksB] = t('about.books');
     .intro {
       grid-template-columns: 1fr;
       gap: 28px;
+    }
+    .photo {
+      max-width: 420px;
     }
     .looking {
       grid-template-columns: 1fr;

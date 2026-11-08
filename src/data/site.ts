@@ -122,6 +122,7 @@ export const thinking = {
 
 // TODO: Александр правит текст About своими словами
 export const about = {
+  photo: '/photos/about.jpg', // портрет 2:3
   photoCaption: { en: 'TODO: photo caption', ru: 'TODO: подпись к фото' } as L,
   greeting: { en: 'Hi, I’m Alexander.', ru: 'Привет, я Александр.' } as L,
   headline: {
