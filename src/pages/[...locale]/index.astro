@@ -1,7 +1,9 @@
 ---
-// Главная. Кейсы с featured: true — крупные карточки в одну колонку,
-// остальные — сетка в две колонки. «Другие проекты» (архив) встаёт в свободную
-// ячейку сетки, если кейсов в ней нечётное число, иначе — плашкой на всю ширину.
+// Главная. Все карточки лежат в одной 12-колоночной сетке с общим gutter:
+// крупные (featured: true) — обложка 6 колонок + текст 6 колонок,
+// остальные — по 6 колонок, две в ряд. Вертикальный шаг между карточками один.
+// «Другие проекты» (архив) встаёт в свободную ячейку, если компактных кейсов
+// нечётное число, иначе — плашкой на всю ширину.
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import Icon from '../../components/Icon.astro';
@@ -42,7 +44,6 @@ const archiveHref = localePath('/archive/', lang);
         moreInGrid && (
           <a href={archiveHref} class="more-card reveal" style={`--i:${rest.length + featured.length}`}>
             <div class="more-cover">
-              <span class="more-cover-title">{t('work.more')}</span>
               <ul>
                 {archived.map((a) => (
                   <li>{tr(a.data.title, lang)}</li>
@@ -127,26 +128,32 @@ const archiveHref = localePath('/archive/', lang);
     color: #fff;
   }
 
+  /* Одна сетка для всех карточек: секции берут одинаковые 12 колонок */
   .work {
+    --gutter: 24px;
+    --card-gap: 48px;
     display: grid;
-    gap: 64px;
+    gap: var(--card-gap);
     padding-bottom: 64px;
   }
-  .featured {
+  .featured,
+  .grid {
     display: grid;
-    gap: 56px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    row-gap: var(--card-gap);
   }
   .featured:empty {
     display: none;
   }
-  /* Каждая карточка занимает две строки (обложка + текст) — см. ProjectCard */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 48px 24px;
+  /* Компактная карточка — 6 колонок, две строки (обложка + текст), см. ProjectCard */
+  .grid > :global(.card),
+  .more-card {
+    grid-column: span 6;
   }
 
-  /* «Другие проекты» в свободной ячейке сетки — того же размера, что карточки */
+  /* «Другие проекты» в свободной ячейке сетки — того же размера, что карточки.
+     В обложке — только список проектов, заголовок и описание — под ней. */
   .more-card {
     display: grid;
     grid-row: span 2;
@@ -156,7 +163,6 @@ const archiveHref = localePath('/archive/', lang);
   .more-cover {
     display: grid;
     align-content: center;
-    gap: 14px;
     padding: 32px;
     border-radius: var(--radius-lg);
     background: var(--surface);
@@ -165,20 +171,23 @@ const archiveHref = localePath('/archive/', lang);
   .more-card:hover .more-cover {
     background: var(--surface-hover);
   }
-  .more-cover-title {
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 1.2;
-  }
   .more-cover ul {
     margin: 0;
     padding: 0;
     list-style: none;
     display: grid;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-3);
+    gap: 12px;
+  }
+  .more-cover li {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    color: var(--text-2);
+  }
+  .more-cover li + li {
+    padding-top: 12px;
+    border-top: 1px solid rgba(4, 17, 31, 0.1);
   }
   .more-info {
     display: grid;
@@ -236,15 +245,13 @@ const archiveHref = localePath('/archive/', lang);
   }
 
   @media (max-width: 768px) {
-    .work {
-      gap: 48px;
-    }
-    .featured {
-      gap: 48px;
-    }
+    .featured,
     .grid {
-      grid-template-columns: 1fr;
-      gap: 48px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .grid > :global(.card),
+    .more-card {
+      grid-column: 1 / -1;
     }
   }
 </style>

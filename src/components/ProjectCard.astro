@@ -1,9 +1,10 @@
 ---
 // Карточка кейса.
-//   layout="row"     — крупная (featured) на главной: обложка слева, текст справа.
-//   layout="compact" — в сетке из двух колонок: обложка сверху, текст снизу.
+// Обе раскладки лежат в общей 12-колоночной сетке главной (см. index.astro).
+//   layout="row"     — крупная (featured): обложка 6 колонок, текст 6 колонок.
+//   layout="compact" — обложка сверху, текст снизу (на главной — 6 колонок).
 // На телефоне обе — обложка сверху, текст снизу.
-// В сетке карточка занимает две строки (обложка и текст) через subgrid,
+// Компактная карточка занимает две строки сетки (обложка и текст) через subgrid,
 // поэтому обложки в одном ряду одной высоты — по самой высокой.
 import CaseCover from './case/CaseCover.astro';
 import Icon from './Icon.astro';
@@ -138,12 +139,18 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
     overflow: hidden;
   }
 
-  /* --- Крупная: обложка слева, текст справа --- */
+  /* --- Крупная: колонки берёт у сетки главной, текст — от верхнего края обложки --- */
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 48px;
-    align-items: center;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: start;
+  }
+  .row .cover {
+    grid-column: 1 / span 6;
+  }
+  .row .info {
+    grid-column: 7 / -1;
   }
   .row .title {
     font-size: 26px;
@@ -160,9 +167,12 @@ const sub = [tr(data.company, lang), data.year].filter(Boolean).join(' • ');
   }
 
   @media (max-width: 768px) {
+    .row .cover,
+    .row .info {
+      grid-column: 1 / -1;
+    }
     .row {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 16px;
+      row-gap: 16px;
     }
     .row .title {
       font-size: 21px;

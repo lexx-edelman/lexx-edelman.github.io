@@ -260,6 +260,11 @@ const typeLabel = typesOf(item)
   .chat {
     gap: 0.6em;
   }
+  /* Текст пузыря — блоком: анимация «печати» (clip-path) у строчного элемента
+     в Chrome обрезает всё, кроме первой строки */
+  .bubble-text {
+    display: block;
+  }
   .bubble {
     position: relative;
     max-width: 88%;
@@ -299,18 +304,32 @@ const typeLabel = typesOf(item)
     background: var(--text-3);
   }
 
-  /* --- Picker: два параметра в строку, результат под ними --- */
+  /* --- Picker: два параметра в строку, результат под ними.
+     Подпись и значение у обоих параметров — общие строки (subgrid),
+     поэтому поля значений одной высоты, даже если текст в одном длиннее. --- */
   .picker {
     grid-template-columns: 1fr 1fr;
-    align-items: start;
+    grid-template-rows: auto auto auto;
+    row-gap: 0.35em;
   }
   .picker .result {
     grid-column: 1 / -1;
+    margin-top: 0.4em;
+  }
+  .param {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
   }
   .param,
   .result {
-    display: grid;
     gap: 0.35em;
+  }
+  .result {
+    display: grid;
+  }
+  .param .f-label {
+    align-self: end;
   }
   .value,
   .swap {
@@ -592,6 +611,11 @@ const typeLabel = typesOf(item)
     }
     .picker {
       grid-template-columns: 1fr;
+      grid-template-rows: none;
+    }
+    .param {
+      grid-row: auto;
+      grid-template-rows: none;
     }
   }
 </style>
