@@ -42,8 +42,10 @@ const ws = new WebSocket(target.webSocketDebuggerUrl);
 await new Promise((r) => (ws.onopen = r));
 let id = 0;
 const pending = new Map();
+let onLoad = null;
 ws.onmessage = (m) => {
   const d = JSON.parse(m.data);
+  if (d.method === 'Page.loadEventFired' && onLoad) onLoad();
   if (d.id && pending.has(d.id)) {
     pending.get(d.id)(d);
     pending.delete(d.id);
@@ -57,9 +59,14 @@ const send = (method, params = {}) =>
   });
 const evaluate = async (expression) =>
   (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
+// Открыть страницу и дождаться полной загрузки (шрифты, картинки), не дольше 20 секунд
 const open = async (url) => {
+  const loaded = new Promise((r) => (onLoad = r));
   await send('Page.navigate', { url });
-  await sleep(1200);
+  await Promise.race([loaded, sleep(20000)]);
+  onLoad = null;
+  await evaluate('document.fonts.ready.then(() => true)');
+  await sleep(300);
 };
 
 // Выполняется в странице: список обрезанных текстов во всех обложках
@@ -127,11 +134,19 @@ for (const home of ['/', '/ru/']) {
 }
 pages = [...new Set(pages)];
 
+// Защита от пустой проверки: на главных должны найтись обложки и ссылки на кейсы
+if (pages.length < 3) {
+  console.error(`Найдено слишком мало страниц (${pages.length}). Сайт открылся?`);
+  process.exit(2);
+}
+
 let failed = 0;
+let covers = 0;
 for (const width of widths) {
   await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
   for (const path of pages) {
     await open(base + path);
+    covers += (await evaluate(`document.querySelectorAll('[data-cover]').length`)) ?? 0;
     const before = (await evaluate(inspect)) ?? [];
     await evaluate(finishAnimations);
     const after = (await evaluate(inspect)) ?? [];
@@ -154,4 +169,10 @@ if (failed) {
   console.error(`\nОбрезано на обложках: ${failed}. Страниц проверено: ${pages.length}, ширины: ${widths.join(', ')}.`);
   process.exit(1);
 }
-console.log(`✓ Обложки целиком видны: ${pages.length} страниц × ${widths.length} ширины (${widths.join(', ')}px).`);
+if (!covers) {
+  console.error('Не найдено ни одной обложки — проверять нечего.');
+  process.exit(2);
+}
+console.log(
+  `✓ Обложки целиком видны: ${pages.length} страниц × ${widths.length} ширины (${widths.join(', ')}px), проверено обложек: ${covers}.`,
+);
