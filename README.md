@@ -56,3 +56,8 @@ npm run build   # готовый сайт в папке dist/
 
 Сайт собирается в обычные HTML-файлы (`dist/`), поэтому подходит любой хостинг статики.
 Команда сборки: `npm run build`, папка с результатом: `dist`.
+
+Сейчас сайт живёт на VPS у Webdock (Дания): nginx отдаёт `/var/www/portfolio`, HTTPS — Let's Encrypt
+(certbot продлевает сам). Каждый push в `main` собирает сайт в GitHub Actions и копирует `dist/`
+на сервер через rsync (`.github/workflows/deploy.yml`). Ключ из секрета `DEPLOY_SSH_KEY` на сервере
+разрешает только rsync в папку сайта, `DEPLOY_KNOWN_HOSTS` — проверенный ключ сервера.
