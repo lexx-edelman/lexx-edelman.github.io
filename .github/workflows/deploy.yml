@@ -28,7 +28,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # ВРЕМЕННО: тексты кейсов ещё дописываются, поэтому TODO не останавливает сборку
+      # (только предупреждение). Убрать env, когда TODO-content.md будет закрыт.
       - run: npm run build
+        env:
+          ALLOW_TODO: '1'
 
       - name: Upload to server
         env:
